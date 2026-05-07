@@ -58,6 +58,7 @@ function SensoryBar({ label, value }: { label: string; value: number | null }) {
 function ProductPage() {
   const { slug } = Route.useParams();
   const add = useCart((s) => s.add);
+  const openCart = useCartDrawer((s) => s.setOpen);
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", slug],
