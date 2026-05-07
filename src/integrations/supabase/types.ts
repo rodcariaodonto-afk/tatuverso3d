@@ -1735,6 +1735,14 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      order_belongs_to_customer: {
+        Args: { _order_id: string; _user_id: string }
+        Returns: boolean
+      }
+      order_has_producer_owner: {
+        Args: { _order_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "customer" | "producer" | "admin" | "support"
