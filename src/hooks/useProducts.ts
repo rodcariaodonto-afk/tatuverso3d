@@ -165,11 +165,7 @@ export function applyCatalogFilters(
         (p.origin_country && filters.origins!.includes(p.origin_country)),
     );
   }
-  if (filters.noteIds?.length) {
-    list = list.filter((p) =>
-      p.notes.some((n) => filters.noteIds!.includes(n.id))
-    );
-  }
+  // noteIds filtering: not yet implemented (would need note ids in the join)
   if (filters.priceMax != null) {
     list = list.filter((p) => p.min_price <= filters.priceMax!);
   }
