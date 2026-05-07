@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -10,8 +10,13 @@ import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — Cafezeira" }] }),
-  component: AdminDashboard,
+  component: AdminLayout,
 });
+
+function AdminLayout() {
+  const path = useRouterState({ select: (state) => state.location.pathname });
+  return path === "/admin" ? <AdminDashboard /> : <Outlet />;
+}
 
 function AdminDashboard() {
   const { user, loading } = useAuth();
@@ -121,9 +126,9 @@ function AdminDashboard() {
           <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Painel Cafezeira</h1>
           <div className="gold-divider mt-3" />
         </div>
-        <a href="/admin/produtos" className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-primary hover:border-primary">
+        <Link to="/admin/produtos" className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-primary hover:border-primary">
           Gerenciar cafés →
-        </a>
+        </Link>
       </header>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">

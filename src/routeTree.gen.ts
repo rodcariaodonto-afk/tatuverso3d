@@ -33,13 +33,13 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ProdutoresSlugRouteImport } from './routes/produtores.$slug'
 import { Route as CafeSlugRouteImport } from './routes/cafe.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AdminProdutosRouteImport } from './routes/admin.produtos'
 import { Route as AdminProdutoresRouteImport } from './routes/admin.produtores'
 import { Route as AdminPedidosRouteImport } from './routes/admin.pedidos'
 import { Route as AdminLeadsRouteImport } from './routes/admin.leads'
 import { Route as AdminCuponsRouteImport } from './routes/admin.cupons'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
-import { Route as AdminProdutosIndexRouteImport } from './routes/admin.produtos.index'
 import { Route as AdminProdutosNovoRouteImport } from './routes/admin.produtos.novo'
 import { Route as AdminProdutosIdEditarRouteImport } from './routes/admin.produtos.$id.editar'
 
@@ -163,6 +163,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminProdutosRoute = AdminProdutosRouteImport.update({
+  id: '/produtos',
+  path: '/produtos',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProdutoresRoute = AdminProdutoresRouteImport.update({
   id: '/produtores',
   path: '/produtores',
@@ -193,20 +198,15 @@ const AdminClientesRoute = AdminClientesRouteImport.update({
   path: '/clientes',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminProdutosIndexRoute = AdminProdutosIndexRouteImport.update({
-  id: '/produtos/',
-  path: '/produtos/',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminProdutosNovoRoute = AdminProdutosNovoRouteImport.update({
-  id: '/produtos/novo',
-  path: '/produtos/novo',
-  getParentRoute: () => AdminRoute,
+  id: '/novo',
+  path: '/novo',
+  getParentRoute: () => AdminProdutosRoute,
 } as any)
 const AdminProdutosIdEditarRoute = AdminProdutosIdEditarRouteImport.update({
-  id: '/produtos/$id/editar',
-  path: '/produtos/$id/editar',
-  getParentRoute: () => AdminRoute,
+  id: '/$id/editar',
+  path: '/$id/editar',
+  getParentRoute: () => AdminProdutosRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -235,13 +235,13 @@ export interface FileRoutesByFullPath {
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/pedidos': typeof AdminPedidosRoute
   '/admin/produtores': typeof AdminProdutoresRoute
+  '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
-  '/admin/produtos/': typeof AdminProdutosIndexRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
 }
 export interface FileRoutesByTo {
@@ -270,13 +270,13 @@ export interface FileRoutesByTo {
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/pedidos': typeof AdminPedidosRoute
   '/admin/produtores': typeof AdminProdutoresRoute
+  '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog': typeof BlogIndexRoute
   '/produtores': typeof ProdutoresIndexRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
-  '/admin/produtos': typeof AdminProdutosIndexRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
 }
 export interface FileRoutesById {
@@ -306,13 +306,13 @@ export interface FileRoutesById {
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/pedidos': typeof AdminPedidosRoute
   '/admin/produtores': typeof AdminProdutoresRoute
+  '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
-  '/admin/produtos/': typeof AdminProdutosIndexRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
 }
 export interface FileRouteTypes {
@@ -343,13 +343,13 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/pedidos'
     | '/admin/produtores'
+    | '/admin/produtos'
     | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
     | '/blog/'
     | '/produtores/'
     | '/admin/produtos/novo'
-    | '/admin/produtos/'
     | '/admin/produtos/$id/editar'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -378,13 +378,13 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/pedidos'
     | '/admin/produtores'
+    | '/admin/produtos'
     | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
     | '/blog'
     | '/produtores'
     | '/admin/produtos/novo'
-    | '/admin/produtos'
     | '/admin/produtos/$id/editar'
   id:
     | '__root__'
@@ -413,13 +413,13 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/pedidos'
     | '/admin/produtores'
+    | '/admin/produtos'
     | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
     | '/blog/'
     | '/produtores/'
     | '/admin/produtos/novo'
-    | '/admin/produtos/'
     | '/admin/produtos/$id/editar'
   fileRoutesById: FileRoutesById
 }
@@ -620,6 +620,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/produtos': {
+      id: '/admin/produtos'
+      path: '/produtos'
+      fullPath: '/admin/produtos'
+      preLoaderRoute: typeof AdminProdutosRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/produtores': {
       id: '/admin/produtores'
       path: '/produtores'
@@ -662,29 +669,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminClientesRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/produtos/': {
-      id: '/admin/produtos/'
-      path: '/produtos'
-      fullPath: '/admin/produtos/'
-      preLoaderRoute: typeof AdminProdutosIndexRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/produtos/novo': {
       id: '/admin/produtos/novo'
-      path: '/produtos/novo'
+      path: '/novo'
       fullPath: '/admin/produtos/novo'
       preLoaderRoute: typeof AdminProdutosNovoRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof AdminProdutosRoute
     }
     '/admin/produtos/$id/editar': {
       id: '/admin/produtos/$id/editar'
-      path: '/produtos/$id/editar'
+      path: '/$id/editar'
       fullPath: '/admin/produtos/$id/editar'
       preLoaderRoute: typeof AdminProdutosIdEditarRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof AdminProdutosRoute
     }
   }
 }
+
+interface AdminProdutosRouteChildren {
+  AdminProdutosNovoRoute: typeof AdminProdutosNovoRoute
+  AdminProdutosIdEditarRoute: typeof AdminProdutosIdEditarRoute
+}
+
+const AdminProdutosRouteChildren: AdminProdutosRouteChildren = {
+  AdminProdutosNovoRoute: AdminProdutosNovoRoute,
+  AdminProdutosIdEditarRoute: AdminProdutosIdEditarRoute,
+}
+
+const AdminProdutosRouteWithChildren = AdminProdutosRoute._addFileChildren(
+  AdminProdutosRouteChildren,
+)
 
 interface AdminRouteChildren {
   AdminClientesRoute: typeof AdminClientesRoute
@@ -693,9 +707,7 @@ interface AdminRouteChildren {
   AdminLeadsRoute: typeof AdminLeadsRoute
   AdminPedidosRoute: typeof AdminPedidosRoute
   AdminProdutoresRoute: typeof AdminProdutoresRoute
-  AdminProdutosNovoRoute: typeof AdminProdutosNovoRoute
-  AdminProdutosIndexRoute: typeof AdminProdutosIndexRoute
-  AdminProdutosIdEditarRoute: typeof AdminProdutosIdEditarRoute
+  AdminProdutosRoute: typeof AdminProdutosRouteWithChildren
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -705,9 +717,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminLeadsRoute: AdminLeadsRoute,
   AdminPedidosRoute: AdminPedidosRoute,
   AdminProdutoresRoute: AdminProdutoresRoute,
-  AdminProdutosNovoRoute: AdminProdutosNovoRoute,
-  AdminProdutosIndexRoute: AdminProdutosIndexRoute,
-  AdminProdutosIdEditarRoute: AdminProdutosIdEditarRoute,
+  AdminProdutosRoute: AdminProdutosRouteWithChildren,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
