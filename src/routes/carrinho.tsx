@@ -44,7 +44,7 @@ function CartPage() {
       <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_380px]">
         <ul className="divide-y divide-border rounded-lg border border-border bg-card">
           {items.map((i) => (
-            <li key={`${i.product_id}-${i.grind_option}`} className="flex gap-4 p-4">
+            <li key={i.variant_id} className="flex gap-4 p-4">
               <div className="h-24 w-24 shrink-0 overflow-hidden rounded-md bg-muted">
                 {i.cover_url && <img src={i.cover_url} alt={i.name} className="h-full w-full object-cover" />}
               </div>
@@ -62,16 +62,16 @@ function CartPage() {
                 </p>
                 <div className="mt-2 flex items-center gap-3">
                   <div className="flex items-center rounded-full border border-border">
-                    <button onClick={() => setQty(i.product_id, i.grind_option, i.quantity - 1)} className="px-2 py-1">
+                    <button onClick={() => setQty(i.variant_id, i.quantity - 1)} className="px-2 py-1">
                       <Minus className="h-3 w-3" />
                     </button>
                     <span className="w-8 text-center text-sm font-semibold">{i.quantity}</span>
-                    <button onClick={() => setQty(i.product_id, i.grind_option, i.quantity + 1)} className="px-2 py-1">
+                    <button onClick={() => setQty(i.variant_id, i.quantity + 1)} className="px-2 py-1">
                       <Plus className="h-3 w-3" />
                     </button>
                   </div>
                   <button
-                    onClick={() => remove(i.product_id, i.grind_option)}
+                    onClick={() => remove(i.variant_id)}
                     className="text-xs text-muted-foreground hover:text-destructive"
                   >
                     <Trash2 className="h-4 w-4" />
