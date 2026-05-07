@@ -53,12 +53,14 @@ function HomePage() {
 
         <div className="container mx-auto px-4 py-24 md:px-6 md:py-36">
           <div className="max-w-2xl">
-            <p className="eyebrow !text-[var(--gold)]">Cafés especiais · América Latina</p>
+            <p className="eyebrow !text-[var(--gold)]">Cafezeira · cafés especiais da Mantiqueira</p>
             <h1 className="mt-4 font-display text-4xl leading-[1.05] md:text-6xl lg:text-7xl">
-              Cafés especiais com <em className="text-[var(--gold)] not-italic">origem, curadoria</em> e torra fresca.
+              Compre, assine e crie cafés <em className="text-[var(--gold)] not-italic">com a sua marca</em>.
             </h1>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-white/80 md:text-lg">
-              Conectamos produtores excepcionais a apaixonados por café. Microlotes premiados, processos cuidados e entrega no auge do frescor.
+              A Cafezeira é especialista em cafés 100% arábica da Serra da Mantiqueira. Curadoria de
+              microlotes, assinatura mensal e private label para empresas que querem cafés
+              corporativos com identidade própria.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -68,18 +70,16 @@ function HomePage() {
                 Explorar cafés <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                to="/quiz"
+                to="/private-label"
                 className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-white/10"
               >
-                Fazer Quiz Sensorial
+                Café com sua marca
               </Link>
             </div>
-            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-xs uppercase tracking-wider text-white/60">
-              <span>+4 produtores selecionados</span>
-              <span>·</span>
-              <span>Microlotes pontuados 85+</span>
-              <span>·</span>
-              <span>Frete grátis acima de R$ 199</span>
+            <div className="mt-10 grid max-w-xl grid-cols-3 gap-4 text-xs uppercase tracking-wider text-white/60">
+              <div><span className="block font-display text-2xl text-[var(--gold)] normal-case tracking-normal">B2C</span>Cafés especiais</div>
+              <div><span className="block font-display text-2xl text-[var(--gold)] normal-case tracking-normal">Clube</span>Assinatura mensal</div>
+              <div><span className="block font-display text-2xl text-[var(--gold)] normal-case tracking-normal">B2B</span>Private label</div>
             </div>
           </div>
         </div>
