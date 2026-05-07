@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/auth-context";
 import { formatBRL } from "@/lib/cart-store";
 import { AdminShell } from "@/components/admin/AdminShell";
 
-export const Route = createFileRoute("/admin/produtos")({
+export const Route = createFileRoute("/admin/produtos/")({
   head: () => ({ meta: [{ title: "Admin · Cafés — Cafezeira" }] }),
   component: AdminProductsList,
 });
