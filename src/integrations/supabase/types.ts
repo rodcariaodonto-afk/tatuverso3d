@@ -101,6 +101,69 @@ export type Database = {
         }
         Relationships: []
       }
+      b2b_leads: {
+        Row: {
+          assigned_admin_id: string | null
+          company_name: string
+          contact_name: string
+          created_at: string
+          desired_deadline: string | null
+          email: string
+          estimated_quantity: string | null
+          has_brand: boolean | null
+          id: string
+          internal_notes: string | null
+          logo_url: string | null
+          notes: string | null
+          packaging_preference: string | null
+          phone: string | null
+          purpose: string | null
+          source: string | null
+          status: Database["public"]["Enums"]["b2b_lead_status"]
+          updated_at: string
+        }
+        Insert: {
+          assigned_admin_id?: string | null
+          company_name: string
+          contact_name: string
+          created_at?: string
+          desired_deadline?: string | null
+          email: string
+          estimated_quantity?: string | null
+          has_brand?: boolean | null
+          id?: string
+          internal_notes?: string | null
+          logo_url?: string | null
+          notes?: string | null
+          packaging_preference?: string | null
+          phone?: string | null
+          purpose?: string | null
+          source?: string | null
+          status?: Database["public"]["Enums"]["b2b_lead_status"]
+          updated_at?: string
+        }
+        Update: {
+          assigned_admin_id?: string | null
+          company_name?: string
+          contact_name?: string
+          created_at?: string
+          desired_deadline?: string | null
+          email?: string
+          estimated_quantity?: string | null
+          has_brand?: boolean | null
+          id?: string
+          internal_notes?: string | null
+          logo_url?: string | null
+          notes?: string | null
+          packaging_preference?: string | null
+          phone?: string | null
+          purpose?: string | null
+          source?: string | null
+          status?: Database["public"]["Enums"]["b2b_lead_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       banners: {
         Row: {
           created_at: string
@@ -283,6 +346,57 @@ export type Database = {
           sort_order?: number | null
         }
         Relationships: []
+      }
+      corporate_quote_requests: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          lead_id: string | null
+          notes: string | null
+          project_id: string | null
+          status: Database["public"]["Enums"]["corporate_quote_status"]
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          lead_id?: string | null
+          notes?: string | null
+          project_id?: string | null
+          status?: Database["public"]["Enums"]["corporate_quote_status"]
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          lead_id?: string | null
+          notes?: string | null
+          project_id?: string | null
+          status?: Database["public"]["Enums"]["corporate_quote_status"]
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "corporate_quote_requests_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "b2b_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "corporate_quote_requests_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "private_label_projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       coupons: {
         Row: {
@@ -531,6 +645,42 @@ export type Database = {
           },
         ]
       }
+      packaging_options: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          min_quantity: number | null
+          name: string
+          slug: string
+          sort_order: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          min_quantity?: number | null
+          name: string
+          slug: string
+          sort_order?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          min_quantity?: number | null
+          name?: string
+          slug?: string
+          sort_order?: number | null
+        }
+        Relationships: []
+      }
       platform_settings: {
         Row: {
           key: string
@@ -548,6 +698,60 @@ export type Database = {
           value?: Json | null
         }
         Relationships: []
+      }
+      private_label_projects: {
+        Row: {
+          created_at: string
+          estimated_value: number | null
+          id: string
+          internal_notes: string | null
+          lead_id: string | null
+          packaging_option_id: string | null
+          project_name: string
+          quantity: number | null
+          status: Database["public"]["Enums"]["private_label_project_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          estimated_value?: number | null
+          id?: string
+          internal_notes?: string | null
+          lead_id?: string | null
+          packaging_option_id?: string | null
+          project_name: string
+          quantity?: number | null
+          status?: Database["public"]["Enums"]["private_label_project_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          estimated_value?: number | null
+          id?: string
+          internal_notes?: string | null
+          lead_id?: string | null
+          packaging_option_id?: string | null
+          project_name?: string
+          quantity?: number | null
+          status?: Database["public"]["Enums"]["private_label_project_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "private_label_projects_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "b2b_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "private_label_projects_packaging_option_id_fkey"
+            columns: ["packaging_option_id"]
+            isOneToOne: false
+            referencedRelation: "packaging_options"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       producer_plans: {
         Row: {
@@ -946,6 +1150,54 @@ export type Database = {
         }
         Relationships: []
       }
+      project_files: {
+        Row: {
+          created_at: string
+          file_name: string | null
+          file_type: string | null
+          file_url: string
+          id: string
+          lead_id: string | null
+          project_id: string | null
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          file_name?: string | null
+          file_type?: string | null
+          file_url: string
+          id?: string
+          lead_id?: string | null
+          project_id?: string | null
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          file_name?: string | null
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          lead_id?: string | null
+          project_id?: string | null
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_files_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "b2b_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_files_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "private_label_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quiz_responses: {
         Row: {
           answers: Json
@@ -1164,6 +1416,13 @@ export type Database = {
     }
     Enums: {
       app_role: "customer" | "producer" | "admin" | "support"
+      b2b_lead_status:
+        | "new"
+        | "contacted"
+        | "in_proposal"
+        | "won"
+        | "lost"
+        | "archived"
       brew_method:
         | "espresso"
         | "filter"
@@ -1173,6 +1432,12 @@ export type Database = {
         | "cold_brew"
         | "chemex"
         | "v60"
+      corporate_quote_status:
+        | "draft"
+        | "sent"
+        | "accepted"
+        | "rejected"
+        | "expired"
       grind_option:
         | "whole_bean"
         | "espresso"
@@ -1190,6 +1455,13 @@ export type Database = {
         | "cancelled"
         | "refunded"
       payment_status: "pending" | "authorized" | "paid" | "failed" | "refunded"
+      private_label_project_status:
+        | "briefing"
+        | "design"
+        | "approval"
+        | "production"
+        | "delivered"
+        | "cancelled"
       producer_status: "pending_review" | "active" | "suspended" | "rejected"
       product_status:
         | "draft"
@@ -1327,6 +1599,14 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["customer", "producer", "admin", "support"],
+      b2b_lead_status: [
+        "new",
+        "contacted",
+        "in_proposal",
+        "won",
+        "lost",
+        "archived",
+      ],
       brew_method: [
         "espresso",
         "filter",
@@ -1336,6 +1616,13 @@ export const Constants = {
         "cold_brew",
         "chemex",
         "v60",
+      ],
+      corporate_quote_status: [
+        "draft",
+        "sent",
+        "accepted",
+        "rejected",
+        "expired",
       ],
       grind_option: [
         "whole_bean",
@@ -1356,6 +1643,14 @@ export const Constants = {
         "refunded",
       ],
       payment_status: ["pending", "authorized", "paid", "failed", "refunded"],
+      private_label_project_status: [
+        "briefing",
+        "design",
+        "approval",
+        "production",
+        "delivered",
+        "cancelled",
+      ],
       producer_status: ["pending_review", "active", "suspended", "rejected"],
       product_status: [
         "draft",
