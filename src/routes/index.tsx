@@ -156,6 +156,39 @@ function HomePage() {
         </div>
       </section>
 
+      {/* PRIVATE LABEL B2B */}
+      <section className="bg-[var(--cream)]">
+        <div className="container mx-auto grid items-center gap-12 px-4 py-20 md:grid-cols-2 md:px-6">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="aspect-[3/4] rounded-md bg-[oklch(0.22_0.045_45)]" />
+            <div className="aspect-[3/4] translate-y-6 rounded-md bg-[var(--gold)]" />
+            <div className="aspect-[3/4] translate-y-3 rounded-md bg-[oklch(0.35_0.05_45)]" />
+            <div className="aspect-[3/4] -translate-y-3 rounded-md bg-[var(--espresso)]" />
+          </div>
+          <div>
+            <p className="eyebrow">Para empresas · Private Label</p>
+            <h2 className="mt-2 font-display text-3xl text-primary md:text-5xl">
+              Café especial com a sua marca.
+            </h2>
+            <p className="mt-4 max-w-lg text-primary/80">
+              Curadoria de grãos, embalagem personalizada, design de marca e produção artesanal para
+              presentes corporativos, brindes e cafés institucionais. A partir de 30 unidades.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-4 text-sm text-primary/80">
+              <span className="inline-flex items-center gap-2"><PackageIcon className="h-4 w-4 text-[var(--gold)]" /> Embalagem premium</span>
+              <span className="inline-flex items-center gap-2"><Sparkles className="h-4 w-4 text-[var(--gold)]" /> Branding exclusivo</span>
+              <span className="inline-flex items-center gap-2"><Coffee className="h-4 w-4 text-[var(--gold)]" /> 100% arábica</span>
+            </div>
+            <Link
+              to="/private-label"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground hover:bg-primary/90"
+            >
+              Solicitar orçamento <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* PRODUCERS */}
       <section className="container mx-auto px-4 py-20 md:px-6">
         <div className="text-center">
