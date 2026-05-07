@@ -74,6 +74,26 @@ function AdminDashboard() {
     },
   });
 
+  const { data: b2bLeads } = useQuery({
+    queryKey: ["b2b-leads"],
+    enabled: !!isAdmin,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("b2b_leads")
+        .select("id, company_name, contact_name, email, phone, estimated_quantity, purpose, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      return data;
+    },
+  });
+
+  const setLeadStatus = async (id: string, status: string) => {
+    const { error } = await supabase.from("b2b_leads").update({ status: status as any }).eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Lead atualizado");
+    qc.invalidateQueries({ queryKey: ["b2b-leads"] });
+  };
+
   const setProducerStatus = async (id: string, status: "active" | "rejected" | "suspended" | "pending_review") => {
     const { error } = await supabase.from("producers").update({ status }).eq("id", id);
     if (error) return toast.error(error.message);
