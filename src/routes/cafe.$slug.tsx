@@ -64,7 +64,7 @@ function ProductPage() {
       const { data, error } = await supabase
         .from("products")
         .select(
-          "*, producers(id, name, slug, region, state, country, logo_url), product_sensory_notes(sensory_notes(name, family)), product_images(url, alt, sort_order)",
+          "*, producers(id, name, slug, region, state, country, logo_url), product_sensory_notes(sensory_notes(name, family)), product_images(url, alt, sort_order), product_variants(id, weight_grams, grind_option, price, compare_at_price, stock_quantity, is_default)",
         )
         .eq("slug", slug)
         .eq("status", "active")
