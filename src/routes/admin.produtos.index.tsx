@@ -46,13 +46,9 @@ function AdminProductsList() {
     },
   });
 
-  if (!user) return null;
-  if (isAdmin === false) {
-    return <div className="container mx-auto py-20 text-center text-sm text-muted-foreground">Acesso restrito.</div>;
-  }
-
   return (
-    <div className="container mx-auto px-4 py-12 md:px-6">
+    <AdminShell>
+      <div className="mx-auto max-w-6xl">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Administração</p>
@@ -118,6 +114,7 @@ function AdminProductsList() {
           </tbody>
         </table>
       </div>
-    </div>
+      </div>
+    </AdminShell>
   );
 }
