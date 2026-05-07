@@ -613,7 +613,7 @@ export type Database = {
           joined_at: string | null
           logo_url: string | null
           name: string
-          owner_user_id: string
+          owner_user_id: string | null
           plan_id: string | null
           region: string | null
           slug: string
@@ -638,7 +638,7 @@ export type Database = {
           joined_at?: string | null
           logo_url?: string | null
           name: string
-          owner_user_id: string
+          owner_user_id?: string | null
           plan_id?: string | null
           region?: string | null
           slug: string
@@ -663,7 +663,7 @@ export type Database = {
           joined_at?: string | null
           logo_url?: string | null
           name?: string
-          owner_user_id?: string
+          owner_user_id?: string | null
           plan_id?: string | null
           region?: string | null
           slug?: string
