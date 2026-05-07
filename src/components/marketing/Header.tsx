@@ -1,7 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { ShoppingBag, User } from "lucide-react";
+import { useCart } from "@/lib/cart-store";
+import { useAuth } from "@/lib/auth-context";
 
 export function Header() {
+  const count = useCart((s) => s.items.reduce((a, i) => a + i.quantity, 0));
+  const { user } = useAuth();
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
@@ -27,11 +32,24 @@ export function Header() {
           >
             Vender na Cafezeira
           </Link>
-          <Link to="/login" className="rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-primary" aria-label="Entrar">
+          <Link
+            to={user ? "/minha-conta" : "/login"}
+            className="rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-primary"
+            aria-label={user ? "Minha conta" : "Entrar"}
+          >
             <User className="h-5 w-5" />
           </Link>
-          <Link to="/carrinho" className="rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-primary" aria-label="Carrinho">
+          <Link
+            to="/carrinho"
+            className="relative rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-primary"
+            aria-label="Carrinho"
+          >
             <ShoppingBag className="h-5 w-5" />
+            {count > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--gold)] px-1 text-[10px] font-bold text-[var(--espresso)]">
+                {count}
+              </span>
+            )}
           </Link>
         </div>
       </div>
