@@ -9,38 +9,447 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VenderNaPlataformaRouteImport } from './routes/vender-na-plataforma'
+import { Route as TermosRouteImport } from './routes/termos'
+import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as ProdutorRouteImport } from './routes/produtor'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as MinhaContaRouteImport } from './routes/minha-conta'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CatalogoRouteImport } from './routes/catalogo'
+import { Route as CarrinhoRouteImport } from './routes/carrinho'
+import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as AssinaturaRouteImport } from './routes/assinatura'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProdutoresIndexRouteImport } from './routes/produtores.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as ProdutoresSlugRouteImport } from './routes/produtores.$slug'
+import { Route as CafeSlugRouteImport } from './routes/cafe.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
+const VenderNaPlataformaRoute = VenderNaPlataformaRouteImport.update({
+  id: '/vender-na-plataforma',
+  path: '/vender-na-plataforma',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
+  id: '/recuperar-senha',
+  path: '/recuperar-senha',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizRoute = QuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProdutorRoute = ProdutorRouteImport.update({
+  id: '/produtor',
+  path: '/produtor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MinhaContaRoute = MinhaContaRouteImport.update({
+  id: '/minha-conta',
+  path: '/minha-conta',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatalogoRoute = CatalogoRouteImport.update({
+  id: '/catalogo',
+  path: '/catalogo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CarrinhoRoute = CarrinhoRouteImport.update({
+  id: '/carrinho',
+  path: '/carrinho',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroRoute = CadastroRouteImport.update({
+  id: '/cadastro',
+  path: '/cadastro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssinaturaRoute = AssinaturaRouteImport.update({
+  id: '/assinatura',
+  path: '/assinatura',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProdutoresIndexRoute = ProdutoresIndexRouteImport.update({
+  id: '/produtores/',
+  path: '/produtores/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProdutoresSlugRoute = ProdutoresSlugRouteImport.update({
+  id: '/produtores/$slug',
+  path: '/produtores/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CafeSlugRoute = CafeSlugRouteImport.update({
+  id: '/cafe/$slug',
+  path: '/cafe/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/assinatura': typeof AssinaturaRoute
+  '/cadastro': typeof CadastroRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/catalogo': typeof CatalogoRoute
+  '/checkout': typeof CheckoutRoute
+  '/contato': typeof ContatoRoute
+  '/login': typeof LoginRoute
+  '/minha-conta': typeof MinhaContaRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/produtor': typeof ProdutorRoute
+  '/quiz': typeof QuizRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
+  '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/cafe/$slug': typeof CafeSlugRoute
+  '/produtores/$slug': typeof ProdutoresSlugRoute
+  '/blog/': typeof BlogIndexRoute
+  '/produtores/': typeof ProdutoresIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/assinatura': typeof AssinaturaRoute
+  '/cadastro': typeof CadastroRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/catalogo': typeof CatalogoRoute
+  '/checkout': typeof CheckoutRoute
+  '/contato': typeof ContatoRoute
+  '/login': typeof LoginRoute
+  '/minha-conta': typeof MinhaContaRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/produtor': typeof ProdutorRoute
+  '/quiz': typeof QuizRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
+  '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/cafe/$slug': typeof CafeSlugRoute
+  '/produtores/$slug': typeof ProdutoresSlugRoute
+  '/blog': typeof BlogIndexRoute
+  '/produtores': typeof ProdutoresIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/assinatura': typeof AssinaturaRoute
+  '/cadastro': typeof CadastroRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/catalogo': typeof CatalogoRoute
+  '/checkout': typeof CheckoutRoute
+  '/contato': typeof ContatoRoute
+  '/login': typeof LoginRoute
+  '/minha-conta': typeof MinhaContaRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/produtor': typeof ProdutorRoute
+  '/quiz': typeof QuizRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
+  '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/cafe/$slug': typeof CafeSlugRoute
+  '/produtores/$slug': typeof ProdutoresSlugRoute
+  '/blog/': typeof BlogIndexRoute
+  '/produtores/': typeof ProdutoresIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/assinatura'
+    | '/cadastro'
+    | '/carrinho'
+    | '/catalogo'
+    | '/checkout'
+    | '/contato'
+    | '/login'
+    | '/minha-conta'
+    | '/privacidade'
+    | '/produtor'
+    | '/quiz'
+    | '/recuperar-senha'
+    | '/reset-password'
+    | '/sobre'
+    | '/termos'
+    | '/vender-na-plataforma'
+    | '/blog/$slug'
+    | '/cafe/$slug'
+    | '/produtores/$slug'
+    | '/blog/'
+    | '/produtores/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/assinatura'
+    | '/cadastro'
+    | '/carrinho'
+    | '/catalogo'
+    | '/checkout'
+    | '/contato'
+    | '/login'
+    | '/minha-conta'
+    | '/privacidade'
+    | '/produtor'
+    | '/quiz'
+    | '/recuperar-senha'
+    | '/reset-password'
+    | '/sobre'
+    | '/termos'
+    | '/vender-na-plataforma'
+    | '/blog/$slug'
+    | '/cafe/$slug'
+    | '/produtores/$slug'
+    | '/blog'
+    | '/produtores'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/assinatura'
+    | '/cadastro'
+    | '/carrinho'
+    | '/catalogo'
+    | '/checkout'
+    | '/contato'
+    | '/login'
+    | '/minha-conta'
+    | '/privacidade'
+    | '/produtor'
+    | '/quiz'
+    | '/recuperar-senha'
+    | '/reset-password'
+    | '/sobre'
+    | '/termos'
+    | '/vender-na-plataforma'
+    | '/blog/$slug'
+    | '/cafe/$slug'
+    | '/produtores/$slug'
+    | '/blog/'
+    | '/produtores/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  AssinaturaRoute: typeof AssinaturaRoute
+  CadastroRoute: typeof CadastroRoute
+  CarrinhoRoute: typeof CarrinhoRoute
+  CatalogoRoute: typeof CatalogoRoute
+  CheckoutRoute: typeof CheckoutRoute
+  ContatoRoute: typeof ContatoRoute
+  LoginRoute: typeof LoginRoute
+  MinhaContaRoute: typeof MinhaContaRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
+  ProdutorRoute: typeof ProdutorRoute
+  QuizRoute: typeof QuizRoute
+  RecuperarSenhaRoute: typeof RecuperarSenhaRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SobreRoute: typeof SobreRoute
+  TermosRoute: typeof TermosRoute
+  VenderNaPlataformaRoute: typeof VenderNaPlataformaRoute
+  BlogSlugRoute: typeof BlogSlugRoute
+  CafeSlugRoute: typeof CafeSlugRoute
+  ProdutoresSlugRoute: typeof ProdutoresSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
+  ProdutoresIndexRoute: typeof ProdutoresIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vender-na-plataforma': {
+      id: '/vender-na-plataforma'
+      path: '/vender-na-plataforma'
+      fullPath: '/vender-na-plataforma'
+      preLoaderRoute: typeof VenderNaPlataformaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recuperar-senha': {
+      id: '/recuperar-senha'
+      path: '/recuperar-senha'
+      fullPath: '/recuperar-senha'
+      preLoaderRoute: typeof RecuperarSenhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz': {
+      id: '/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produtor': {
+      id: '/produtor'
+      path: '/produtor'
+      fullPath: '/produtor'
+      preLoaderRoute: typeof ProdutorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/minha-conta': {
+      id: '/minha-conta'
+      path: '/minha-conta'
+      fullPath: '/minha-conta'
+      preLoaderRoute: typeof MinhaContaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/catalogo': {
+      id: '/catalogo'
+      path: '/catalogo'
+      fullPath: '/catalogo'
+      preLoaderRoute: typeof CatalogoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/carrinho': {
+      id: '/carrinho'
+      path: '/carrinho'
+      fullPath: '/carrinho'
+      preLoaderRoute: typeof CarrinhoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro': {
+      id: '/cadastro'
+      path: '/cadastro'
+      fullPath: '/cadastro'
+      preLoaderRoute: typeof CadastroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assinatura': {
+      id: '/assinatura'
+      path: '/assinatura'
+      fullPath: '/assinatura'
+      preLoaderRoute: typeof AssinaturaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +457,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/produtores/': {
+      id: '/produtores/'
+      path: '/produtores'
+      fullPath: '/produtores/'
+      preLoaderRoute: typeof ProdutoresIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produtores/$slug': {
+      id: '/produtores/$slug'
+      path: '/produtores/$slug'
+      fullPath: '/produtores/$slug'
+      preLoaderRoute: typeof ProdutoresSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cafe/$slug': {
+      id: '/cafe/$slug'
+      path: '/cafe/$slug'
+      fullPath: '/cafe/$slug'
+      preLoaderRoute: typeof CafeSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  AssinaturaRoute: AssinaturaRoute,
+  CadastroRoute: CadastroRoute,
+  CarrinhoRoute: CarrinhoRoute,
+  CatalogoRoute: CatalogoRoute,
+  CheckoutRoute: CheckoutRoute,
+  ContatoRoute: ContatoRoute,
+  LoginRoute: LoginRoute,
+  MinhaContaRoute: MinhaContaRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
+  ProdutorRoute: ProdutorRoute,
+  QuizRoute: QuizRoute,
+  RecuperarSenhaRoute: RecuperarSenhaRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SobreRoute: SobreRoute,
+  TermosRoute: TermosRoute,
+  VenderNaPlataformaRoute: VenderNaPlataformaRoute,
+  BlogSlugRoute: BlogSlugRoute,
+  CafeSlugRoute: CafeSlugRoute,
+  ProdutoresSlugRoute: ProdutoresSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
+  ProdutoresIndexRoute: ProdutoresIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
