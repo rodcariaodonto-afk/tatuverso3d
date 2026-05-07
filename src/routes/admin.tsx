@@ -6,6 +6,7 @@ import { Users, Package, ShoppingBag, Sprout, Briefcase } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/cart-store";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — Cafezeira" }] }),
