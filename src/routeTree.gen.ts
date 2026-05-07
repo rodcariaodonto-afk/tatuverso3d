@@ -33,6 +33,12 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ProdutoresSlugRouteImport } from './routes/produtores.$slug'
 import { Route as CafeSlugRouteImport } from './routes/cafe.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AdminProdutoresRouteImport } from './routes/admin.produtores'
+import { Route as AdminPedidosRouteImport } from './routes/admin.pedidos'
+import { Route as AdminLeadsRouteImport } from './routes/admin.leads'
+import { Route as AdminCuponsRouteImport } from './routes/admin.cupons'
+import { Route as AdminConfigRouteImport } from './routes/admin.config'
+import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
 import { Route as AdminProdutosIndexRouteImport } from './routes/admin.produtos.index'
 import { Route as AdminProdutosNovoRouteImport } from './routes/admin.produtos.novo'
 import { Route as AdminProdutosIdEditarRouteImport } from './routes/admin.produtos.$id.editar'
@@ -157,6 +163,36 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminProdutoresRoute = AdminProdutoresRouteImport.update({
+  id: '/produtores',
+  path: '/produtores',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPedidosRoute = AdminPedidosRouteImport.update({
+  id: '/pedidos',
+  path: '/pedidos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLeadsRoute = AdminLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCuponsRoute = AdminCuponsRouteImport.update({
+  id: '/cupons',
+  path: '/cupons',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConfigRoute = AdminConfigRouteImport.update({
+  id: '/config',
+  path: '/config',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminClientesRoute = AdminClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProdutosIndexRoute = AdminProdutosIndexRouteImport.update({
   id: '/produtos/',
   path: '/produtos/',
@@ -193,6 +229,12 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/admin/clientes': typeof AdminClientesRoute
+  '/admin/config': typeof AdminConfigRoute
+  '/admin/cupons': typeof AdminCuponsRoute
+  '/admin/leads': typeof AdminLeadsRoute
+  '/admin/pedidos': typeof AdminPedidosRoute
+  '/admin/produtores': typeof AdminProdutoresRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
@@ -222,6 +264,12 @@ export interface FileRoutesByTo {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/admin/clientes': typeof AdminClientesRoute
+  '/admin/config': typeof AdminConfigRoute
+  '/admin/cupons': typeof AdminCuponsRoute
+  '/admin/leads': typeof AdminLeadsRoute
+  '/admin/pedidos': typeof AdminPedidosRoute
+  '/admin/produtores': typeof AdminProdutoresRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
@@ -252,6 +300,12 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/admin/clientes': typeof AdminClientesRoute
+  '/admin/config': typeof AdminConfigRoute
+  '/admin/cupons': typeof AdminCuponsRoute
+  '/admin/leads': typeof AdminLeadsRoute
+  '/admin/pedidos': typeof AdminPedidosRoute
+  '/admin/produtores': typeof AdminProdutoresRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
@@ -283,6 +337,12 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/vender-na-plataforma'
+    | '/admin/clientes'
+    | '/admin/config'
+    | '/admin/cupons'
+    | '/admin/leads'
+    | '/admin/pedidos'
+    | '/admin/produtores'
     | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
@@ -312,6 +372,12 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/vender-na-plataforma'
+    | '/admin/clientes'
+    | '/admin/config'
+    | '/admin/cupons'
+    | '/admin/leads'
+    | '/admin/pedidos'
+    | '/admin/produtores'
     | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
@@ -341,6 +407,12 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/vender-na-plataforma'
+    | '/admin/clientes'
+    | '/admin/config'
+    | '/admin/cupons'
+    | '/admin/leads'
+    | '/admin/pedidos'
+    | '/admin/produtores'
     | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
@@ -548,6 +620,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/produtores': {
+      id: '/admin/produtores'
+      path: '/produtores'
+      fullPath: '/admin/produtores'
+      preLoaderRoute: typeof AdminProdutoresRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/pedidos': {
+      id: '/admin/pedidos'
+      path: '/pedidos'
+      fullPath: '/admin/pedidos'
+      preLoaderRoute: typeof AdminPedidosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/leads': {
+      id: '/admin/leads'
+      path: '/leads'
+      fullPath: '/admin/leads'
+      preLoaderRoute: typeof AdminLeadsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/cupons': {
+      id: '/admin/cupons'
+      path: '/cupons'
+      fullPath: '/admin/cupons'
+      preLoaderRoute: typeof AdminCuponsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/config': {
+      id: '/admin/config'
+      path: '/config'
+      fullPath: '/admin/config'
+      preLoaderRoute: typeof AdminConfigRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/clientes': {
+      id: '/admin/clientes'
+      path: '/clientes'
+      fullPath: '/admin/clientes'
+      preLoaderRoute: typeof AdminClientesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/produtos/': {
       id: '/admin/produtos/'
       path: '/produtos'
@@ -573,12 +687,24 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminClientesRoute: typeof AdminClientesRoute
+  AdminConfigRoute: typeof AdminConfigRoute
+  AdminCuponsRoute: typeof AdminCuponsRoute
+  AdminLeadsRoute: typeof AdminLeadsRoute
+  AdminPedidosRoute: typeof AdminPedidosRoute
+  AdminProdutoresRoute: typeof AdminProdutoresRoute
   AdminProdutosNovoRoute: typeof AdminProdutosNovoRoute
   AdminProdutosIndexRoute: typeof AdminProdutosIndexRoute
   AdminProdutosIdEditarRoute: typeof AdminProdutosIdEditarRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminClientesRoute: AdminClientesRoute,
+  AdminConfigRoute: AdminConfigRoute,
+  AdminCuponsRoute: AdminCuponsRoute,
+  AdminLeadsRoute: AdminLeadsRoute,
+  AdminPedidosRoute: AdminPedidosRoute,
+  AdminProdutoresRoute: AdminProdutoresRoute,
   AdminProdutosNovoRoute: AdminProdutosNovoRoute,
   AdminProdutosIndexRoute: AdminProdutosIndexRoute,
   AdminProdutosIdEditarRoute: AdminProdutosIdEditarRoute,
