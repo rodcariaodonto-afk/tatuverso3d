@@ -82,7 +82,7 @@ function CheckoutPage() {
         .from("orders")
         .insert({
           customer_id: user.id,
-          status: "confirmed",
+          status: "paid",
           payment_status: "paid",
           payment_provider: "simulated",
           payment_reference: `SIM-${Date.now()}`,
