@@ -310,20 +310,23 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          session_token: string | null
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
+          session_token?: string | null
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
+          session_token?: string | null
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -1723,6 +1726,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      current_cart_session: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
