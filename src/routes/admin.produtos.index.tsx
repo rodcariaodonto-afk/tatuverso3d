@@ -134,10 +134,10 @@ function AdminProductsList() {
                 <td className="px-4 py-3">
                   <span className="rounded-full bg-[var(--sand)] px-2 py-0.5 text-xs">{p.status}</span>
                 </td>
-                <td className="px-4 py-3 text-right">
-                  <Link to="/admin/produtos/$id/editar" params={{ id: p.id }} className="text-xs font-semibold text-primary hover:underline">
-                    Editar →
-                  </Link>
+                <td className="px-4 py-3 text-right space-x-3 whitespace-nowrap">
+                  <Link to="/admin/produtos/$id/editar" params={{ id: p.id }} className="text-xs font-semibold text-primary hover:underline">Editar</Link>
+                  <button onClick={() => duplicate(p.id)} className="text-xs font-semibold text-foreground/70 hover:underline">Duplicar</button>
+                  <button onClick={() => archive(p.id, p.name)} className="text-xs font-semibold text-destructive hover:underline">Arquivar</button>
                 </td>
               </tr>
             ))}
