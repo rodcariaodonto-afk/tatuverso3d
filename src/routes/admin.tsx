@@ -6,6 +6,7 @@ import { Users, Package, ShoppingBag, Sprout, Briefcase } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/cart-store";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — Cafezeira" }] }),
@@ -111,18 +112,9 @@ function AdminDashboard() {
     qc.invalidateQueries({ queryKey: ["pending-products"] });
   };
 
-  if (!user) return null;
-  if (roles && !isAdmin) {
-    return (
-      <div className="container mx-auto max-w-xl py-20 text-center">
-        <h1 className="font-display text-3xl text-primary">Acesso restrito</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Esta área é exclusiva para administradores.</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="container mx-auto px-4 py-12 md:px-6">
+    <AdminShell>
+      <div className="mx-auto max-w-6xl">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Administração</p>
@@ -255,7 +247,8 @@ function AdminDashboard() {
           </table>
         </div>
       </section>
-    </div>
+      </div>
+    </AdminShell>
   );
 }
 

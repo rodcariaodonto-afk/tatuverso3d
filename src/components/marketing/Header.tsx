@@ -2,10 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { ShoppingBag, User } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { useAuth } from "@/lib/auth-context";
+import { useCartDrawer } from "@/components/cart/CartDrawer";
 
 export function Header() {
   const count = useCart((s) => s.items.reduce((a, i) => a + i.quantity, 0));
   const { user } = useAuth();
+  const openDrawer = useCartDrawer((s) => s.setOpen);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
@@ -39,8 +41,8 @@ export function Header() {
           >
             <User className="h-5 w-5" />
           </Link>
-          <Link
-            to="/carrinho"
+          <button
+            onClick={() => openDrawer(true)}
             className="relative rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-primary"
             aria-label="Carrinho"
           >
@@ -50,7 +52,7 @@ export function Header() {
                 {count}
               </span>
             )}
-          </Link>
+          </button>
         </div>
       </div>
     </header>

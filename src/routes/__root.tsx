@@ -12,6 +12,8 @@ import appCss from "../styles.css?url";
 import { AuthProvider } from "@/lib/auth-context";
 import { Header } from "@/components/marketing/Header";
 import { Footer } from "@/components/marketing/Footer";
+import { CartDrawer } from "@/components/cart/CartDrawer";
+import { Toaster } from "sonner";
 
 function NotFoundComponent() {
   return (
@@ -128,6 +130,8 @@ function RootComponent() {
           </main>
           <Footer />
         </div>
+        <CartDrawer />
+        <Toaster position="top-right" richColors />
       </AuthProvider>
     </QueryClientProvider>
   );

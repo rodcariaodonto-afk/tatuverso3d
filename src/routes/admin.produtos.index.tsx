@@ -1,10 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus, Search } from "lucide-react";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { formatBRL } from "@/lib/cart-store";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/produtos/")({
   head: () => ({ meta: [{ title: "Admin · Cafés — Cafezeira" }] }),
@@ -45,13 +47,41 @@ function AdminProductsList() {
     },
   });
 
-  if (!user) return null;
-  if (isAdmin === false) {
-    return <div className="container mx-auto py-20 text-center text-sm text-muted-foreground">Acesso restrito.</div>;
-  }
+  const qc = useQueryClient();
+
+  const duplicate = async (id: string) => {
+    const { data: src } = await supabase.from("products").select("*, product_variants(*)").eq("id", id).maybeSingle();
+    if (!src) return toast.error("Produto não encontrado");
+    const { product_variants, id: _id, created_at, updated_at, published_at, ...rest } = src as any;
+    const { data: created, error } = await supabase
+      .from("products")
+      .insert({ ...rest, name: `${rest.name} (cópia)`, slug: `${rest.slug}-copia-${Date.now().toString(36)}`, status: "draft" })
+      .select("id")
+      .single();
+    if (error || !created) return toast.error(error?.message ?? "Erro ao duplicar");
+    if (product_variants?.length) {
+      await supabase.from("product_variants").insert(
+        product_variants.map((v: any) => {
+          const { id, created_at, updated_at, ...vrest } = v;
+          return { ...vrest, product_id: created.id };
+        }),
+      );
+    }
+    toast.success("Café duplicado");
+    qc.invalidateQueries({ queryKey: ["admin-products"] });
+  };
+
+  const archive = async (id: string, name: string) => {
+    if (!confirm(`Arquivar "${name}"? Ele deixará de aparecer no catálogo.`)) return;
+    const { error } = await supabase.from("products").update({ status: "archived" }).eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Arquivado");
+    qc.invalidateQueries({ queryKey: ["admin-products"] });
+  };
 
   return (
-    <div className="container mx-auto px-4 py-12 md:px-6">
+    <AdminShell>
+      <div className="mx-auto max-w-6xl">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Administração</p>
@@ -104,10 +134,10 @@ function AdminProductsList() {
                 <td className="px-4 py-3">
                   <span className="rounded-full bg-[var(--sand)] px-2 py-0.5 text-xs">{p.status}</span>
                 </td>
-                <td className="px-4 py-3 text-right">
-                  <Link to="/admin/produtos/$id/editar" params={{ id: p.id }} className="text-xs font-semibold text-primary hover:underline">
-                    Editar →
-                  </Link>
+                <td className="px-4 py-3 text-right space-x-3 whitespace-nowrap">
+                  <Link to="/admin/produtos/$id/editar" params={{ id: p.id }} className="text-xs font-semibold text-primary hover:underline">Editar</Link>
+                  <button onClick={() => duplicate(p.id)} className="text-xs font-semibold text-foreground/70 hover:underline">Duplicar</button>
+                  <button onClick={() => archive(p.id, p.name)} className="text-xs font-semibold text-destructive hover:underline">Arquivar</button>
                 </td>
               </tr>
             ))}
@@ -117,6 +147,7 @@ function AdminProductsList() {
           </tbody>
         </table>
       </div>
-    </div>
+      </div>
+    </AdminShell>
   );
 }

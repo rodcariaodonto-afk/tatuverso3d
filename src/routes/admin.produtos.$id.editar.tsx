@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
+import { AdminShell } from "@/components/admin/AdminShell";
 import { ProductForm } from "@/components/admin/ProductForm";
 
 export const Route = createFileRoute("/admin/produtos/$id/editar")({
@@ -30,7 +31,7 @@ function EditProductPage() {
   if (!user) return null;
 
   return (
-    <div className="container mx-auto px-4 py-12 md:px-6">
+    <AdminShell><div className="mx-auto max-w-5xl">
       <Link to="/admin/produtos" className="inline-flex items-center gap-1 text-xs uppercase tracking-wider text-muted-foreground hover:text-primary">
         <ArrowLeft className="h-3 w-3" /> Voltar
       </Link>
@@ -38,6 +39,6 @@ function EditProductPage() {
       <div className="gold-divider mt-3 mb-8" />
 
       {producerId && <ProductForm productId={id} producerId={producerId} />}
-    </div>
+    </div></AdminShell>
   );
 }

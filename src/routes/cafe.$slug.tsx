@@ -5,6 +5,7 @@ import { ArrowLeft, Coffee, Leaf, Mountain, Star, Award, ShoppingBag } from "luc
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { GRIND_LABEL, formatBRL, useCart, type GrindOption } from "@/lib/cart-store";
+import { useCartDrawer } from "@/components/cart/CartDrawer";
 
 export const Route = createFileRoute("/cafe/$slug")({
   component: ProductPage,
@@ -57,6 +58,7 @@ function SensoryBar({ label, value }: { label: string; value: number | null }) {
 function ProductPage() {
   const { slug } = Route.useParams();
   const add = useCart((s) => s.add);
+  const openCart = useCartDrawer((s) => s.setOpen);
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", slug],
@@ -145,6 +147,7 @@ function ProductPage() {
       weight_grams: selectedVariant.weight_grams,
     });
     toast.success("Adicionado ao carrinho", { description: `${qty}x ${product.name}` });
+    openCart(true);
   };
 
   return (
