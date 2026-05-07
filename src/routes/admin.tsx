@@ -167,7 +167,7 @@ function AdminDashboard() {
                   <td className="px-4 py-3"><span className="rounded-full bg-[var(--sand)] px-2 py-0.5 text-xs">{p.status}</span></td>
                   <td className="px-4 py-3 text-right">
                     <button onClick={() => setProductStatus(p.id, "active")} className="mr-2 text-xs font-semibold text-[var(--farm)] hover:underline">Publicar</button>
-                    <button onClick={() => setProductStatus(p.id, "paused")} className="text-xs font-semibold text-muted-foreground hover:underline">Pausar</button>
+                    <button onClick={() => setProductStatus(p.id, "draft")} className="text-xs font-semibold text-muted-foreground hover:underline">Pausar</button>
                   </td>
                 </tr>
               ))}
