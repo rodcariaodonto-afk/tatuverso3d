@@ -9,19 +9,43 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VenderNaPlataformaRouteImport } from './routes/vender-na-plataforma'
+import { Route as TermosRouteImport } from './routes/termos'
+import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CarrinhoRouteImport } from './routes/carrinho'
 import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as AssinaturaRouteImport } from './routes/assinatura'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProdutoresIndexRouteImport } from './routes/produtores.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ProdutoresSlugRouteImport } from './routes/produtores.$slug'
 import { Route as CafeSlugRouteImport } from './routes/cafe.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
+const VenderNaPlataformaRoute = VenderNaPlataformaRouteImport.update({
+  id: '/vender-na-plataforma',
+  path: '/vender-na-plataforma',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -32,6 +56,16 @@ const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   path: '/recuperar-senha',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuizRoute = QuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MinhaContaRoute = MinhaContaRouteImport.update({
   id: '/minha-conta',
   path: '/minha-conta',
@@ -40,6 +74,11 @@ const MinhaContaRoute = MinhaContaRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -62,6 +101,11 @@ const CadastroRoute = CadastroRouteImport.update({
   path: '/cadastro',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssinaturaRoute = AssinaturaRouteImport.update({
+  id: '/assinatura',
+  path: '/assinatura',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -70,6 +114,11 @@ const IndexRoute = IndexRouteImport.update({
 const ProdutoresIndexRoute = ProdutoresIndexRouteImport.update({
   id: '/produtores/',
   path: '/produtores/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProdutoresSlugRoute = ProdutoresSlugRouteImport.update({
@@ -82,112 +131,201 @@ const CafeSlugRoute = CafeSlugRouteImport.update({
   path: '/cafe/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assinatura': typeof AssinaturaRoute
   '/cadastro': typeof CadastroRoute
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
+  '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
   '/minha-conta': typeof MinhaContaRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
+  '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assinatura': typeof AssinaturaRoute
   '/cadastro': typeof CadastroRoute
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
+  '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
   '/minha-conta': typeof MinhaContaRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
+  '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/produtores': typeof ProdutoresIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/assinatura': typeof AssinaturaRoute
   '/cadastro': typeof CadastroRoute
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
+  '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
   '/minha-conta': typeof MinhaContaRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/termos': typeof TermosRoute
+  '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/assinatura'
     | '/cadastro'
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
+    | '/contato'
     | '/login'
     | '/minha-conta'
+    | '/privacidade'
+    | '/quiz'
     | '/recuperar-senha'
     | '/reset-password'
+    | '/sobre'
+    | '/termos'
+    | '/vender-na-plataforma'
+    | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
+    | '/blog/'
     | '/produtores/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/assinatura'
     | '/cadastro'
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
+    | '/contato'
     | '/login'
     | '/minha-conta'
+    | '/privacidade'
+    | '/quiz'
     | '/recuperar-senha'
     | '/reset-password'
+    | '/sobre'
+    | '/termos'
+    | '/vender-na-plataforma'
+    | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
+    | '/blog'
     | '/produtores'
   id:
     | '__root__'
     | '/'
+    | '/assinatura'
     | '/cadastro'
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
+    | '/contato'
     | '/login'
     | '/minha-conta'
+    | '/privacidade'
+    | '/quiz'
     | '/recuperar-senha'
     | '/reset-password'
+    | '/sobre'
+    | '/termos'
+    | '/vender-na-plataforma'
+    | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
+    | '/blog/'
     | '/produtores/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssinaturaRoute: typeof AssinaturaRoute
   CadastroRoute: typeof CadastroRoute
   CarrinhoRoute: typeof CarrinhoRoute
   CatalogoRoute: typeof CatalogoRoute
   CheckoutRoute: typeof CheckoutRoute
+  ContatoRoute: typeof ContatoRoute
   LoginRoute: typeof LoginRoute
   MinhaContaRoute: typeof MinhaContaRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
+  QuizRoute: typeof QuizRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SobreRoute: typeof SobreRoute
+  TermosRoute: typeof TermosRoute
+  VenderNaPlataformaRoute: typeof VenderNaPlataformaRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   CafeSlugRoute: typeof CafeSlugRoute
   ProdutoresSlugRoute: typeof ProdutoresSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   ProdutoresIndexRoute: typeof ProdutoresIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vender-na-plataforma': {
+      id: '/vender-na-plataforma'
+      path: '/vender-na-plataforma'
+      fullPath: '/vender-na-plataforma'
+      preLoaderRoute: typeof VenderNaPlataformaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -202,6 +340,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecuperarSenhaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quiz': {
+      id: '/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/minha-conta': {
       id: '/minha-conta'
       path: '/minha-conta'
@@ -214,6 +366,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -244,6 +403,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CadastroRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assinatura': {
+      id: '/assinatura'
+      path: '/assinatura'
+      fullPath: '/assinatura'
+      preLoaderRoute: typeof AssinaturaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -256,6 +422,13 @@ declare module '@tanstack/react-router' {
       path: '/produtores'
       fullPath: '/produtores/'
       preLoaderRoute: typeof ProdutoresIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/produtores/$slug': {
@@ -272,21 +445,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CafeSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssinaturaRoute: AssinaturaRoute,
   CadastroRoute: CadastroRoute,
   CarrinhoRoute: CarrinhoRoute,
   CatalogoRoute: CatalogoRoute,
   CheckoutRoute: CheckoutRoute,
+  ContatoRoute: ContatoRoute,
   LoginRoute: LoginRoute,
   MinhaContaRoute: MinhaContaRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
+  QuizRoute: QuizRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SobreRoute: SobreRoute,
+  TermosRoute: TermosRoute,
+  VenderNaPlataformaRoute: VenderNaPlataformaRoute,
+  BlogSlugRoute: BlogSlugRoute,
   CafeSlugRoute: CafeSlugRoute,
   ProdutoresSlugRoute: ProdutoresSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
   ProdutoresIndexRoute: ProdutoresIndexRoute,
 }
 export const routeTree = rootRouteImport
