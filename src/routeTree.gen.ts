@@ -16,6 +16,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as ProdutorRouteImport } from './routes/produtor'
+import { Route as PrivateLabelRouteImport } from './routes/private-label'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
 import { Route as LoginRouteImport } from './routes/login'
@@ -66,6 +67,11 @@ const QuizRoute = QuizRouteImport.update({
 const ProdutorRoute = ProdutorRouteImport.update({
   id: '/produtor',
   path: '/produtor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivateLabelRoute = PrivateLabelRouteImport.update({
+  id: '/private-label',
+  path: '/private-label',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
@@ -161,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/private-label': typeof PrivateLabelRoute
   '/produtor': typeof ProdutorRoute
   '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
@@ -186,6 +193,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/private-label': typeof PrivateLabelRoute
   '/produtor': typeof ProdutorRoute
   '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/private-label': typeof PrivateLabelRoute
   '/produtor': typeof ProdutorRoute
   '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
@@ -239,6 +248,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/minha-conta'
     | '/privacidade'
+    | '/private-label'
     | '/produtor'
     | '/quiz'
     | '/recuperar-senha'
@@ -264,6 +274,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/minha-conta'
     | '/privacidade'
+    | '/private-label'
     | '/produtor'
     | '/quiz'
     | '/recuperar-senha'
@@ -289,6 +300,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/minha-conta'
     | '/privacidade'
+    | '/private-label'
     | '/produtor'
     | '/quiz'
     | '/recuperar-senha'
@@ -315,6 +327,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MinhaContaRoute: typeof MinhaContaRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
+  PrivateLabelRoute: typeof PrivateLabelRoute
   ProdutorRoute: typeof ProdutorRoute
   QuizRoute: typeof QuizRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
@@ -378,6 +391,13 @@ declare module '@tanstack/react-router' {
       path: '/produtor'
       fullPath: '/produtor'
       preLoaderRoute: typeof ProdutorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/private-label': {
+      id: '/private-label'
+      path: '/private-label'
+      fullPath: '/private-label'
+      preLoaderRoute: typeof PrivateLabelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacidade': {
@@ -507,6 +527,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MinhaContaRoute: MinhaContaRoute,
   PrivacidadeRoute: PrivacidadeRoute,
+  PrivateLabelRoute: PrivateLabelRoute,
   ProdutorRoute: ProdutorRoute,
   QuizRoute: QuizRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
@@ -523,3 +544,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
