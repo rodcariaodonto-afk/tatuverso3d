@@ -334,7 +334,7 @@ function CatalogPage() {
                     return (
                       <button
                         key={page}
-                        onClick={() => navigate({ search: (p) => ({ ...p, page }) })}
+                        onClick={() => navigate({ search: (p: typeof search) => ({ ...p, page }) })}
                         className={`h-9 min-w-9 rounded-md px-3 text-sm font-medium transition ${
                           active
                             ? "bg-primary text-primary-foreground"
