@@ -87,7 +87,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         {NAV.map((item) => {
           const active = item.exact ? path === item.to : path.startsWith(item.to);
           const Icon = item.icon;
-          if (item.soon) {
+          if ((item as any).soon) {
             return (
               <div
                 key={item.to}
