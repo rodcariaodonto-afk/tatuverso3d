@@ -33,6 +33,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ProdutoresSlugRouteImport } from './routes/produtores.$slug'
 import { Route as CafeSlugRouteImport } from './routes/cafe.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AdminVendasRouteImport } from './routes/admin.vendas'
 import { Route as AdminProdutosRouteImport } from './routes/admin.produtos'
 import { Route as AdminProdutoresRouteImport } from './routes/admin.produtores'
 import { Route as AdminPedidosRouteImport } from './routes/admin.pedidos'
@@ -163,6 +164,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminVendasRoute = AdminVendasRouteImport.update({
+  id: '/vendas',
+  path: '/vendas',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProdutosRoute = AdminProdutosRouteImport.update({
   id: '/produtos',
   path: '/produtos',
@@ -236,6 +242,7 @@ export interface FileRoutesByFullPath {
   '/admin/pedidos': typeof AdminPedidosRoute
   '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
+  '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
@@ -271,6 +278,7 @@ export interface FileRoutesByTo {
   '/admin/pedidos': typeof AdminPedidosRoute
   '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
+  '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
@@ -307,6 +315,7 @@ export interface FileRoutesById {
   '/admin/pedidos': typeof AdminPedidosRoute
   '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
+  '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
@@ -344,6 +353,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/produtores'
     | '/admin/produtos'
+    | '/admin/vendas'
     | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
@@ -379,6 +389,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/produtores'
     | '/admin/produtos'
+    | '/admin/vendas'
     | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
@@ -414,6 +425,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos'
     | '/admin/produtores'
     | '/admin/produtos'
+    | '/admin/vendas'
     | '/blog/$slug'
     | '/cafe/$slug'
     | '/produtores/$slug'
@@ -620,6 +632,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/vendas': {
+      id: '/admin/vendas'
+      path: '/vendas'
+      fullPath: '/admin/vendas'
+      preLoaderRoute: typeof AdminVendasRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/produtos': {
       id: '/admin/produtos'
       path: '/produtos'
@@ -708,6 +727,7 @@ interface AdminRouteChildren {
   AdminPedidosRoute: typeof AdminPedidosRoute
   AdminProdutoresRoute: typeof AdminProdutoresRoute
   AdminProdutosRoute: typeof AdminProdutosRouteWithChildren
+  AdminVendasRoute: typeof AdminVendasRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -718,6 +738,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPedidosRoute: AdminPedidosRoute,
   AdminProdutoresRoute: AdminProdutoresRoute,
   AdminProdutosRoute: AdminProdutosRouteWithChildren,
+  AdminVendasRoute: AdminVendasRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
