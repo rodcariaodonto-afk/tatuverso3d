@@ -41,8 +41,8 @@ export function Header() {
           >
             <User className="h-5 w-5" />
           </Link>
-          <Link
-            to="/carrinho"
+          <button
+            onClick={() => openDrawer(true)}
             className="relative rounded-full p-2 text-foreground/70 hover:bg-muted hover:text-primary"
             aria-label="Carrinho"
           >
@@ -52,7 +52,7 @@ export function Header() {
                 {count}
               </span>
             )}
-          </Link>
+          </button>
         </div>
       </div>
     </header>
