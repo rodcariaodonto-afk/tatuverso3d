@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus, Search } from "lucide-react";
@@ -10,8 +10,13 @@ import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/produtos")({
   head: () => ({ meta: [{ title: "Admin · Cafés — Cafezeira" }] }),
-  component: AdminProductsList,
+  component: AdminProductsLayout,
 });
+
+function AdminProductsLayout() {
+  const path = useRouterState({ select: (state) => state.location.pathname });
+  return path === "/admin/produtos" ? <AdminProductsList /> : <Outlet />;
+}
 
 function AdminProductsList() {
   const { user, loading } = useAuth();
