@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Package,
   ShoppingBag,
+  TrendingUp,
   Users,
   Sprout,
   Briefcase,
