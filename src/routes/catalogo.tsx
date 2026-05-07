@@ -99,7 +99,9 @@ function CatalogPage() {
   );
 
   const update = (patch: Partial<typeof search>) =>
-    navigate({ search: (prev) => ({ ...prev, ...patch, page: 1 }) });
+    navigate({
+      search: (prev: typeof search) => ({ ...prev, ...patch, page: 1 }),
+    });
 
   const toggleArray = (key: "cat" | "roast" | "origin", v: string) => {
     const cur = (search[key] ?? []) as string[];
