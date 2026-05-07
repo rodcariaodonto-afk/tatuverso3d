@@ -75,7 +75,22 @@ function ProductPage() {
     },
   });
 
-  const [grind, setGrind] = useState<GrindOption>("whole_bean");
+  type Variant = {
+    id: string;
+    weight_grams: number;
+    grind_option: GrindOption;
+    price: number;
+    compare_at_price: number | null;
+    stock_quantity: number;
+    is_default: boolean | null;
+  };
+  const variants = ((product?.product_variants ?? []) as Variant[]).slice().sort((a, b) => {
+    if (a.is_default && !b.is_default) return -1;
+    if (!a.is_default && b.is_default) return 1;
+    return a.weight_grams - b.weight_grams;
+  });
+
+  const [variantId, setVariantId] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
 
   if (isLoading) {
@@ -84,6 +99,9 @@ function ProductPage() {
     );
   }
   if (!product) return null;
+
+  const selectedVariant =
+    variants.find((v) => v.id === variantId) ?? variants[0] ?? null;
 
   const images = [
     ...(product.cover_url ? [{ url: product.cover_url, alt: product.name }] : []),
@@ -97,20 +115,34 @@ function ProductPage() {
     .map((n: any) => n.sensory_notes)
     .filter(Boolean) as Array<{ name: string; family: string | null }>;
 
-  const onSale = product.compare_at_price && Number(product.compare_at_price) > Number(product.price);
-  const grindOptions = (product.grind_options ?? ["whole_bean"]) as GrindOption[];
+  const displayPrice = selectedVariant ? Number(selectedVariant.price) : Number(product.price);
+  const displayCompare = selectedVariant
+    ? selectedVariant.compare_at_price != null
+      ? Number(selectedVariant.compare_at_price)
+      : null
+    : product.compare_at_price != null
+      ? Number(product.compare_at_price)
+      : null;
+  const displayWeight = selectedVariant?.weight_grams ?? product.weight_grams ?? 250;
+  const displayStock = selectedVariant?.stock_quantity ?? product.stock_quantity ?? 0;
+  const onSale = displayCompare != null && displayCompare > displayPrice;
 
   const handleAdd = () => {
+    if (!selectedVariant) {
+      toast.error("Selecione uma variante");
+      return;
+    }
     add({
+      variant_id: selectedVariant.id,
       product_id: product.id,
       slug: product.slug,
       name: product.name,
       producer_name: product.producers?.name ?? null,
       cover_url: product.cover_url,
-      unit_price: Number(product.price),
+      unit_price: displayPrice,
       quantity: qty,
-      grind_option: grind,
-      weight_grams: product.weight_grams,
+      grind_option: selectedVariant.grind_option,
+      weight_grams: selectedVariant.weight_grams,
     });
     toast.success("Adicionado ao carrinho", { description: `${qty}x ${product.name}` });
   };
