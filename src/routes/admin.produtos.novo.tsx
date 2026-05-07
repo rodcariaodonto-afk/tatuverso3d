@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
+import { AdminShell } from "@/components/admin/AdminShell";
 import { ProductForm } from "@/components/admin/ProductForm";
 
 export const Route = createFileRoute("/admin/produtos/novo")({
@@ -38,7 +39,7 @@ function NewProductPage() {
   if (!user) return null;
 
   return (
-    <div className="container mx-auto px-4 py-12 md:px-6">
+    <AdminShell><div className="mx-auto max-w-5xl">
       <Link to="/admin/produtos" className="inline-flex items-center gap-1 text-xs uppercase tracking-wider text-muted-foreground hover:text-primary">
         <ArrowLeft className="h-3 w-3" /> Voltar
       </Link>
@@ -55,6 +56,6 @@ function NewProductPage() {
       )}
 
       {producerId && <ProductForm producerId={producerId} />}
-    </div>
+    </div></AdminShell>
   );
 }
