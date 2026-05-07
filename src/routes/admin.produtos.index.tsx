@@ -47,6 +47,38 @@ function AdminProductsList() {
     },
   });
 
+  const qc = useQueryClient();
+
+  const duplicate = async (id: string) => {
+    const { data: src } = await supabase.from("products").select("*, product_variants(*)").eq("id", id).maybeSingle();
+    if (!src) return toast.error("Produto não encontrado");
+    const { product_variants, id: _id, created_at, updated_at, published_at, ...rest } = src as any;
+    const { data: created, error } = await supabase
+      .from("products")
+      .insert({ ...rest, name: `${rest.name} (cópia)`, slug: `${rest.slug}-copia-${Date.now().toString(36)}`, status: "draft" })
+      .select("id")
+      .single();
+    if (error || !created) return toast.error(error?.message ?? "Erro ao duplicar");
+    if (product_variants?.length) {
+      await supabase.from("product_variants").insert(
+        product_variants.map((v: any) => {
+          const { id, created_at, updated_at, ...vrest } = v;
+          return { ...vrest, product_id: created.id };
+        }),
+      );
+    }
+    toast.success("Café duplicado");
+    qc.invalidateQueries({ queryKey: ["admin-products"] });
+  };
+
+  const archive = async (id: string, name: string) => {
+    if (!confirm(`Arquivar "${name}"? Ele deixará de aparecer no catálogo.`)) return;
+    const { error } = await supabase.from("products").update({ status: "archived" }).eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Arquivado");
+    qc.invalidateQueries({ queryKey: ["admin-products"] });
+  };
+
   return (
     <AdminShell>
       <div className="mx-auto max-w-6xl">
