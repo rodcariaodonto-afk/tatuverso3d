@@ -262,6 +262,7 @@ export type Database = {
           id: string
           product_id: string
           quantity: number
+          variant_id: string | null
         }
         Insert: {
           cart_id: string
@@ -270,6 +271,7 @@ export type Database = {
           id?: string
           product_id: string
           quantity?: number
+          variant_id?: string | null
         }
         Update: {
           cart_id?: string
@@ -278,6 +280,7 @@ export type Database = {
           id?: string
           product_id?: string
           quantity?: number
+          variant_id?: string | null
         }
         Relationships: [
           {
@@ -292,6 +295,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cart_items_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
             referencedColumns: ["id"]
           },
         ]
@@ -519,6 +529,50 @@ export type Database = {
           },
         ]
       }
+      inventory_movements: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          movement_type: string
+          notes: string | null
+          quantity: number
+          reference_id: string | null
+          reference_type: string | null
+          variant_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          movement_type: string
+          notes?: string | null
+          quantity: number
+          reference_id?: string | null
+          reference_type?: string | null
+          variant_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          movement_type?: string
+          notes?: string | null
+          quantity?: number
+          reference_id?: string | null
+          reference_type?: string | null
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_movements_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           created_at: string
@@ -532,6 +586,7 @@ export type Database = {
           quantity: number
           total_price: number
           unit_price: number
+          variant_id: string | null
         }
         Insert: {
           created_at?: string
@@ -545,6 +600,7 @@ export type Database = {
           quantity: number
           total_price: number
           unit_price: number
+          variant_id?: string | null
         }
         Update: {
           created_at?: string
@@ -558,6 +614,7 @@ export type Database = {
           quantity?: number
           total_price?: number
           unit_price?: number
+          variant_id?: string | null
         }
         Relationships: [
           {
@@ -579,6 +636,51 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_status_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          from_status: Database["public"]["Enums"]["order_status"] | null
+          id: string
+          notes: string | null
+          order_id: string
+          to_status: Database["public"]["Enums"]["order_status"]
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["order_status"] | null
+          id?: string
+          notes?: string | null
+          order_id: string
+          to_status: Database["public"]["Enums"]["order_status"]
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["order_status"] | null
+          id?: string
+          notes?: string | null
+          order_id?: string
+          to_status?: Database["public"]["Enums"]["order_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_status_history_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
             referencedColumns: ["id"]
           },
         ]
@@ -681,6 +783,53 @@ export type Database = {
         }
         Relationships: []
       }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          method: string | null
+          order_id: string
+          provider: string
+          provider_payment_id: string | null
+          raw_payload: Json | null
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          method?: string | null
+          order_id: string
+          provider: string
+          provider_payment_id?: string | null
+          raw_payload?: Json | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          method?: string | null
+          order_id?: string
+          provider?: string
+          provider_payment_id?: string | null
+          raw_payload?: Json | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_settings: {
         Row: {
           key: string
@@ -752,6 +901,72 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      producer_applications: {
+        Row: {
+          admin_notes: string | null
+          applicant_user_id: string | null
+          brand_name: string
+          city: string | null
+          country: string | null
+          created_at: string
+          email: string
+          id: string
+          links: Json | null
+          message: string | null
+          monthly_volume_kg: number | null
+          operation_type: string | null
+          phone: string
+          responsible_name: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          state: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          applicant_user_id?: string | null
+          brand_name: string
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          links?: Json | null
+          message?: string | null
+          monthly_volume_kg?: number | null
+          operation_type?: string | null
+          phone: string
+          responsible_name: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          applicant_user_id?: string | null
+          brand_name?: string
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          links?: Json | null
+          message?: string | null
+          monthly_volume_kg?: number | null
+          operation_type?: string | null
+          phone?: string
+          responsible_name?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       producer_plans: {
         Row: {
@@ -978,6 +1193,56 @@ export type Database = {
             columns: ["sensory_note_id"]
             isOneToOne: false
             referencedRelation: "sensory_notes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_variants: {
+        Row: {
+          compare_at_price: number | null
+          created_at: string
+          grind_option: Database["public"]["Enums"]["grind_option"]
+          id: string
+          is_default: boolean | null
+          price: number
+          product_id: string
+          sku: string | null
+          stock_quantity: number
+          updated_at: string
+          weight_grams: number
+        }
+        Insert: {
+          compare_at_price?: number | null
+          created_at?: string
+          grind_option?: Database["public"]["Enums"]["grind_option"]
+          id?: string
+          is_default?: boolean | null
+          price: number
+          product_id: string
+          sku?: string | null
+          stock_quantity?: number
+          updated_at?: string
+          weight_grams: number
+        }
+        Update: {
+          compare_at_price?: number | null
+          created_at?: string
+          grind_option?: Database["public"]["Enums"]["grind_option"]
+          id?: string
+          is_default?: boolean | null
+          price?: number
+          product_id?: string
+          sku?: string | null
+          stock_quantity?: number
+          updated_at?: string
+          weight_grams?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
@@ -1286,6 +1551,59 @@ export type Database = {
           slug?: string
         }
         Relationships: []
+      }
+      shipments: {
+        Row: {
+          carrier: string | null
+          created_at: string
+          delivered_at: string | null
+          estimated_delivery_at: string | null
+          id: string
+          order_id: string
+          service: string | null
+          shipped_at: string | null
+          status: string | null
+          tracking_code: string | null
+          tracking_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          carrier?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          estimated_delivery_at?: string | null
+          id?: string
+          order_id: string
+          service?: string | null
+          shipped_at?: string | null
+          status?: string | null
+          tracking_code?: string | null
+          tracking_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          carrier?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          estimated_delivery_at?: string | null
+          id?: string
+          order_id?: string
+          service?: string | null
+          shipped_at?: string | null
+          status?: string | null
+          tracking_code?: string | null
+          tracking_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipments_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscription_plans: {
         Row: {
