@@ -64,7 +64,7 @@ function ProductPage() {
       const { data, error } = await supabase
         .from("products")
         .select(
-          "*, producers(id, name, slug, region, state, country, logo_url), product_sensory_notes(sensory_notes(name, family)), product_images(url, alt, sort_order)",
+          "*, producers(id, name, slug, region, state, country, logo_url), product_sensory_notes(sensory_notes(name, family)), product_images(url, alt, sort_order), product_variants(id, weight_grams, grind_option, price, compare_at_price, stock_quantity, is_default)",
         )
         .eq("slug", slug)
         .eq("status", "active")
@@ -75,7 +75,22 @@ function ProductPage() {
     },
   });
 
-  const [grind, setGrind] = useState<GrindOption>("whole_bean");
+  type Variant = {
+    id: string;
+    weight_grams: number;
+    grind_option: GrindOption;
+    price: number;
+    compare_at_price: number | null;
+    stock_quantity: number;
+    is_default: boolean | null;
+  };
+  const variants = ((product?.product_variants ?? []) as Variant[]).slice().sort((a, b) => {
+    if (a.is_default && !b.is_default) return -1;
+    if (!a.is_default && b.is_default) return 1;
+    return a.weight_grams - b.weight_grams;
+  });
+
+  const [variantId, setVariantId] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
 
   if (isLoading) {
@@ -84,6 +99,9 @@ function ProductPage() {
     );
   }
   if (!product) return null;
+
+  const selectedVariant =
+    variants.find((v) => v.id === variantId) ?? variants[0] ?? null;
 
   const images = [
     ...(product.cover_url ? [{ url: product.cover_url, alt: product.name }] : []),
@@ -97,20 +115,34 @@ function ProductPage() {
     .map((n: any) => n.sensory_notes)
     .filter(Boolean) as Array<{ name: string; family: string | null }>;
 
-  const onSale = product.compare_at_price && Number(product.compare_at_price) > Number(product.price);
-  const grindOptions = (product.grind_options ?? ["whole_bean"]) as GrindOption[];
+  const displayPrice = selectedVariant ? Number(selectedVariant.price) : Number(product.price);
+  const displayCompare = selectedVariant
+    ? selectedVariant.compare_at_price != null
+      ? Number(selectedVariant.compare_at_price)
+      : null
+    : product.compare_at_price != null
+      ? Number(product.compare_at_price)
+      : null;
+  const displayWeight = selectedVariant?.weight_grams ?? product.weight_grams ?? 250;
+  const displayStock = selectedVariant?.stock_quantity ?? product.stock_quantity ?? 0;
+  const onSale = displayCompare != null && displayCompare > displayPrice;
 
   const handleAdd = () => {
+    if (!selectedVariant) {
+      toast.error("Selecione uma variante");
+      return;
+    }
     add({
+      variant_id: selectedVariant.id,
       product_id: product.id,
       slug: product.slug,
       name: product.name,
       producer_name: product.producers?.name ?? null,
       cover_url: product.cover_url,
-      unit_price: Number(product.price),
+      unit_price: displayPrice,
       quantity: qty,
-      grind_option: grind,
-      weight_grams: product.weight_grams,
+      grind_option: selectedVariant.grind_option,
+      weight_grams: selectedVariant.weight_grams,
     });
     toast.success("Adicionado ao carrinho", { description: `${qty}x ${product.name}` });
   };
@@ -214,37 +246,41 @@ function ProductPage() {
           {/* Buy box */}
           <div className="mt-8 rounded-xl border border-border bg-[var(--sand)] p-5">
             <div className="flex items-baseline gap-3">
-              {onSale && (
+              {onSale && displayCompare != null && (
                 <span className="text-sm text-muted-foreground line-through">
-                  {formatBRL(Number(product.compare_at_price))}
+                  {formatBRL(displayCompare)}
                 </span>
               )}
               <span className="font-display text-3xl font-semibold text-primary">
-                {formatBRL(Number(product.price))}
+                {formatBRL(displayPrice)}
               </span>
-              <span className="text-xs text-muted-foreground">
-                / {product.weight_grams ?? 250}g
-              </span>
+              <span className="text-xs text-muted-foreground">/ {displayWeight}g</span>
             </div>
 
-            <div className="mt-5">
-              <p className="eyebrow">Moagem</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {grindOptions.map((g) => (
-                  <button
-                    key={g}
-                    onClick={() => setGrind(g)}
-                    className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-                      grind === g
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-border bg-card text-foreground/80 hover:border-primary"
-                    }`}
-                  >
-                    {GRIND_LABEL[g]}
-                  </button>
-                ))}
+            {variants.length > 0 && (
+              <div className="mt-5">
+                <p className="eyebrow">Variante</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {variants.map((v) => {
+                    const active = (selectedVariant?.id ?? variants[0]?.id) === v.id;
+                    return (
+                      <button
+                        key={v.id}
+                        onClick={() => setVariantId(v.id)}
+                        disabled={v.stock_quantity <= 0}
+                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition disabled:opacity-40 ${
+                          active
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border bg-card text-foreground/80 hover:border-primary"
+                        }`}
+                      >
+                        {v.weight_grams}g · {GRIND_LABEL[v.grind_option]}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="mt-5 flex items-center gap-3">
               <div className="flex items-center rounded-full border border-border bg-card">
@@ -254,11 +290,11 @@ function ProductPage() {
               </div>
               <button
                 onClick={handleAdd}
-                disabled={product.stock_quantity <= 0}
+                disabled={displayStock <= 0}
                 className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition hover:bg-primary/90 disabled:opacity-50"
               >
                 <ShoppingBag className="h-4 w-4" />
-                {product.stock_quantity > 0 ? "Adicionar ao carrinho" : "Esgotado"}
+                {displayStock > 0 ? "Adicionar ao carrinho" : "Esgotado"}
               </button>
             </div>
 
