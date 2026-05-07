@@ -1,9 +1,31 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { ProductCard, type ProductCardData } from "@/components/catalog/ProductCard";
+import { Search, SlidersHorizontal, X } from "lucide-react";
+import { z } from "zod";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import {
+  CatalogProductCard,
+} from "@/components/catalog/ProductCard";
+import {
+  applyCatalogFilters,
+  useCatalogProducts,
+  useCategories,
+} from "@/hooks/useProducts";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const searchSchema = z.object({
+  q: fallback(z.string(), "").default(""),
+  cat: fallback(z.array(z.string()), []).default([]),
+  roast: fallback(z.array(z.string()), []).default([]),
+  origin: fallback(z.array(z.string()), []).default([]),
+  pmax: fallback(z.number().nullable(), null).default(null),
+  sub: fallback(z.boolean(), false).default(false),
+  sort: fallback(
+    z.enum(["featured", "price_asc", "price_desc", "score_desc", "newest"]),
+    "featured",
+  ).default("featured"),
+  page: fallback(z.number().int().positive(), 1).default(1),
+});
 
 export const Route = createFileRoute("/catalogo")({
   head: () => ({
@@ -18,6 +40,7 @@ export const Route = createFileRoute("/catalogo")({
       { property: "og:description", content: "Cafés especiais com origem, curadoria e torra fresca." },
     ],
   }),
+  validateSearch: zodValidator(searchSchema),
   component: CatalogPage,
 });
 
@@ -35,79 +58,194 @@ const SORTS = [
   { value: "price_desc", label: "Maior preço" },
   { value: "score_desc", label: "Maior pontuação" },
   { value: "newest", label: "Mais recentes" },
-];
+] as const;
+
+const PAGE_SIZE = 12;
 
 function CatalogPage() {
-  const [search, setSearch] = useState("");
-  const [roast, setRoast] = useState<string[]>([]);
-  const [sort, setSort] = useState("featured");
-  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: "/catalogo" });
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const { data: products, isLoading } = useQuery({
-    queryKey: ["catalog"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select(
-          "id, slug, name, short_description, price, compare_at_price, cover_url, score, badges, origin_region, origin_country, roast_level, is_featured, created_at, producers(name)",
-        )
-        .eq("status", "active");
-      if (error) throw error;
-      return data as unknown as (ProductCardData & {
-        roast_level: string | null;
-        is_featured: boolean;
-        created_at: string;
-      })[];
-    },
-  });
+  const { data: products, isLoading } = useCatalogProducts();
+  const { data: categories } = useCategories();
 
-  const { data: categories } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("categories")
-        .select("id, name, slug")
-        .order("sort_order");
-      if (error) throw error;
-      return data;
-    },
-  });
+  const origins = useMemo(() => {
+    const set = new Set<string>();
+    (products ?? []).forEach((p) => {
+      if (p.origin_region) set.add(p.origin_region);
+    });
+    return Array.from(set).sort();
+  }, [products]);
 
   const filtered = useMemo(() => {
-    let list = (products ?? []).slice();
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.short_description?.toLowerCase().includes(q) ||
-          p.producers?.name.toLowerCase().includes(q),
-      );
-    }
-    if (roast.length) list = list.filter((p) => p.roast_level && roast.includes(p.roast_level));
-    if (maxPrice) list = list.filter((p) => p.price <= maxPrice);
+    if (!products) return [];
+    return applyCatalogFilters(products, {
+      search: search.q,
+      categoryIds: search.cat,
+      roastLevels: search.roast,
+      origins: search.origin,
+      priceMax: search.pmax ?? undefined,
+      subscriptionOnly: search.sub,
+      sort: search.sort,
+    });
+  }, [products, search]);
 
-    switch (sort) {
-      case "price_asc":
-        list.sort((a, b) => a.price - b.price);
-        break;
-      case "price_desc":
-        list.sort((a, b) => b.price - a.price);
-        break;
-      case "score_desc":
-        list.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
-        break;
-      case "newest":
-        list.sort((a, b) => (b.created_at > a.created_at ? 1 : -1));
-        break;
-      default:
-        list.sort((a, b) => Number(b.is_featured) - Number(a.is_featured));
-    }
-    return list;
-  }, [products, search, roast, maxPrice, sort]);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(search.page, totalPages);
+  const pageItems = filtered.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
 
-  const toggleRoast = (v: string) =>
-    setRoast((prev) => (prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v]));
+  const update = (patch: Partial<typeof search>) =>
+    navigate({ search: (prev) => ({ ...prev, ...patch, page: 1 }) });
+
+  const toggleArray = (key: "cat" | "roast" | "origin", v: string) => {
+    const cur = (search[key] ?? []) as string[];
+    update({ [key]: cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v] } as any);
+  };
+
+  const clearAll = () =>
+    navigate({
+      search: {
+        q: "",
+        cat: [],
+        roast: [],
+        origin: [],
+        pmax: null,
+        sub: false,
+        sort: "featured",
+        page: 1,
+      },
+    });
+
+  const activeCount =
+    (search.q ? 1 : 0) +
+    search.cat.length +
+    search.roast.length +
+    search.origin.length +
+    (search.pmax ? 1 : 0) +
+    (search.sub ? 1 : 0);
+
+  const Filters = (
+    <div className="space-y-8">
+      <div>
+        <label className="eyebrow">Buscar</label>
+        <div className="relative mt-2">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            value={search.q}
+            onChange={(e) => update({ q: e.target.value })}
+            placeholder="Café, fazenda, região..."
+            className="w-full rounded-md border border-border bg-card py-2 pl-9 pr-3 text-sm focus:border-accent focus:outline-none"
+          />
+        </div>
+      </div>
+
+      {categories && categories.length > 0 && (
+        <div>
+          <p className="eyebrow">Categorias</p>
+          <div className="mt-3 space-y-2">
+            {categories.map((c) => (
+              <label key={c.id} className="flex items-center gap-2 text-sm text-foreground/80">
+                <input
+                  type="checkbox"
+                  checked={search.cat.includes(c.id)}
+                  onChange={() => toggleArray("cat", c.id)}
+                  className="h-4 w-4 rounded border-border accent-[var(--gold)]"
+                />
+                {c.name}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div>
+        <p className="eyebrow">Torra</p>
+        <div className="mt-3 space-y-2">
+          {ROAST_LEVELS.map((r) => (
+            <label key={r.value} className="flex items-center gap-2 text-sm text-foreground/80">
+              <input
+                type="checkbox"
+                checked={search.roast.includes(r.value)}
+                onChange={() => toggleArray("roast", r.value)}
+                className="h-4 w-4 rounded border-border accent-[var(--gold)]"
+              />
+              {r.label}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {origins.length > 0 && (
+        <div>
+          <p className="eyebrow">Origem</p>
+          <div className="mt-3 space-y-2 max-h-48 overflow-auto pr-1">
+            {origins.map((o) => (
+              <label key={o} className="flex items-center gap-2 text-sm text-foreground/80">
+                <input
+                  type="checkbox"
+                  checked={search.origin.includes(o)}
+                  onChange={() => toggleArray("origin", o)}
+                  className="h-4 w-4 rounded border-border accent-[var(--gold)]"
+                />
+                {o}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div>
+        <p className="eyebrow">Preço máximo</p>
+        <div className="mt-3 space-y-2">
+          {[60, 90, 120, 200].map((v) => (
+            <label key={v} className="flex items-center gap-2 text-sm text-foreground/80">
+              <input
+                type="radio"
+                name="maxPrice"
+                checked={search.pmax === v}
+                onChange={() => update({ pmax: v })}
+                className="h-4 w-4 accent-[var(--gold)]"
+              />
+              Até R$ {v}
+            </label>
+          ))}
+          {search.pmax && (
+            <button
+              onClick={() => update({ pmax: null })}
+              className="text-xs text-muted-foreground underline-offset-4 hover:underline"
+            >
+              Limpar preço
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div>
+        <label className="flex items-center gap-2 text-sm text-foreground/80">
+          <input
+            type="checkbox"
+            checked={search.sub}
+            onChange={(e) => update({ sub: e.target.checked })}
+            className="h-4 w-4 rounded border-border accent-[var(--gold)]"
+          />
+          Disponível para assinatura
+        </label>
+      </div>
+
+      {activeCount > 0 && (
+        <button
+          onClick={clearAll}
+          className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-3 py-2 text-xs font-medium text-foreground hover:border-accent"
+        >
+          <X className="h-3 w-3" /> Limpar todos os filtros ({activeCount})
+        </button>
+      )}
+    </div>
+  );
 
   return (
     <div className="container mx-auto px-4 py-12 md:px-6">
@@ -116,93 +254,35 @@ function CatalogPage() {
         <h1 className="mt-2 font-display text-4xl md:text-5xl">Cafés especiais</h1>
         <div className="gold-divider mt-3" />
         <p className="mt-4 max-w-2xl text-sm text-muted-foreground">
-          Microlotes selecionados de fazendas e torrefações da América Latina. Use os filtros para encontrar
-          o perfil sensorial perfeito para você.
+          Microlotes selecionados de fazendas e torrefações da América Latina.
+          Use os filtros para encontrar o perfil sensorial perfeito para você.
         </p>
       </header>
 
       <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
-        {/* SIDEBAR */}
-        <aside className="space-y-8">
-          <div>
-            <label className="eyebrow">Buscar</label>
-            <div className="relative mt-2">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Café, fazenda, região..."
-                className="w-full rounded-md border border-border bg-card py-2 pl-9 pr-3 text-sm focus:border-accent focus:outline-none"
-              />
-            </div>
-          </div>
+        <aside className="hidden lg:block">{Filters}</aside>
 
-          <div>
-            <p className="eyebrow">Torra</p>
-            <div className="mt-3 space-y-2">
-              {ROAST_LEVELS.map((r) => (
-                <label key={r.value} className="flex items-center gap-2 text-sm text-foreground/80">
-                  <input
-                    type="checkbox"
-                    checked={roast.includes(r.value)}
-                    onChange={() => toggleRoast(r.value)}
-                    className="h-4 w-4 rounded border-border accent-[var(--gold)]"
-                  />
-                  {r.label}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="eyebrow">Preço máximo</p>
-            <div className="mt-3 space-y-2">
-              {[60, 90, 120, 200].map((v) => (
-                <label key={v} className="flex items-center gap-2 text-sm text-foreground/80">
-                  <input
-                    type="radio"
-                    name="maxPrice"
-                    checked={maxPrice === v}
-                    onChange={() => setMaxPrice(v)}
-                    className="h-4 w-4 accent-[var(--gold)]"
-                  />
-                  Até R$ {v}
-                </label>
-              ))}
-              <button
-                onClick={() => setMaxPrice(null)}
-                className="text-xs text-muted-foreground underline-offset-4 hover:underline"
-              >
-                Limpar preço
-              </button>
-            </div>
-          </div>
-
-          {categories && categories.length > 0 && (
-            <div>
-              <p className="eyebrow">Categorias</p>
-              <ul className="mt-3 space-y-1 text-sm">
-                {categories.map((c) => (
-                  <li key={c.id} className="text-foreground/70">
-                    {c.name}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </aside>
-
-        {/* RESULTS */}
         <section>
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
-            <p className="text-sm text-muted-foreground">
-              {isLoading ? "Carregando..." : `${filtered.length} cafés encontrados`}
-            </p>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setDrawerOpen(true)}
+                className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-sm lg:hidden"
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                Filtros {activeCount > 0 && `(${activeCount})`}
+              </button>
+              <p className="text-sm text-muted-foreground">
+                {isLoading ? "Carregando..." : `${filtered.length} cafés`}
+              </p>
+            </div>
             <div className="flex items-center gap-2">
-              <label className="text-xs uppercase tracking-wider text-muted-foreground">Ordenar</label>
+              <label className="text-xs uppercase tracking-wider text-muted-foreground">
+                Ordenar
+              </label>
               <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
+                value={search.sort}
+                onChange={(e) => update({ sort: e.target.value as any })}
                 className="rounded-md border border-border bg-card px-3 py-1.5 text-sm focus:border-accent focus:outline-none"
               >
                 {SORTS.map((s) => (
@@ -214,20 +294,87 @@ function CatalogPage() {
             </div>
           </div>
 
-          {filtered.length === 0 && !isLoading ? (
-            <div className="mt-16 rounded-lg border border-dashed border-border py-16 text-center">
-              <p className="font-display text-xl text-primary">Nenhum café encontrado</p>
-              <p className="mt-1 text-sm text-muted-foreground">Tente ajustar os filtros.</p>
-            </div>
-          ) : (
+          {isLoading ? (
             <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {filtered.map((p) => (
-                <ProductCard key={p.id} product={p} />
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="space-y-3">
+                  <Skeleton className="aspect-[4/5] w-full rounded-lg" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
               ))}
             </div>
+          ) : filtered.length === 0 ? (
+            <div className="mt-16 rounded-lg border border-dashed border-border py-16 text-center">
+              <p className="font-display text-xl text-primary">Nenhum café encontrado</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Tente ajustar os filtros.
+              </p>
+              <button
+                onClick={clearAll}
+                className="mt-4 inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-wider text-primary-foreground"
+              >
+                Limpar filtros
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                {pageItems.map((p) => (
+                  <CatalogProductCard key={p.id} product={p} />
+                ))}
+              </div>
+              {totalPages > 1 && (
+                <div className="mt-10 flex items-center justify-center gap-1">
+                  {Array.from({ length: totalPages }).map((_, i) => {
+                    const page = i + 1;
+                    const active = page === currentPage;
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => navigate({ search: (p) => ({ ...p, page }) })}
+                        className={`h-9 min-w-9 rounded-md px-3 text-sm font-medium transition ${
+                          active
+                            ? "bg-primary text-primary-foreground"
+                            : "border border-border bg-card text-foreground hover:border-accent"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </>
           )}
         </section>
       </div>
+
+      {/* Mobile filter drawer */}
+      {drawerOpen && (
+        <div
+          className="fixed inset-0 z-50 lg:hidden"
+          onClick={() => setDrawerOpen(false)}
+        >
+          <div className="absolute inset-0 bg-black/40" />
+          <div
+            className="absolute right-0 top-0 h-full w-[85%] max-w-sm overflow-auto bg-background p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="font-display text-xl text-primary">Filtros</h2>
+              <button
+                onClick={() => setDrawerOpen(false)}
+                className="rounded-md p-1 hover:bg-muted"
+                aria-label="Fechar"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            {Filters}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
