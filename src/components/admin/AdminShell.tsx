@@ -20,12 +20,12 @@ import { useAuth } from "@/lib/auth-context";
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/produtos", label: "Cafés", icon: Package },
-  { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag, soon: true },
-  { to: "/admin/clientes", label: "Clientes", icon: Users, soon: true },
-  { to: "/admin/produtores", label: "Produtores", icon: Sprout, soon: true },
-  { to: "/admin/leads", label: "Leads B2B", icon: Briefcase, soon: true },
-  { to: "/admin/cupons", label: "Cupons", icon: TicketPercent, soon: true },
-  { to: "/admin/config", label: "Configurações", icon: Settings, soon: true },
+  { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
+  { to: "/admin/clientes", label: "Clientes", icon: Users },
+  { to: "/admin/produtores", label: "Produtores", icon: Sprout },
+  { to: "/admin/leads", label: "Leads B2B", icon: Briefcase },
+  { to: "/admin/cupons", label: "Cupons", icon: TicketPercent },
+  { to: "/admin/config", label: "Configurações", icon: Settings },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
@@ -87,7 +87,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         {NAV.map((item) => {
           const active = item.exact ? path === item.to : path.startsWith(item.to);
           const Icon = item.icon;
-          if (item.soon) {
+          if ((item as any).soon) {
             return (
               <div
                 key={item.to}
