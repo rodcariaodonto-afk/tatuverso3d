@@ -130,6 +130,8 @@ function RootComponent() {
           </main>
           <Footer />
         </div>
+        <CartDrawer />
+        <Toaster position="top-right" richColors />
       </AuthProvider>
     </QueryClientProvider>
   );
