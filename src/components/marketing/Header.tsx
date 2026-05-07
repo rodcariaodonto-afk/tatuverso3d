@@ -2,10 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { ShoppingBag, User } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { useAuth } from "@/lib/auth-context";
+import { useCartDrawer } from "@/components/cart/CartDrawer";
 
 export function Header() {
   const count = useCart((s) => s.items.reduce((a, i) => a + i.quantity, 0));
   const { user } = useAuth();
+  const openDrawer = useCartDrawer((s) => s.setOpen);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
