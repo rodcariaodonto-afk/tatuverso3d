@@ -20,9 +20,9 @@ export function Header() {
         <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
           <Link to="/catalogo" className="text-foreground/80 transition hover:text-primary">Catálogo</Link>
           <Link to="/assinatura" className="text-foreground/80 transition hover:text-primary">Assinatura</Link>
+          <Link to="/private-label" className="text-foreground/80 transition hover:text-primary">Café com sua marca</Link>
           <Link to="/produtores" className="text-foreground/80 transition hover:text-primary">Produtores</Link>
-          <Link to="/quiz" className="text-foreground/80 transition hover:text-primary">Quiz Sensorial</Link>
-          <Link to="/blog" className="text-foreground/80 transition hover:text-primary">Blog</Link>
+          <Link to="/quiz" className="text-foreground/80 transition hover:text-primary">Quiz</Link>
         </nav>
 
         <div className="flex items-center gap-2">

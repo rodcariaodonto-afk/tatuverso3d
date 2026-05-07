@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Coffee, Leaf, Award, Truck } from "lucide-react";
+import { ArrowRight, Coffee, Leaf, Award, Truck, Sparkles, Package as PackageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ProductCard, type ProductCardData } from "@/components/catalog/ProductCard";
 
@@ -53,12 +53,14 @@ function HomePage() {
 
         <div className="container mx-auto px-4 py-24 md:px-6 md:py-36">
           <div className="max-w-2xl">
-            <p className="eyebrow !text-[var(--gold)]">Cafés especiais · América Latina</p>
+            <p className="eyebrow !text-[var(--gold)]">Cafezeira · cafés especiais da Mantiqueira</p>
             <h1 className="mt-4 font-display text-4xl leading-[1.05] md:text-6xl lg:text-7xl">
-              Cafés especiais com <em className="text-[var(--gold)] not-italic">origem, curadoria</em> e torra fresca.
+              Compre, assine e crie cafés <em className="text-[var(--gold)] not-italic">com a sua marca</em>.
             </h1>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-white/80 md:text-lg">
-              Conectamos produtores excepcionais a apaixonados por café. Microlotes premiados, processos cuidados e entrega no auge do frescor.
+              A Cafezeira é especialista em cafés 100% arábica da Serra da Mantiqueira. Curadoria de
+              microlotes, assinatura mensal e private label para empresas que querem cafés
+              corporativos com identidade própria.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -68,18 +70,16 @@ function HomePage() {
                 Explorar cafés <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                to="/quiz"
+                to="/private-label"
                 className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-white/10"
               >
-                Fazer Quiz Sensorial
+                Café com sua marca
               </Link>
             </div>
-            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-xs uppercase tracking-wider text-white/60">
-              <span>+4 produtores selecionados</span>
-              <span>·</span>
-              <span>Microlotes pontuados 85+</span>
-              <span>·</span>
-              <span>Frete grátis acima de R$ 199</span>
+            <div className="mt-10 grid max-w-xl grid-cols-3 gap-4 text-xs uppercase tracking-wider text-white/60">
+              <div><span className="block font-display text-2xl text-[var(--gold)] normal-case tracking-normal">B2C</span>Cafés especiais</div>
+              <div><span className="block font-display text-2xl text-[var(--gold)] normal-case tracking-normal">Clube</span>Assinatura mensal</div>
+              <div><span className="block font-display text-2xl text-[var(--gold)] normal-case tracking-normal">B2B</span>Private label</div>
             </div>
           </div>
         </div>
@@ -152,6 +152,39 @@ function HomePage() {
                 className={`aspect-[3/4] w-full rounded-md object-cover ${i === 1 ? "translate-y-6" : ""}`}
               />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PRIVATE LABEL B2B */}
+      <section className="bg-[var(--cream)]">
+        <div className="container mx-auto grid items-center gap-12 px-4 py-20 md:grid-cols-2 md:px-6">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="aspect-[3/4] rounded-md bg-[oklch(0.22_0.045_45)]" />
+            <div className="aspect-[3/4] translate-y-6 rounded-md bg-[var(--gold)]" />
+            <div className="aspect-[3/4] translate-y-3 rounded-md bg-[oklch(0.35_0.05_45)]" />
+            <div className="aspect-[3/4] -translate-y-3 rounded-md bg-[var(--espresso)]" />
+          </div>
+          <div>
+            <p className="eyebrow">Para empresas · Private Label</p>
+            <h2 className="mt-2 font-display text-3xl text-primary md:text-5xl">
+              Café especial com a sua marca.
+            </h2>
+            <p className="mt-4 max-w-lg text-primary/80">
+              Curadoria de grãos, embalagem personalizada, design de marca e produção artesanal para
+              presentes corporativos, brindes e cafés institucionais. A partir de 30 unidades.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-4 text-sm text-primary/80">
+              <span className="inline-flex items-center gap-2"><PackageIcon className="h-4 w-4 text-[var(--gold)]" /> Embalagem premium</span>
+              <span className="inline-flex items-center gap-2"><Sparkles className="h-4 w-4 text-[var(--gold)]" /> Branding exclusivo</span>
+              <span className="inline-flex items-center gap-2"><Coffee className="h-4 w-4 text-[var(--gold)]" /> 100% arábica</span>
+            </div>
+            <Link
+              to="/private-label"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground hover:bg-primary/90"
+            >
+              Solicitar orçamento <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>

@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Users, Package, ShoppingBag, Sprout } from "lucide-react";
+import { Users, Package, ShoppingBag, Sprout, Briefcase } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/cart-store";
@@ -74,6 +74,26 @@ function AdminDashboard() {
     },
   });
 
+  const { data: b2bLeads } = useQuery({
+    queryKey: ["b2b-leads"],
+    enabled: !!isAdmin,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("b2b_leads")
+        .select("id, company_name, contact_name, email, phone, estimated_quantity, purpose, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      return data;
+    },
+  });
+
+  const setLeadStatus = async (id: string, status: string) => {
+    const { error } = await supabase.from("b2b_leads").update({ status: status as any }).eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Lead atualizado");
+    qc.invalidateQueries({ queryKey: ["b2b-leads"] });
+  };
+
   const setProducerStatus = async (id: string, status: "active" | "rejected" | "suspended" | "pending_review") => {
     const { error } = await supabase.from("producers").update({ status }).eq("id", id);
     if (error) return toast.error(error.message);
@@ -109,12 +129,67 @@ function AdminDashboard() {
         <div className="gold-divider mt-3" />
       </header>
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
         <Metric icon={Sprout} label="Produtores" value={`${stats?.producers ?? 0}`} />
         <Metric icon={Package} label="Cafés" value={`${stats?.products ?? 0}`} />
         <Metric icon={ShoppingBag} label="Pedidos" value={`${stats?.orders ?? 0}`} />
-        <Metric icon={Users} label="Receita total" value={formatBRL(stats?.revenue ?? 0)} />
+        <Metric icon={Briefcase} label="Leads B2B" value={`${b2bLeads?.length ?? 0}`} />
+        <Metric icon={Users} label="Receita" value={formatBRL(stats?.revenue ?? 0)} />
       </div>
+
+      <section className="mt-12">
+        <h2 className="font-display text-2xl text-primary">Orçamentos corporativos · Private Label</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Leads recebidos pelo formulário Café com sua marca.</p>
+        <div className="mt-4 overflow-hidden rounded-lg border border-border bg-card">
+          {(b2bLeads ?? []).length === 0 ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">Nenhum lead recebido ainda.</div>
+          ) : (
+            <table className="w-full text-sm">
+              <thead className="bg-muted text-xs uppercase tracking-wider text-muted-foreground">
+                <tr>
+                  <th className="px-4 py-3 text-left">Empresa</th>
+                  <th className="px-4 py-3 text-left">Contato</th>
+                  <th className="px-4 py-3 text-left">Qtd / Finalidade</th>
+                  <th className="px-4 py-3 text-left">Status</th>
+                  <th className="px-4 py-3 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {(b2bLeads ?? []).map((l: any) => (
+                  <tr key={l.id}>
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-primary">{l.company_name}</p>
+                      <p className="text-xs text-muted-foreground">{new Date(l.created_at).toLocaleDateString("pt-BR")}</p>
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      <p>{l.contact_name}</p>
+                      <p className="text-xs">{l.email}{l.phone ? ` · ${l.phone}` : ""}</p>
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      <p>{l.estimated_quantity ?? "—"}</p>
+                      <p className="text-xs line-clamp-1">{l.purpose ?? ""}</p>
+                    </td>
+                    <td className="px-4 py-3">
+                      <select
+                        value={l.status}
+                        onChange={(e) => setLeadStatus(l.id, e.target.value)}
+                        className="rounded-full border border-border bg-card px-2 py-0.5 text-xs"
+                      >
+                        {["new","contacted","in_proposal","won","lost","archived"].map((s) => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <a href={`mailto:${l.email}`} className="text-xs font-semibold text-primary hover:underline">Responder →</a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </section>
 
       <section className="mt-12">
         <h2 className="font-display text-2xl text-primary">Curadoria de produtores</h2>
