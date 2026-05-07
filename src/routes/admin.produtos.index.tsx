@@ -5,6 +5,7 @@ import { Plus, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { formatBRL } from "@/lib/cart-store";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/produtos/")({
   head: () => ({ meta: [{ title: "Admin · Cafés — Cafezeira" }] }),
