@@ -38,3 +38,11 @@ dist-ssr
 .env.development
 .env.production
 !.env.example
+
+# Supabase CLI (cache local)
+supabase/.temp/
+supabase/.branches/
+
+# Supabase CLI (cache local — gerado por supabase login/link)
+supabase/.temp/
+supabase/.branches/
