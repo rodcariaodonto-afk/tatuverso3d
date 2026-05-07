@@ -246,37 +246,41 @@ function ProductPage() {
           {/* Buy box */}
           <div className="mt-8 rounded-xl border border-border bg-[var(--sand)] p-5">
             <div className="flex items-baseline gap-3">
-              {onSale && (
+              {onSale && displayCompare != null && (
                 <span className="text-sm text-muted-foreground line-through">
-                  {formatBRL(Number(product.compare_at_price))}
+                  {formatBRL(displayCompare)}
                 </span>
               )}
               <span className="font-display text-3xl font-semibold text-primary">
-                {formatBRL(Number(product.price))}
+                {formatBRL(displayPrice)}
               </span>
-              <span className="text-xs text-muted-foreground">
-                / {product.weight_grams ?? 250}g
-              </span>
+              <span className="text-xs text-muted-foreground">/ {displayWeight}g</span>
             </div>
 
-            <div className="mt-5">
-              <p className="eyebrow">Moagem</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {grindOptions.map((g) => (
-                  <button
-                    key={g}
-                    onClick={() => setGrind(g)}
-                    className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-                      grind === g
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-border bg-card text-foreground/80 hover:border-primary"
-                    }`}
-                  >
-                    {GRIND_LABEL[g]}
-                  </button>
-                ))}
+            {variants.length > 0 && (
+              <div className="mt-5">
+                <p className="eyebrow">Variante</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {variants.map((v) => {
+                    const active = (selectedVariant?.id ?? variants[0]?.id) === v.id;
+                    return (
+                      <button
+                        key={v.id}
+                        onClick={() => setVariantId(v.id)}
+                        disabled={v.stock_quantity <= 0}
+                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition disabled:opacity-40 ${
+                          active
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border bg-card text-foreground/80 hover:border-primary"
+                        }`}
+                      >
+                        {v.weight_grams}g · {GRIND_LABEL[v.grind_option]}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="mt-5 flex items-center gap-3">
               <div className="flex items-center rounded-full border border-border bg-card">
@@ -286,11 +290,11 @@ function ProductPage() {
               </div>
               <button
                 onClick={handleAdd}
-                disabled={product.stock_quantity <= 0}
+                disabled={displayStock <= 0}
                 className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition hover:bg-primary/90 disabled:opacity-50"
               >
                 <ShoppingBag className="h-4 w-4" />
-                {product.stock_quantity > 0 ? "Adicionar ao carrinho" : "Esgotado"}
+                {displayStock > 0 ? "Adicionar ao carrinho" : "Esgotado"}
               </button>
             </div>
 
