@@ -22,6 +22,7 @@ const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/produtos", label: "Cafés", icon: Package },
   { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
+  { to: "/admin/vendas", label: "Vendas", icon: TrendingUp },
   { to: "/admin/clientes", label: "Clientes", icon: Users },
   { to: "/admin/produtores", label: "Produtores", icon: Sprout },
   { to: "/admin/leads", label: "Leads B2B", icon: Briefcase },
