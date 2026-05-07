@@ -87,31 +87,34 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         {NAV.map((item) => {
           const active = item.exact ? path === item.to : path.startsWith(item.to);
           const Icon = item.icon;
+          if (item.soon) {
+            return (
+              <div
+                key={item.to}
+                className="flex cursor-not-allowed items-center justify-between gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground/60"
+              >
+                <span className="flex items-center gap-2">
+                  <Icon className="h-4 w-4" />
+                  {item.label}
+                </span>
+                <span className="rounded-full bg-muted px-2 py-0.5 text-[9px] uppercase tracking-wider text-muted-foreground">
+                  em breve
+                </span>
+              </div>
+            );
+          }
           return (
             <Link
               key={item.to}
               to={item.to as any}
-              disabled={item.soon}
-              className={`flex items-center justify-between gap-2 rounded-md px-3 py-2 text-sm transition ${
+              className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm transition ${
                 active
                   ? "bg-primary text-primary-foreground"
-                  : item.soon
-                    ? "cursor-not-allowed text-muted-foreground/60 hover:bg-muted/40"
-                    : "text-foreground/80 hover:bg-muted hover:text-primary"
+                  : "text-foreground/80 hover:bg-muted hover:text-primary"
               }`}
-              onClick={(e) => {
-                if (item.soon) e.preventDefault();
-              }}
             >
-              <span className="flex items-center gap-2">
-                <Icon className="h-4 w-4" />
-                {item.label}
-              </span>
-              {item.soon && (
-                <span className="rounded-full bg-muted px-2 py-0.5 text-[9px] uppercase tracking-wider text-muted-foreground">
-                  em breve
-                </span>
-              )}
+              <Icon className="h-4 w-4" />
+              {item.label}
             </Link>
           );
         })}
