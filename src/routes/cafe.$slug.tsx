@@ -5,6 +5,7 @@ import { ArrowLeft, Coffee, Leaf, Mountain, Star, Award, ShoppingBag } from "luc
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { GRIND_LABEL, formatBRL, useCart, type GrindOption } from "@/lib/cart-store";
+import { useCartDrawer } from "@/components/cart/CartDrawer";
 
 export const Route = createFileRoute("/cafe/$slug")({
   component: ProductPage,
