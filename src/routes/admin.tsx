@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -14,7 +14,8 @@ export const Route = createFileRoute("/admin")({
 });
 
 function AdminLayout() {
-  return <Outlet />;
+  const path = useRouterState({ select: (state) => state.location.pathname });
+  return path === "/admin" ? <AdminDashboard /> : <Outlet />;
 }
 
 function AdminDashboard() {
