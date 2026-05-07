@@ -147,6 +147,7 @@ function ProductPage() {
       weight_grams: selectedVariant.weight_grams,
     });
     toast.success("Adicionado ao carrinho", { description: `${qty}x ${product.name}` });
+    openCart(true);
   };
 
   return (
