@@ -74,14 +74,14 @@ function AdminDashboard() {
     },
   });
 
-  const setProducerStatus = async (id: string, status: string) => {
+  const setProducerStatus = async (id: string, status: "active" | "rejected" | "suspended" | "pending_review") => {
     const { error } = await supabase.from("producers").update({ status }).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Atualizado");
     qc.invalidateQueries({ queryKey: ["pending-producers"] });
   };
 
-  const setProductStatus = async (id: string, status: string) => {
+  const setProductStatus = async (id: string, status: "active" | "draft" | "pending_review" | "rejected" | "archived") => {
     const { error } = await supabase.from("products").update({
       status,
       published_at: status === "active" ? new Date().toISOString() : null,
