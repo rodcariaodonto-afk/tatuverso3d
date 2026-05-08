@@ -1608,6 +1608,27 @@ export type Database = {
           },
         ]
       }
+      site_images: {
+        Row: {
+          alt: string
+          key: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          alt?: string
+          key: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          alt?: string
+          key?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       subscription_plans: {
         Row: {
           created_at: string
