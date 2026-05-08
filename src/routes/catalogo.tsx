@@ -30,13 +30,13 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/catalogo")({
   head: () => ({
     meta: [
-      { title: "Catálogo de cafés especiais — Cafezeira" },
+      { title: "Catálogo de cafés especiais — Cafe EX" },
       {
         name: "description",
         content:
           "Explore microlotes premiados de produtores latino-americanos. Filtre por torra, processo, perfil e origem.",
       },
-      { property: "og:title", content: "Catálogo Cafezeira" },
+      { property: "og:title", content: "Catálogo Cafe EX" },
       { property: "og:description", content: "Cafés especiais com origem, curadoria e torra fresca." },
     ],
   }),

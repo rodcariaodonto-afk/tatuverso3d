@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/produtor")({
-  head: () => ({ meta: [{ title: "Painel do Produtor — Cafezeira" }] }),
+  head: () => ({ meta: [{ title: "Painel do Produtor — Cafe EX" }] }),
   component: ProducerDashboard,
 });
 

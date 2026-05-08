@@ -3,7 +3,7 @@ import { Trash2, Minus, Plus, ArrowRight, ShoppingBag } from "lucide-react";
 import { formatBRL, GRIND_LABEL, useCart } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/carrinho")({
-  head: () => ({ meta: [{ title: "Carrinho — Cafezeira" }] }),
+  head: () => ({ meta: [{ title: "Carrinho — Cafe EX" }] }),
   component: CartPage,
 });
 

@@ -9,7 +9,7 @@ import { formatBRL } from "@/lib/cart-store";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/produtos")({
-  head: () => ({ meta: [{ title: "Admin · Cafés — Cafezeira" }] }),
+  head: () => ({ meta: [{ title: "Admin · Cafés — Cafe EX" }] }),
   component: AdminProductsLayout,
 });
 

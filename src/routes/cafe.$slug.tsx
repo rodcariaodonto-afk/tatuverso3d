@@ -304,7 +304,7 @@ function ProductPage() {
             {product.is_subscription_available && (
               <div className="mt-4 flex items-start gap-2 rounded-md bg-card p-3 text-xs text-muted-foreground">
                 <Award className="h-4 w-4 shrink-0 text-[var(--gold)]" />
-                Disponível também na assinatura mensal Cafezeira.
+                Disponível também na assinatura mensal Cafe EX.
               </div>
             )}
           </div>
