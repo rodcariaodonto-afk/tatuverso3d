@@ -19,20 +19,6 @@ function AccountPage() {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 
-  const { data: orders } = useQuery({
-    queryKey: ["my-orders", user?.id],
-    enabled: !!user?.id,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("orders")
-        .select("id, status, payment_status, total, created_at, order_items(product_name, quantity)")
-        .eq("customer_id", user!.id)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
-    },
-  });
-
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
     enabled: !!user?.id,
@@ -48,6 +34,23 @@ function AccountPage() {
     queryFn: async () => {
       const { data } = await supabase.from("user_roles").select("role").eq("user_id", user!.id);
       return data?.map((r) => r.role) ?? [];
+    },
+  });
+
+  const isStaff = roles?.includes("admin" as any) || roles?.includes("support" as any);
+
+  const { data: orders } = useQuery({
+    queryKey: ["my-orders", user?.id, isStaff],
+    enabled: !!user?.id && roles !== undefined,
+    queryFn: async () => {
+      let q = supabase
+        .from("orders")
+        .select("id, status, payment_status, total, created_at, customer_id, order_items(product_name, quantity)")
+        .order("created_at", { ascending: false });
+      if (!isStaff) q = q.eq("customer_id", user!.id);
+      const { data, error } = await q;
+      if (error) throw error;
+      return data;
     },
   });
 
@@ -113,7 +116,10 @@ function AccountPage() {
       )}
 
       <section className="mt-12">
-        <h2 className="font-display text-2xl text-primary">Meus pedidos</h2>
+        <h2 className="font-display text-2xl text-primary">{isStaff ? "Pedidos da plataforma" : "Meus pedidos"}</h2>
+        {isStaff && (
+          <p className="mt-1 text-xs text-muted-foreground">Visão administrativa · todos os pedidos. <Link to="/admin/pedidos" className="font-semibold text-primary underline">Abrir gestão completa</Link></p>
+        )}
         <div className="mt-4 overflow-hidden rounded-lg border border-border bg-card">
           {(orders ?? []).length === 0 ? (
             <div className="p-8 text-center text-sm text-muted-foreground">
