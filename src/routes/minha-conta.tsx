@@ -116,7 +116,10 @@ function AccountPage() {
       )}
 
       <section className="mt-12">
-        <h2 className="font-display text-2xl text-primary">Meus pedidos</h2>
+        <h2 className="font-display text-2xl text-primary">{isStaff ? "Pedidos da plataforma" : "Meus pedidos"}</h2>
+        {isStaff && (
+          <p className="mt-1 text-xs text-muted-foreground">Visão administrativa · todos os pedidos. <Link to="/admin/pedidos" className="font-semibold text-primary underline">Abrir gestão completa</Link></p>
+        )}
         <div className="mt-4 overflow-hidden rounded-lg border border-border bg-card">
           {(orders ?? []).length === 0 ? (
             <div className="p-8 text-center text-sm text-muted-foreground">
