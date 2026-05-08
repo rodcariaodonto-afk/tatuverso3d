@@ -94,7 +94,7 @@ export function CatalogProductCard({ product }: { product: CatalogProduct }) {
       params={{ slug: product.slug }}
       className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card transition hover:border-accent/60 hover:shadow-[0_20px_50px_-30px_oklch(0.22_0.045_45/0.4)]"
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+      <div className="relative aspect-[4/5] overflow-hidden bg-[var(--sand)]">
         {product.cover_url ? (
           <img
             src={product.cover_url}
@@ -107,32 +107,37 @@ export function CatalogProductCard({ product }: { product: CatalogProduct }) {
             sem imagem
           </div>
         )}
-        <div className="absolute left-3 top-3 flex flex-wrap gap-1">
-          {product.is_featured && (
-            <span className="rounded-full bg-[var(--gold)]/95 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--espresso)] backdrop-blur">
-              Destaque
-            </span>
-          )}
-          {product.is_subscription_available && (
-            <span className="rounded-full bg-background/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur">
-              Assinatura
-            </span>
-          )}
-          {(product.badges ?? []).slice(0, 1).map((b) => (
-            <span
-              key={b}
-              className="rounded-full bg-background/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur"
-            >
-              {b}
-            </span>
-          ))}
-        </div>
-        {product.score != null && (
-          <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-primary/90 px-2 py-0.5 text-[11px] font-semibold text-primary-foreground backdrop-blur">
-            <Star className="h-3 w-3 fill-[var(--gold)] text-[var(--gold)]" />
-            {product.score}
+
+        {/* Top overlay: badges left (stacked), score right — no overlap */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3">
+          <div className="flex max-w-[70%] flex-col items-start gap-1">
+            {product.is_featured && (
+              <span className="rounded-full bg-[var(--gold)]/95 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--espresso)] backdrop-blur">
+                Destaque
+              </span>
+            )}
+            {product.is_subscription_available && (
+              <span className="rounded-full bg-background/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur">
+                Assinatura
+              </span>
+            )}
+            {(product.badges ?? []).slice(0, 1).map((b) => (
+              <span
+                key={b}
+                className="max-w-full truncate rounded-full bg-background/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur"
+              >
+                {b}
+              </span>
+            ))}
           </div>
-        )}
+          {product.score != null && (
+            <div className="flex shrink-0 items-center gap-1 rounded-full bg-primary/90 px-2 py-0.5 text-[11px] font-semibold text-primary-foreground backdrop-blur">
+              <Star className="h-3 w-3 fill-[var(--gold)] text-[var(--gold)]" />
+              {product.score}
+            </div>
+          )}
+        </div>
+
         {totalStock === 0 && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/60 text-xs font-bold uppercase tracking-wider text-primary">
             Esgotado
