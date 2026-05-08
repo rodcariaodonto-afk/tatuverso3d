@@ -10,12 +10,12 @@ import { useAuth } from "@/lib/auth-context";
 export const Route = createFileRoute("/quiz")({
   head: () => ({
     meta: [
-      { title: "Quiz Sensorial — Cafezeira" },
+      { title: "Quiz Sensorial — Cafe EX" },
       {
         name: "description",
         content: "Descubra qual perfil de café especial combina com você em 5 perguntas rápidas.",
       },
-      { property: "og:title", content: "Quiz Sensorial Cafezeira" },
+      { property: "og:title", content: "Quiz Sensorial Cafe EX" },
       { property: "og:description", content: "Encontre seu café ideal." },
     ],
   }),

@@ -7,14 +7,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/config")({
-  head: () => ({ meta: [{ title: "Configurações — Admin Cafezeira" }] }),
+  head: () => ({ meta: [{ title: "Configurações — Admin Cafe EX" }] }),
   component: ConfigPage,
 });
 
 type Tab = "store" | "company" | "payments";
 
 const STORE_FIELDS = [
-  { key: "store.name", label: "Nome da loja", placeholder: "Cafezeira" },
+  { key: "store.name", label: "Nome da loja", placeholder: "Cafe EX" },
   { key: "store.tagline", label: "Tagline", placeholder: "Cafés especiais brasileiros" },
   { key: "store.currency", label: "Moeda", placeholder: "BRL", type: "select", options: ["BRL", "USD", "EUR"] },
   { key: "store.measurement", label: "Sistema de medição", placeholder: "metric", type: "select", options: ["metric", "imperial"] },
@@ -25,7 +25,7 @@ const STORE_FIELDS = [
 ];
 
 const COMPANY_FIELDS = [
-  { key: "company.legal_name", label: "Razão social", placeholder: "Cafezeira LTDA" },
+  { key: "company.legal_name", label: "Razão social", placeholder: "Cafe EX LTDA" },
   { key: "company.cnpj", label: "CNPJ", placeholder: "00.000.000/0001-00" },
   { key: "company.email", label: "E-mail de contato", placeholder: "contato@cafezeira.com.br" },
   { key: "company.phone", label: "Telefone / WhatsApp", placeholder: "+55 11 99999-9999" },
@@ -203,7 +203,7 @@ function PaymentsPanel() {
       <div className="rounded-lg border border-border bg-card p-5">
         <h3 className="font-display text-lg text-primary">Métodos de pagamento aceitos</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          Escolha quais formas de pagamento serão oferecidas no checkout da Cafezeira.
+          Escolha quais formas de pagamento serão oferecidas no checkout da Cafe EX.
         </p>
         <div className="mt-5 divide-y divide-border">
           {PAYMENT_METHODS.map((m) => (

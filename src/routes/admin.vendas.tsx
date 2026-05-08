@@ -18,7 +18,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { formatBRL } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/admin/vendas")({
-  head: () => ({ meta: [{ title: "Vendas — Admin Cafezeira" }] }),
+  head: () => ({ meta: [{ title: "Vendas — Admin Cafe EX" }] }),
   component: VendasPage,
 });
 

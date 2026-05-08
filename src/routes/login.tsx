@@ -6,8 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Entrar — Cafezeira" },
-      { name: "description", content: "Acesse sua conta Cafezeira." },
+      { title: "Entrar — Cafe EX" },
+      { name: "description", content: "Acesse sua conta Cafe EX." },
     ],
   }),
   component: LoginPage,
@@ -51,7 +51,7 @@ function LoginPage() {
   return (
     <div className="container mx-auto max-w-md px-4 py-16 md:px-6">
       <p className="eyebrow text-center">Bem-vindo</p>
-      <h1 className="mt-2 text-center font-display text-3xl text-primary md:text-4xl">Entrar na Cafezeira</h1>
+      <h1 className="mt-2 text-center font-display text-3xl text-primary md:text-4xl">Entrar na Cafe EX</h1>
       <div className="gold-divider mx-auto mt-3" />
 
       <form onSubmit={onSubmit} className="mt-8 space-y-4 rounded-xl border border-border bg-card p-6">

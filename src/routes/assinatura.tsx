@@ -9,12 +9,12 @@ import { formatBRL } from "@/lib/cart-store";
 export const Route = createFileRoute("/assinatura")({
   head: () => ({
     meta: [
-      { title: "Assinatura — Cafezeira" },
+      { title: "Assinatura — Cafe EX" },
       {
         name: "description",
         content: "Receba microlotes premiados todos os meses na sua casa. Três planos para todos os perfis.",
       },
-      { property: "og:title", content: "Assinatura Cafezeira" },
+      { property: "og:title", content: "Assinatura Cafe EX" },
     ],
   }),
   component: SubscriptionPage,
@@ -61,7 +61,7 @@ function SubscriptionPage() {
     <div>
       <section className="bg-[var(--espresso)] py-20 text-[oklch(0.95_0.02_80)]">
         <div className="container mx-auto px-4 text-center md:px-6">
-          <p className="eyebrow !text-[var(--gold)]">Clube Cafezeira</p>
+          <p className="eyebrow !text-[var(--gold)]">Clube Cafe EX</p>
           <h1 className="mt-3 font-display text-4xl md:text-6xl">Microlotes premiados, todos os meses.</h1>
           <p className="mx-auto mt-5 max-w-2xl text-base text-white/80">
             Curadoria sensorial sazonal, feita por especialistas. Receba cafés selecionados de fazendas

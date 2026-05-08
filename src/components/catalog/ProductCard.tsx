@@ -59,7 +59,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
       </div>
       <div className="flex flex-1 flex-col p-4">
         <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-          {product.producers?.name ?? "Cafezeira"}
+          {product.producers?.name ?? "Cafe EX"}
           {product.origin_region ? ` · ${product.origin_region}` : ""}
         </p>
         <h3 className="mt-1 font-display text-lg leading-tight text-foreground">{product.name}</h3>
@@ -147,7 +147,7 @@ export function CatalogProductCard({ product }: { product: CatalogProduct }) {
 
       <div className="flex flex-1 flex-col p-4">
         <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-          {product.producer?.name ?? "Cafezeira"}
+          {product.producer?.name ?? "Cafe EX"}
           {product.origin_region ? ` · ${product.origin_region}` : ""}
         </p>
         <h3 className="mt-1 font-display text-lg leading-tight text-foreground">

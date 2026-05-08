@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/minha-conta")({
-  head: () => ({ meta: [{ title: "Minha conta — Cafezeira" }] }),
+  head: () => ({ meta: [{ title: "Minha conta — Cafe EX" }] }),
   component: AccountPage,
 });
 

@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/conteudo")({
-  head: () => ({ meta: [{ title: "Conteúdo do site — Admin Cafezeira" }] }),
+  head: () => ({ meta: [{ title: "Conteúdo do site — Admin Cafe EX" }] }),
   component: ContentAdminPage,
 });
 
@@ -19,7 +19,7 @@ type Section = {
 
 const SECTIONS: Section[] = [
   {
-    title: "Home · Assinatura Cafezeira",
+    title: "Home · Assinatura Cafe EX",
     description: "Três imagens exibidas ao lado do bloco da assinatura na home.",
     slots: [
       { key: "home_assinatura_1", label: "Imagem 1" },

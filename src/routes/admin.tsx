@@ -9,7 +9,7 @@ import { formatBRL } from "@/lib/cart-store";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin")({
-  head: () => ({ meta: [{ title: "Admin — Cafezeira" }] }),
+  head: () => ({ meta: [{ title: "Admin — Cafe EX" }] }),
   component: AdminLayout,
 });
 
@@ -123,7 +123,7 @@ function AdminDashboard() {
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Administração</p>
-          <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Painel Cafezeira</h1>
+          <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Painel Cafe EX</h1>
           <div className="gold-divider mt-3" />
         </div>
         <Link to="/admin/produtos" className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-primary hover:border-primary">
