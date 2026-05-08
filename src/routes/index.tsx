@@ -36,6 +36,20 @@ function HomePage() {
     },
   });
 
+  const { data: siteImages } = useQuery({
+    queryKey: ["home", "site_images"],
+    queryFn: async () => {
+      const { data } = await supabase.from("site_images").select("key, url, alt");
+      const map: Record<string, { url: string; alt: string }> = {};
+      (data ?? []).forEach((r: any) => (map[r.key] = { url: r.url, alt: r.alt }));
+      return map;
+    },
+  });
+  const img = (key: string, fallback: string, fallbackAlt = "") => ({
+    url: siteImages?.[key]?.url || fallback,
+    alt: siteImages?.[key]?.alt || fallbackAlt,
+  });
+
   return (
     <div>
       {/* HERO */}
