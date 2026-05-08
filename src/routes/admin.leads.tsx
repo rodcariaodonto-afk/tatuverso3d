@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/leads")({
-  head: () => ({ meta: [{ title: "Leads B2B — Admin Cafe EX" }] }),
+  head: () => ({ meta: [{ title: "Leads B2B — Admin Café EX" }] }),
   component: LeadsPage,
 });
 

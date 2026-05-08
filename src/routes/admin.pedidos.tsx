@@ -7,7 +7,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { formatBRL } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/admin/pedidos")({
-  head: () => ({ meta: [{ title: "Pedidos — Admin Cafe EX" }] }),
+  head: () => ({ meta: [{ title: "Pedidos — Admin Café EX" }] }),
   component: PedidosPage,
 });
 

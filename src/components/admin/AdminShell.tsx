@@ -57,7 +57,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   if (!user) {
     return (
       <div className="container mx-auto max-w-md py-20 text-center">
-        <h1 className="font-display text-3xl text-primary">Entre na Cafe EX</h1>
+        <h1 className="font-display text-3xl text-primary">Entre na Café EX</h1>
         <p className="mt-2 text-sm text-muted-foreground">Você precisa estar autenticado para acessar o painel.</p>
         <Link to="/login" className="mt-6 inline-flex rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground">
           Entrar
@@ -70,7 +70,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <div className="container mx-auto max-w-md py-20 text-center">
         <h1 className="font-display text-3xl text-primary">403 — Acesso restrito</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Esta área é exclusiva para administradores Cafe EX.
+          Esta área é exclusiva para administradores Café EX.
         </p>
         <Link to="/" className="mt-6 inline-flex rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground">
           Voltar para o site
@@ -82,7 +82,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const SidebarBody = (
     <div className="flex h-full flex-col">
       <Link to="/admin" className="flex items-center gap-2 border-b border-border px-5 py-4">
-        <span className="font-display text-lg font-bold tracking-tight text-primary">CAFE EX</span>
+        <span className="font-display text-lg font-bold tracking-tight text-primary">CAFÉ EX</span>
         <span className="rounded-full bg-[var(--gold)]/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--gold)]">
           Admin
         </span>

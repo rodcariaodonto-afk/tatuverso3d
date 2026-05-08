@@ -6,8 +6,8 @@ import { Mail, MessageCircle, Instagram } from "lucide-react";
 export const Route = createFileRoute("/contato")({
   head: () => ({
     meta: [
-      { title: "Contato — Cafe EX" },
-      { name: "description", content: "Fale com a Cafe EX. Estamos aqui para ajudar." },
+      { title: "Contato — Café EX" },
+      { name: "description", content: "Fale com a Café EX. Estamos aqui para ajudar." },
     ],
   }),
   component: ContactPage,
