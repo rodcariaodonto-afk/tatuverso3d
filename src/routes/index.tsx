@@ -67,12 +67,12 @@ function HomePage() {
 
         <div className="container mx-auto px-4 py-24 md:px-6 md:py-36">
           <div className="max-w-2xl">
-            <p className="eyebrow !text-[var(--gold)]">Cafe EX · cafés especiais da Mantiqueira</p>
+            <p className="eyebrow !text-[var(--gold)]">Café EX · cafés especiais da Mantiqueira</p>
             <h1 className="mt-4 font-display text-4xl leading-[1.05] md:text-6xl lg:text-7xl">
               Compre, assine e crie cafés <em className="text-[var(--gold)] not-italic">com a sua marca</em>.
             </h1>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-white/80 md:text-lg">
-              A Cafe EX é especialista em cafés 100% arábica da Serra da Mantiqueira. Curadoria de
+              A Café EX é especialista em cafés 100% arábica da Serra da Mantiqueira. Curadoria de
               microlotes, assinatura mensal e private label para empresas que querem cafés
               corporativos com identidade própria.
             </p>
@@ -145,7 +145,7 @@ function HomePage() {
       <section className="bg-[oklch(0.22_0.045_45)] py-20 text-[oklch(0.95_0.02_80)]">
         <div className="container mx-auto grid items-center gap-12 px-4 md:grid-cols-2 md:px-6">
           <div>
-            <p className="eyebrow !text-[var(--gold)]">Assinatura Cafe EX</p>
+            <p className="eyebrow !text-[var(--gold)]">Assinatura Café EX</p>
             <h2 className="mt-2 font-display text-3xl md:text-5xl">Receba microlotes premiados todos os meses.</h2>
             <p className="mt-4 max-w-lg text-white/80">
               Três planos pensados para iniciantes e exploradores: Descoberta, Gourmet e Premium. Curadoria sazonal, cancele quando quiser.
@@ -159,7 +159,7 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-3 gap-3">
             {[
-              img("home_assinatura_1", "/site/assinatura-1.jpg", "Box de assinatura Cafe EX"),
+              img("home_assinatura_1", "/site/assinatura-1.jpg", "Box de assinatura Café EX"),
               img("home_assinatura_2", "/site/assinatura-2.jpg", "Xícara de café especial"),
               img("home_assinatura_3", "/site/assinatura-3.jpg", "Coador chemex"),
             ].map((it, i) => (
@@ -256,7 +256,7 @@ function HomePage() {
         <div className="container mx-auto grid gap-8 px-4 py-16 md:grid-cols-[2fr_1fr] md:items-center md:px-6">
           <div>
             <p className="eyebrow">Para produtores</p>
-            <h2 className="mt-2 font-display text-3xl text-primary md:text-4xl">Venda na Cafe EX.</h2>
+            <h2 className="mt-2 font-display text-3xl text-primary md:text-4xl">Venda na Café EX.</h2>
             <p className="mt-3 max-w-xl text-sm text-primary/80 md:text-base">
               Conectamos sua fazenda ou torrefação a uma comunidade apaixonada por café. Painel próprio, curadoria, ferramentas de venda e assinatura mensal acessível.
             </p>

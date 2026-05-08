@@ -9,13 +9,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/private-label")({
   head: () => ({
     meta: [
-      { title: "Café com sua marca · Private Label — Cafe EX" },
+      { title: "Café com sua marca · Private Label — Café EX" },
       {
         name: "description",
         content:
           "Crie cafés especiais com a sua marca. Embalagem personalizada, branding e curadoria de grãos para presentes corporativos e empresas.",
       },
-      { property: "og:title", content: "Private Label Cafe EX — Café com sua marca" },
+      { property: "og:title", content: "Private Label Café EX — Café com sua marca" },
       {
         property: "og:description",
         content:
@@ -242,7 +242,7 @@ function PrivateLabelPage() {
           <h2 className="mt-2 font-display text-3xl md:text-4xl">Marcas que já confiaram</h2>
           <div className="gold-divider mx-auto mt-3" />
           <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
-            Empresas que escolheram a Cafe EX para criar cafés corporativos com identidade própria.
+            Empresas que escolheram a Café EX para criar cafés corporativos com identidade própria.
           </p>
         </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

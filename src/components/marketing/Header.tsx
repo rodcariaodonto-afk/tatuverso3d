@@ -37,7 +37,7 @@ export function Header() {
             <Menu className="h-5 w-5" />
           </button>
           <Link to="/" className="flex flex-col leading-none">
-            <span className="font-display text-xl font-bold tracking-tight text-primary md:text-2xl">CAFE EX</span>
+            <span className="font-display text-xl font-bold tracking-tight text-primary md:text-2xl">CAFÉ EX</span>
             <span className="mt-1 hidden text-[9px] uppercase tracking-[0.25em] text-muted-foreground sm:inline">
               cafés especiais
             </span>
@@ -57,7 +57,7 @@ export function Header() {
             to="/vender-na-plataforma"
             className="hidden whitespace-nowrap rounded-full border border-accent/60 px-4 py-1.5 text-center text-xs font-semibold uppercase tracking-wider text-primary transition hover:bg-accent hover:text-accent-foreground lg:inline-flex lg:items-center"
           >
-            Vender na Cafe EX
+            Vender na Café EX
           </Link>
           <Link
             to={user ? "/minha-conta" : "/login"}
@@ -91,7 +91,7 @@ export function Header() {
           />
           <aside className="absolute left-0 top-0 flex h-full w-[82%] max-w-sm flex-col bg-background shadow-2xl animate-in slide-in-from-left">
             <div className="flex h-14 items-center justify-between border-b border-border px-4">
-              <span className="font-display text-xl font-bold text-primary">CAFE EX</span>
+              <span className="font-display text-xl font-bold text-primary">CAFÉ EX</span>
               <button
                 onClick={() => setMobileOpen(false)}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-muted"
@@ -124,7 +124,7 @@ export function Header() {
                 onClick={() => setMobileOpen(false)}
                 className="block rounded-lg px-4 py-3 text-base font-medium text-foreground hover:bg-muted"
               >
-                Vender na Cafe EX
+                Vender na Café EX
               </Link>
             </nav>
           </aside>

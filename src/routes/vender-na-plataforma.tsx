@@ -7,7 +7,7 @@ import { formatBRL } from "@/lib/cart-store";
 export const Route = createFileRoute("/vender-na-plataforma")({
   head: () => ({
     meta: [
-      { title: "Vender na Cafe EX — Para produtores" },
+      { title: "Vender na Café EX — Para produtores" },
       { name: "description", content: "Conecte sua fazenda ou torrefação a uma comunidade apaixonada por café especial." },
     ],
   }),
@@ -33,7 +33,7 @@ function SellPage() {
       <section className="bg-[var(--espresso)] py-20 text-[oklch(0.95_0.02_80)]">
         <div className="container mx-auto max-w-3xl px-4 text-center md:px-6">
           <p className="eyebrow !text-[var(--gold)]">Para produtores</p>
-          <h1 className="mt-3 font-display text-4xl md:text-6xl">Venda seus cafés na Cafe EX.</h1>
+          <h1 className="mt-3 font-display text-4xl md:text-6xl">Venda seus cafés na Café EX.</h1>
           <p className="mx-auto mt-5 max-w-2xl text-base text-white/80">
             Conectamos sua fazenda ou torrefação a uma comunidade apaixonada por café especial. Painel próprio,
             curadoria, ferramentas de venda e assinatura mensal acessível.

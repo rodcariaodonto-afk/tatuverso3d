@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/recuperar-senha")({
   head: () => ({
-    meta: [{ title: "Recuperar senha — Cafe EX" }],
+    meta: [{ title: "Recuperar senha — Café EX" }],
   }),
   component: RecoverPage,
 });

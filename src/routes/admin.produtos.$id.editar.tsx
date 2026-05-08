@@ -7,7 +7,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { ProductForm } from "@/components/admin/ProductForm";
 
 export const Route = createFileRoute("/admin/produtos/$id/editar")({
-  head: () => ({ meta: [{ title: "Editar café — Admin Cafe EX" }] }),
+  head: () => ({ meta: [{ title: "Editar café — Admin Café EX" }] }),
   component: EditProductPage,
 });
 
