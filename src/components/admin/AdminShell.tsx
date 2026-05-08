@@ -10,6 +10,7 @@ import {
   Briefcase,
   TicketPercent,
   Settings,
+  Image as ImageIcon,
   LogOut,
   Menu,
   X,
@@ -27,6 +28,7 @@ const NAV = [
   { to: "/admin/produtores", label: "Produtores", icon: Sprout },
   { to: "/admin/leads", label: "Leads B2B", icon: Briefcase },
   { to: "/admin/cupons", label: "Cupons", icon: TicketPercent },
+  { to: "/admin/conteudo", label: "Conteúdo do site", icon: ImageIcon },
   { to: "/admin/config", label: "Configurações", icon: Settings },
 ];
 

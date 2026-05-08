@@ -36,6 +36,20 @@ function HomePage() {
     },
   });
 
+  const { data: siteImages } = useQuery({
+    queryKey: ["home", "site_images"],
+    queryFn: async () => {
+      const { data } = await supabase.from("site_images").select("key, url, alt");
+      const map: Record<string, { url: string; alt: string }> = {};
+      (data ?? []).forEach((r: any) => (map[r.key] = { url: r.url, alt: r.alt }));
+      return map;
+    },
+  });
+  const img = (key: string, fallback: string, fallbackAlt = "") => ({
+    url: siteImages?.[key]?.url || fallback,
+    alt: siteImages?.[key]?.alt || fallbackAlt,
+  });
+
   return (
     <div>
       {/* HERO */}
@@ -144,11 +158,16 @@ function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-3 gap-3">
-            {["1559525839","1572286258","1611854779"].map((id, i) => (
+            {[
+              img("home_assinatura_1", "/site/assinatura-1.jpg", "Box de assinatura Cafezeira"),
+              img("home_assinatura_2", "/site/assinatura-2.jpg", "Xícara de café especial"),
+              img("home_assinatura_3", "/site/assinatura-3.jpg", "Coador chemex"),
+            ].map((it, i) => (
               <img
-                key={id}
-                src={`https://images.unsplash.com/photo-${id === "1559525839" ? "1559525839-d9acfd03b6ce" : id === "1572286258" ? "1572286258-217cf8e6f3c3" : "1611854779-393-1b2da9d400fe"}?auto=format&fit=crop&w=600&q=80`}
-                alt=""
+                key={i}
+                src={it.url}
+                alt={it.alt}
+                loading="lazy"
                 className={`aspect-[3/4] w-full rounded-md object-cover ${i === 1 ? "translate-y-6" : ""}`}
               />
             ))}
@@ -160,10 +179,20 @@ function HomePage() {
       <section className="bg-[var(--cream)]">
         <div className="container mx-auto grid items-center gap-12 px-4 py-20 md:grid-cols-2 md:px-6">
           <div className="grid grid-cols-2 gap-3">
-            <div className="aspect-[3/4] rounded-md bg-[oklch(0.22_0.045_45)]" />
-            <div className="aspect-[3/4] translate-y-6 rounded-md bg-[var(--gold)]" />
-            <div className="aspect-[3/4] translate-y-3 rounded-md bg-[oklch(0.35_0.05_45)]" />
-            <div className="aspect-[3/4] -translate-y-3 rounded-md bg-[var(--espresso)]" />
+            {[
+              { ...img("home_private_label_1", "/site/private-label-1.jpg", "Private label 1"), cls: "" },
+              { ...img("home_private_label_2", "/site/private-label-2.jpg", "Private label 2"), cls: "translate-y-6" },
+              { ...img("home_private_label_3", "/site/private-label-3.jpg", "Private label 3"), cls: "translate-y-3" },
+              { ...img("home_private_label_4", "/site/private-label-4.jpg", "Private label 4"), cls: "-translate-y-3" },
+            ].map((it, i) => (
+              <img
+                key={i}
+                src={it.url}
+                alt={it.alt}
+                loading="lazy"
+                className={`aspect-[3/4] w-full rounded-md object-cover ${it.cls}`}
+              />
+            ))}
           </div>
           <div>
             <p className="eyebrow">Para empresas · Private Label</p>

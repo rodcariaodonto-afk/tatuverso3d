@@ -39,6 +39,7 @@ import { Route as AdminProdutoresRouteImport } from './routes/admin.produtores'
 import { Route as AdminPedidosRouteImport } from './routes/admin.pedidos'
 import { Route as AdminLeadsRouteImport } from './routes/admin.leads'
 import { Route as AdminCuponsRouteImport } from './routes/admin.cupons'
+import { Route as AdminConteudoRouteImport } from './routes/admin.conteudo'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
 import { Route as AdminProdutosNovoRouteImport } from './routes/admin.produtos.novo'
@@ -194,6 +195,11 @@ const AdminCuponsRoute = AdminCuponsRouteImport.update({
   path: '/cupons',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminConteudoRoute = AdminConteudoRouteImport.update({
+  id: '/conteudo',
+  path: '/conteudo',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminConfigRoute = AdminConfigRouteImport.update({
   id: '/config',
   path: '/config',
@@ -237,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/conteudo': typeof AdminConteudoRoute
   '/admin/cupons': typeof AdminCuponsRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/pedidos': typeof AdminPedidosRoute
@@ -273,6 +280,7 @@ export interface FileRoutesByTo {
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/conteudo': typeof AdminConteudoRoute
   '/admin/cupons': typeof AdminCuponsRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/pedidos': typeof AdminPedidosRoute
@@ -310,6 +318,7 @@ export interface FileRoutesById {
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/conteudo': typeof AdminConteudoRoute
   '/admin/cupons': typeof AdminCuponsRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/pedidos': typeof AdminPedidosRoute
@@ -348,6 +357,7 @@ export interface FileRouteTypes {
     | '/vender-na-plataforma'
     | '/admin/clientes'
     | '/admin/config'
+    | '/admin/conteudo'
     | '/admin/cupons'
     | '/admin/leads'
     | '/admin/pedidos'
@@ -384,6 +394,7 @@ export interface FileRouteTypes {
     | '/vender-na-plataforma'
     | '/admin/clientes'
     | '/admin/config'
+    | '/admin/conteudo'
     | '/admin/cupons'
     | '/admin/leads'
     | '/admin/pedidos'
@@ -420,6 +431,7 @@ export interface FileRouteTypes {
     | '/vender-na-plataforma'
     | '/admin/clientes'
     | '/admin/config'
+    | '/admin/conteudo'
     | '/admin/cupons'
     | '/admin/leads'
     | '/admin/pedidos'
@@ -674,6 +686,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCuponsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/conteudo': {
+      id: '/admin/conteudo'
+      path: '/conteudo'
+      fullPath: '/admin/conteudo'
+      preLoaderRoute: typeof AdminConteudoRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/config': {
       id: '/admin/config'
       path: '/config'
@@ -722,6 +741,7 @@ const AdminProdutosRouteWithChildren = AdminProdutosRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminClientesRoute: typeof AdminClientesRoute
   AdminConfigRoute: typeof AdminConfigRoute
+  AdminConteudoRoute: typeof AdminConteudoRoute
   AdminCuponsRoute: typeof AdminCuponsRoute
   AdminLeadsRoute: typeof AdminLeadsRoute
   AdminPedidosRoute: typeof AdminPedidosRoute
@@ -733,6 +753,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminClientesRoute: AdminClientesRoute,
   AdminConfigRoute: AdminConfigRoute,
+  AdminConteudoRoute: AdminConteudoRoute,
   AdminCuponsRoute: AdminCuponsRoute,
   AdminLeadsRoute: AdminLeadsRoute,
   AdminPedidosRoute: AdminPedidosRoute,
