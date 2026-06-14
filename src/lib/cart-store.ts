@@ -24,11 +24,13 @@ export type CartItem = {
   slug: string;
   name: string;
   producer_name: string | null;
+  producer_id: string | null;
   cover_url: string | null;
   unit_price: number;
   quantity: number;
   grind_option: GrindOption;
   weight_grams: number | null;
+  variant_label: string;
 };
 
 type CartState = {
@@ -69,10 +71,20 @@ export const useCart = create<CartState>()(
     }),
     {
       name: "cafezeira-cart",
-      version: 2,
+      version: 3,
       migrate: (_persisted, version) => {
-        // Schema mudou na v2 (variant_id como chave). Descarta carrinhos antigos.
         if (version < 2) return { items: [] } as Partial<CartState>;
+        if (version < 3) {
+          const old = _persisted as any;
+          return {
+            items: (old.items ?? []).map((item: any) => ({
+              ...item,
+              producer_id: item.producer_id ?? null,
+              variant_label: item.variant_label ??
+                `${item.weight_grams ?? 250}g · ${GRIND_LABEL[item.grind_option as GrindOption] ?? item.grind_option ?? ""}`,
+            })),
+          } as Partial<CartState>;
+        }
         return _persisted as Partial<CartState>;
       },
     },

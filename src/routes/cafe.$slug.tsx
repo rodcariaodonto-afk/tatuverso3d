@@ -140,11 +140,13 @@ function ProductPage() {
       slug: product.slug,
       name: product.name,
       producer_name: product.producers?.name ?? null,
+      producer_id: product.producers?.id ?? null,
       cover_url: product.cover_url,
       unit_price: displayPrice,
       quantity: qty,
       grind_option: selectedVariant.grind_option,
       weight_grams: selectedVariant.weight_grams,
+      variant_label: `${selectedVariant.weight_grams}g · ${GRIND_LABEL[selectedVariant.grind_option]}`,
     });
     toast.success("Adicionado ao carrinho", { description: `${qty}x ${product.name}` });
     openCart(true);

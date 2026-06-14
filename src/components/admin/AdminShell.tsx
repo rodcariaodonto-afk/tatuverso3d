@@ -11,6 +11,7 @@ import {
   TicketPercent,
   Settings,
   Image as ImageIcon,
+  Plug,
   LogOut,
   Menu,
   X,
@@ -29,6 +30,7 @@ const NAV = [
   { to: "/admin/leads", label: "Leads B2B", icon: Briefcase },
   { to: "/admin/cupons", label: "Cupons", icon: TicketPercent },
   { to: "/admin/conteudo", label: "Conteúdo do site", icon: ImageIcon },
+  { to: "/admin/integracoes", label: "Integrações", icon: Plug },
   { to: "/admin/config", label: "Configurações", icon: Settings },
 ];
 
