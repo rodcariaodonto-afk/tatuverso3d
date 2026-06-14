@@ -31,6 +31,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProdutoresIndexRouteImport } from './routes/produtores.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ProdutoresSlugRouteImport } from './routes/produtores.$slug'
+import { Route as ProdutorProdutosRouteImport } from './routes/produtor.produtos'
+import { Route as ProdutorPerfilRouteImport } from './routes/produtor.perfil'
+import { Route as ProdutorPedidosRouteImport } from './routes/produtor.pedidos'
 import { Route as CafeSlugRouteImport } from './routes/cafe.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminVendasRouteImport } from './routes/admin.vendas'
@@ -43,6 +46,7 @@ import { Route as AdminCuponsRouteImport } from './routes/admin.cupons'
 import { Route as AdminConteudoRouteImport } from './routes/admin.conteudo'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
+import { Route as AdminCandidaturasRouteImport } from './routes/admin.candidaturas'
 import { Route as AdminProdutosNovoRouteImport } from './routes/admin.produtos.novo'
 import { Route as AdminProdutosIdEditarRouteImport } from './routes/admin.produtos.$id.editar'
 
@@ -156,6 +160,21 @@ const ProdutoresSlugRoute = ProdutoresSlugRouteImport.update({
   path: '/produtores/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProdutorProdutosRoute = ProdutorProdutosRouteImport.update({
+  id: '/produtos',
+  path: '/produtos',
+  getParentRoute: () => ProdutorRoute,
+} as any)
+const ProdutorPerfilRoute = ProdutorPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => ProdutorRoute,
+} as any)
+const ProdutorPedidosRoute = ProdutorPedidosRouteImport.update({
+  id: '/pedidos',
+  path: '/pedidos',
+  getParentRoute: () => ProdutorRoute,
+} as any)
 const CafeSlugRoute = CafeSlugRouteImport.update({
   id: '/cafe/$slug',
   path: '/cafe/$slug',
@@ -216,6 +235,11 @@ const AdminClientesRoute = AdminClientesRouteImport.update({
   path: '/clientes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCandidaturasRoute = AdminCandidaturasRouteImport.update({
+  id: '/candidaturas',
+  path: '/candidaturas',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProdutosNovoRoute = AdminProdutosNovoRouteImport.update({
   id: '/novo',
   path: '/novo',
@@ -240,13 +264,14 @@ export interface FileRoutesByFullPath {
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/private-label': typeof PrivateLabelRoute
-  '/produtor': typeof ProdutorRoute
+  '/produtor': typeof ProdutorRouteWithChildren
   '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/admin/candidaturas': typeof AdminCandidaturasRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/conteudo': typeof AdminConteudoRoute
@@ -259,6 +284,9 @@ export interface FileRoutesByFullPath {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
+  '/produtor/pedidos': typeof ProdutorPedidosRoute
+  '/produtor/perfil': typeof ProdutorPerfilRoute
+  '/produtor/produtos': typeof ProdutorProdutosRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
@@ -278,13 +306,14 @@ export interface FileRoutesByTo {
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/private-label': typeof PrivateLabelRoute
-  '/produtor': typeof ProdutorRoute
+  '/produtor': typeof ProdutorRouteWithChildren
   '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/admin/candidaturas': typeof AdminCandidaturasRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/conteudo': typeof AdminConteudoRoute
@@ -297,6 +326,9 @@ export interface FileRoutesByTo {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
+  '/produtor/pedidos': typeof ProdutorPedidosRoute
+  '/produtor/perfil': typeof ProdutorPerfilRoute
+  '/produtor/produtos': typeof ProdutorProdutosRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog': typeof BlogIndexRoute
   '/produtores': typeof ProdutoresIndexRoute
@@ -317,13 +349,14 @@ export interface FileRoutesById {
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/private-label': typeof PrivateLabelRoute
-  '/produtor': typeof ProdutorRoute
+  '/produtor': typeof ProdutorRouteWithChildren
   '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/admin/candidaturas': typeof AdminCandidaturasRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/conteudo': typeof AdminConteudoRoute
@@ -336,6 +369,9 @@ export interface FileRoutesById {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
+  '/produtor/pedidos': typeof ProdutorPedidosRoute
+  '/produtor/perfil': typeof ProdutorPerfilRoute
+  '/produtor/produtos': typeof ProdutorProdutosRoute
   '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
@@ -364,6 +400,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/vender-na-plataforma'
+    | '/admin/candidaturas'
     | '/admin/clientes'
     | '/admin/config'
     | '/admin/conteudo'
@@ -376,6 +413,9 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/cafe/$slug'
+    | '/produtor/pedidos'
+    | '/produtor/perfil'
+    | '/produtor/produtos'
     | '/produtores/$slug'
     | '/blog/'
     | '/produtores/'
@@ -402,6 +442,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/vender-na-plataforma'
+    | '/admin/candidaturas'
     | '/admin/clientes'
     | '/admin/config'
     | '/admin/conteudo'
@@ -414,6 +455,9 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/cafe/$slug'
+    | '/produtor/pedidos'
+    | '/produtor/perfil'
+    | '/produtor/produtos'
     | '/produtores/$slug'
     | '/blog'
     | '/produtores'
@@ -440,6 +484,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/vender-na-plataforma'
+    | '/admin/candidaturas'
     | '/admin/clientes'
     | '/admin/config'
     | '/admin/conteudo'
@@ -452,6 +497,9 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/cafe/$slug'
+    | '/produtor/pedidos'
+    | '/produtor/perfil'
+    | '/produtor/produtos'
     | '/produtores/$slug'
     | '/blog/'
     | '/produtores/'
@@ -472,7 +520,7 @@ export interface RootRouteChildren {
   MinhaContaRoute: typeof MinhaContaRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   PrivateLabelRoute: typeof PrivateLabelRoute
-  ProdutorRoute: typeof ProdutorRoute
+  ProdutorRoute: typeof ProdutorRouteWithChildren
   QuizRoute: typeof QuizRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -642,6 +690,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProdutoresSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/produtor/produtos': {
+      id: '/produtor/produtos'
+      path: '/produtos'
+      fullPath: '/produtor/produtos'
+      preLoaderRoute: typeof ProdutorProdutosRouteImport
+      parentRoute: typeof ProdutorRoute
+    }
+    '/produtor/perfil': {
+      id: '/produtor/perfil'
+      path: '/perfil'
+      fullPath: '/produtor/perfil'
+      preLoaderRoute: typeof ProdutorPerfilRouteImport
+      parentRoute: typeof ProdutorRoute
+    }
+    '/produtor/pedidos': {
+      id: '/produtor/pedidos'
+      path: '/pedidos'
+      fullPath: '/produtor/pedidos'
+      preLoaderRoute: typeof ProdutorPedidosRouteImport
+      parentRoute: typeof ProdutorRoute
+    }
     '/cafe/$slug': {
       id: '/cafe/$slug'
       path: '/cafe/$slug'
@@ -726,6 +795,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminClientesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/candidaturas': {
+      id: '/admin/candidaturas'
+      path: '/candidaturas'
+      fullPath: '/admin/candidaturas'
+      preLoaderRoute: typeof AdminCandidaturasRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/produtos/novo': {
       id: '/admin/produtos/novo'
       path: '/novo'
@@ -758,6 +834,7 @@ const AdminProdutosRouteWithChildren = AdminProdutosRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminCandidaturasRoute: typeof AdminCandidaturasRoute
   AdminClientesRoute: typeof AdminClientesRoute
   AdminConfigRoute: typeof AdminConfigRoute
   AdminConteudoRoute: typeof AdminConteudoRoute
@@ -771,6 +848,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminCandidaturasRoute: AdminCandidaturasRoute,
   AdminClientesRoute: AdminClientesRoute,
   AdminConfigRoute: AdminConfigRoute,
   AdminConteudoRoute: AdminConteudoRoute,
@@ -785,6 +863,22 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface ProdutorRouteChildren {
+  ProdutorPedidosRoute: typeof ProdutorPedidosRoute
+  ProdutorPerfilRoute: typeof ProdutorPerfilRoute
+  ProdutorProdutosRoute: typeof ProdutorProdutosRoute
+}
+
+const ProdutorRouteChildren: ProdutorRouteChildren = {
+  ProdutorPedidosRoute: ProdutorPedidosRoute,
+  ProdutorPerfilRoute: ProdutorPerfilRoute,
+  ProdutorProdutosRoute: ProdutorProdutosRoute,
+}
+
+const ProdutorRouteWithChildren = ProdutorRoute._addFileChildren(
+  ProdutorRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -798,7 +892,7 @@ const rootRouteChildren: RootRouteChildren = {
   MinhaContaRoute: MinhaContaRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   PrivateLabelRoute: PrivateLabelRoute,
-  ProdutorRoute: ProdutorRoute,
+  ProdutorRoute: ProdutorRouteWithChildren,
   QuizRoute: QuizRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   ResetPasswordRoute: ResetPasswordRoute,

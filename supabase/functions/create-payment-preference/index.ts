@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
     // 1. Busca credenciais do tenant
     const { data: settings, error: settingsErr } = await supabase
       .from("tenant_credentials")
-      .select("mp_access_token, mp_environment, store_name, cep_origem")
+      .select("mp_access_token, mp_environment, store_name, cep_origem, commission_percent, mp_master_account_id")
       .eq("tenant_id", tenantId)
       .single();
 
@@ -81,8 +81,25 @@ Deno.serve(async (req) => {
       return err("Access Token do Mercado Pago não configurado", 400);
     }
 
-    const { mp_access_token, mp_environment } = settings;
+    const { mp_access_token, mp_environment, commission_percent, mp_master_account_id } = settings;
     const mpBase = "https://api.mercadopago.com";
+
+    // Split: fetch producer's MP account ID for marketplace fee routing
+    const firstProductId = body.items[0]?.product_id;
+    let producerMpAccountId: string | null = null;
+    if (firstProductId) {
+      const { data: prod } = await supabase
+        .from("products")
+        .select("producer_id, producers(mp_account_id)")
+        .eq("id", firstProductId)
+        .single();
+      producerMpAccountId = (prod as any)?.producers?.mp_account_id ?? null;
+    }
+
+    const commissionRate = Number(commission_percent ?? 0);
+    const platformFee = commissionRate > 0
+      ? Math.round(body.total * (commissionRate / 100) * 100) / 100
+      : 0;
 
     // 2. Cria pedido no Supabase via service_role
     const payerEmail = body.customer_id
@@ -153,11 +170,12 @@ Deno.serve(async (req) => {
         payerEmail,
         cpf: body.guest_cpf,
         webhookUrl,
+        applicationFee: platformFee > 0 ? platformFee : undefined,
       });
     }
 
     // Default: Checkout Pro
-    const preference = {
+    const preference: Record<string, unknown> = {
       items: body.items.map((i) => ({
         id: i.variant_id || i.product_id,
         title: i.variant_label ? `${i.product_name} — ${i.variant_label}` : i.product_name,
@@ -179,6 +197,12 @@ Deno.serve(async (req) => {
         cost: body.shipping_total,
         mode: "not_specified",
       },
+      // Split de pagamento: comissão da plataforma vai para a conta master
+      // Exige OAuth do produtor para split completo; apenas deduz a taxa por enquanto.
+      ...(platformFee > 0 && { marketplace_fee: platformFee }),
+      ...(producerMpAccountId && mp_master_account_id && {
+        collector: { id: producerMpAccountId },
+      }),
     };
 
     const mpRes = await fetch(`${mpBase}/checkout/preferences`, {
@@ -218,6 +242,7 @@ async function createPixPayment(opts: {
   payerEmail: string;
   cpf?: string;
   webhookUrl: string;
+  applicationFee?: number;
 }) {
   if (!opts.cpf) {
     return err("CPF é obrigatório para pagamento via PIX nativo", 400);
@@ -233,7 +258,8 @@ async function createPixPayment(opts: {
     description: `Pedido ${opts.orderId.slice(0, 8)}`,
     external_reference: opts.orderId,
     notification_url: opts.webhookUrl,
-    date_of_expiration: new Date(Date.now() + 30 * 60 * 1000).toISOString(), // 30 min
+    date_of_expiration: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
+    ...(opts.applicationFee ? { application_fee: opts.applicationFee } : {}),
   };
 
   const res = await fetch(`${opts.mpBase}/v1/payments`, {

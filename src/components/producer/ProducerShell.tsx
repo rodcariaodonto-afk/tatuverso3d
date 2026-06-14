@@ -3,51 +3,39 @@ import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Package,
-  ShoppingBag,
-  TrendingUp,
-  Users,
-  Sprout,
-  Briefcase,
-  TicketPercent,
-  Settings,
-  Image as ImageIcon,
-  Plug,
-  ClipboardList,
+  ShoppingCart,
+  User,
   LogOut,
   Menu,
   X,
+  Sprout,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 
 const NAV = [
-  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/admin/produtos", label: "Cafés", icon: Package },
-  { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
-  { to: "/admin/vendas", label: "Vendas", icon: TrendingUp },
-  { to: "/admin/clientes", label: "Clientes", icon: Users },
-  { to: "/admin/produtores", label: "Produtores", icon: Sprout },
-  { to: "/admin/candidaturas", label: "Candidaturas", icon: ClipboardList },
-  { to: "/admin/leads", label: "Leads B2B", icon: Briefcase },
-  { to: "/admin/cupons", label: "Cupons", icon: TicketPercent },
-  { to: "/admin/conteudo", label: "Conteúdo do site", icon: ImageIcon },
-  { to: "/admin/integracoes", label: "Integrações", icon: Plug },
-  { to: "/admin/config", label: "Configurações", icon: Settings },
+  { to: "/produtor", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/produtor/produtos", label: "Meus cafés", icon: Package },
+  { to: "/produtor/pedidos", label: "Pedidos", icon: ShoppingCart },
+  { to: "/produtor/perfil", label: "Perfil da marca", icon: User },
 ];
 
-export function AdminShell({ children }: { children: React.ReactNode }) {
+export function ProducerShell({ children }: { children: React.ReactNode }) {
   const { user, loading, signOut } = useAuth();
   const path = useRouterState({ select: (r) => r.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const { data: isAdmin, isLoading: roleLoading } = useQuery({
-    queryKey: ["is-admin", user?.id],
+  const { data: isProducer, isLoading: roleLoading } = useQuery({
+    queryKey: ["is-producer", user?.id],
     enabled: !!user?.id,
     queryFn: async () => {
-      const { data } = await supabase.from("user_roles").select("role").eq("user_id", user!.id);
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user!.id);
       const roles = data?.map((r) => r.role) ?? [];
-      return roles.includes("admin" as any) || roles.includes("support" as any);
+      return roles.includes("producer" as any) || roles.includes("admin" as any);
     },
   });
 
@@ -56,28 +44,44 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }, [path]);
 
   if (loading || (user && roleLoading)) {
-    return <div className="container mx-auto py-20 text-center text-sm text-muted-foreground">Carregando…</div>;
+    return (
+      <div className="container mx-auto py-20 text-center text-sm text-muted-foreground">
+        Carregando…
+      </div>
+    );
   }
+
   if (!user) {
     return (
       <div className="container mx-auto max-w-md py-20 text-center">
         <h1 className="font-display text-3xl text-primary">Entre na Café EX</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Você precisa estar autenticado para acessar o painel.</p>
-        <Link to="/login" className="mt-6 inline-flex rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground">
+        <p className="mt-2 text-sm text-muted-foreground">
+          Você precisa estar autenticado para acessar o painel do produtor.
+        </p>
+        <Link
+          to="/login"
+          className="mt-6 inline-flex rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground"
+        >
           Entrar
         </Link>
       </div>
     );
   }
-  if (!isAdmin) {
+
+  if (!isProducer) {
     return (
       <div className="container mx-auto max-w-md py-20 text-center">
-        <h1 className="font-display text-3xl text-primary">403 — Acesso restrito</h1>
+        <Sprout className="mx-auto h-10 w-10 text-muted-foreground/40" />
+        <h1 className="mt-4 font-display text-3xl text-primary">Acesso restrito</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Esta área é exclusiva para administradores Café EX.
+          Esta área é exclusiva para produtores cadastrados. Se você é produtor e ainda não tem
+          acesso, envie sua candidatura.
         </p>
-        <Link to="/" className="mt-6 inline-flex rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground">
-          Voltar para o site
+        <Link
+          to="/vender-na-plataforma"
+          className="mt-6 inline-flex rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground"
+        >
+          Candidatar-se
         </Link>
       </div>
     );
@@ -85,32 +89,16 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   const SidebarBody = (
     <div className="flex h-full flex-col">
-      <Link to="/admin" className="flex items-center gap-2 border-b border-border px-5 py-4">
-        <span className="font-display text-lg font-bold tracking-tight text-primary">CAFÉ EX</span>
-        <span className="rounded-full bg-[var(--gold)]/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--gold)]">
-          Admin
+      <Link to="/produtor" className="flex items-center gap-2 border-b border-border px-5 py-4">
+        <Sprout className="h-5 w-5 text-[var(--gold)]" />
+        <span className="font-display text-lg font-bold tracking-tight text-primary">
+          Painel do Produtor
         </span>
       </Link>
       <nav className="flex-1 space-y-1 px-3 py-4">
         {NAV.map((item) => {
           const active = item.exact ? path === item.to : path.startsWith(item.to);
           const Icon = item.icon;
-          if ((item as any).soon) {
-            return (
-              <div
-                key={item.to}
-                className="flex cursor-not-allowed items-center justify-between gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground/60"
-              >
-                <span className="flex items-center gap-2">
-                  <Icon className="h-4 w-4" />
-                  {item.label}
-                </span>
-                <span className="rounded-full bg-muted px-2 py-0.5 text-[9px] uppercase tracking-wider text-muted-foreground">
-                  em breve
-                </span>
-              </div>
-            );
-          }
           return (
             <Link
               key={item.to}
@@ -141,7 +129,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] w-full bg-[var(--sand)]/30">
-      <aside className="hidden w-64 shrink-0 border-r border-border bg-card lg:block">{SidebarBody}</aside>
+      <aside className="hidden w-64 shrink-0 border-r border-border bg-card lg:block">
+        {SidebarBody}
+      </aside>
 
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden" onClick={() => setMobileOpen(false)}>
@@ -164,10 +154,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-3 border-b border-border bg-card px-4 py-3 lg:hidden">
-          <button onClick={() => setMobileOpen(true)} className="rounded-md p-2 hover:bg-muted" aria-label="Menu">
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="rounded-md p-2 hover:bg-muted"
+            aria-label="Menu"
+          >
             <Menu className="h-5 w-5" />
           </button>
-          <span className="font-display text-base font-semibold text-primary">Admin</span>
+          <span className="font-display text-base font-semibold text-primary">Produtor</span>
         </div>
         <div className="px-4 py-8 md:px-8">{children}</div>
       </div>
