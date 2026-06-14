@@ -39,7 +39,7 @@ function IntegracoesPage() {
     queryKey: ["platform-settings"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("platform_settings")
+        .from("tenant_credentials" as any)
         .select("*")
         .eq("tenant_id", "default")
         .single();
@@ -66,7 +66,7 @@ function IntegracoesPage() {
     setSaving(true);
     const payload: Partial<PlatformSettings> = { ...form };
     const { error } = await supabase
-      .from("platform_settings")
+      .from("tenant_credentials" as any)
       .update(payload)
       .eq("tenant_id", "default");
     if (error) {

@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
 
     // 1. Busca credenciais e dados do tenant
     const { data: settings, error: settingsErr } = await supabase
-      .from("platform_settings")
+      .from("tenant_credentials")
       .select("melhor_envio_token, me_environment, cep_origem, store_name")
       .eq("tenant_id", tenantId)
       .single();
