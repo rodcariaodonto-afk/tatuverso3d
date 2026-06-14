@@ -103,7 +103,7 @@ export function Header() {
           <aside className="absolute left-0 top-0 flex h-full w-[82%] max-w-sm flex-col bg-background shadow-2xl animate-in slide-in-from-left">
             <div className="flex h-14 items-center justify-between border-b border-border px-4">
               <div className="flex items-center gap-2">
-                <img src={logo} alt={tenantConfig.name} className="h-8 w-8 rounded-full object-cover" />
+                <img src={tenantConfig.logoUrl ?? defaultLogo} alt={tenantConfig.name} className="h-8 w-8 rounded-full object-cover" />
                 <span className="font-display text-xl font-bold text-primary">{tenantConfig.name}</span>
               </div>
               <button
