@@ -118,6 +118,59 @@ Deno.serve(async (req) => {
         to_status: internalOrderStatus as any,
         notes: `MP payment ${paymentId} → ${paymentStatus}`,
       });
+
+      // Dispara e-mail transacional se houver destinatário
+      const emailTemplate =
+        internalPaymentStatus === "paid" ? "order_paid" :
+        internalOrderStatus === "shipped" ? "order_shipped" :
+        internalOrderStatus === "delivered" ? "order_delivered" : null;
+
+      if (emailTemplate) {
+        const { data: order } = await supabase
+          .from("orders")
+          .select("guest_email, customer_id, profiles:customer_id(full_name), tracking_code")
+          .eq("id", orderId)
+          .maybeSingle();
+
+        let recipientEmail: string | null = (order as any)?.guest_email ?? null;
+        let recipientName: string | null = null;
+
+        if (!recipientEmail && (order as any)?.customer_id) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("email_notifications_enabled, full_name")
+            .eq("id", (order as any).customer_id)
+            .maybeSingle();
+          const { data: authUser } = await supabase.auth.admin.getUserById((order as any).customer_id);
+          recipientEmail = authUser?.user?.email ?? null;
+          recipientName = (profile as any)?.full_name ?? null;
+        }
+
+        if (recipientEmail) {
+          const fnUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-email`;
+          const fnRes = await fetch(fnUrl, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              tenant_id: tenantId,
+              to: recipientEmail,
+              template: emailTemplate,
+              vars: {
+                order_id: orderId,
+                recipient_name: recipientName ?? undefined,
+                tracking_code: (order as any)?.tracking_code ?? undefined,
+              },
+            }),
+          });
+          if (!fnRes.ok) {
+            const body = await fnRes.json().catch(() => ({}));
+            console.warn("mp-webhook: send-email falhou", (body as any)?.error);
+          }
+        }
+      }
     }
 
     return json({ received: true });

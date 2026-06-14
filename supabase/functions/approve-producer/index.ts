@@ -97,6 +97,28 @@ Deno.serve(async (req) => {
       .update({ status: "approved", reviewed_at: new Date().toISOString() })
       .eq("id", application_id);
 
+    // 6. Send welcome email to the new producer
+    const fnUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-email`;
+    const emailRes = await fetch(fnUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: app.email,
+        template: "producer_approved",
+        vars: {
+          producer_name: app.brand_name,
+          recipient_name: app.responsible_name,
+        },
+      }),
+    });
+    if (!emailRes.ok) {
+      const body = await emailRes.json().catch(() => ({}));
+      console.warn("approve-producer: send-email falhou (non-fatal)", (body as any)?.error);
+    }
+
     return json({ producer_id: producer.id, slug });
   } catch (e: any) {
     console.error("approve-producer error:", e.message);

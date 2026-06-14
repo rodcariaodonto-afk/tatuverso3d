@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Eye, EyeOff, CheckCircle2, XCircle, Loader2, Save } from "lucide-react";
+import { Eye, EyeOff, CheckCircle2, XCircle, Loader2, Save, Mail, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -26,6 +26,10 @@ type PlatformSettings = {
   mp_environment: string;
   melhor_envio_token: string | null;
   me_environment: string;
+  resend_api_key: string | null;
+  email_from_name: string | null;
+  email_from_address: string | null;
+  email_reply_to: string | null;
 };
 
 type TestResult = { ok: boolean; message: string } | null;
@@ -52,8 +56,10 @@ function IntegracoesPage() {
   const [saving, setSaving] = useState(false);
   const [testingMp, setTestingMp] = useState(false);
   const [testingMe, setTestingMe] = useState(false);
+  const [testingEmail, setTestingEmail] = useState(false);
   const [mpResult, setMpResult] = useState<TestResult>(null);
   const [meResult, setMeResult] = useState<TestResult>(null);
+  const [emailResult, setEmailResult] = useState<TestResult>(null);
 
   // Merge DB values with local edits
   const value = <K extends keyof PlatformSettings>(key: K): PlatformSettings[K] | undefined =>
@@ -127,6 +133,51 @@ function IntegracoesPage() {
       setMeResult({ ok: false, message: "Erro de rede ao conectar ao Melhor Envio" });
     }
     setTestingMe(false);
+  };
+
+  const testResend = async () => {
+    setTestingEmail(true);
+    setEmailResult(null);
+    try {
+      // Save current form state first so the function reads fresh credentials
+      if (Object.keys(form).length > 0) {
+        await supabase
+          .from("tenant_credentials" as any)
+          .update(form)
+          .eq("tenant_id", "default");
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error("Sessão expirada");
+
+      const adminEmail = session.user.email;
+      if (!adminEmail) throw new Error("E-mail do admin não disponível");
+
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-email`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to: adminEmail,
+            template: "test_email",
+            vars: { store_name: value("store_name") ?? "Cafezeira" },
+          }),
+        },
+      );
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setEmailResult({ ok: true, message: `E-mail enviado para ${adminEmail}` });
+      } else {
+        setEmailResult({ ok: false, message: (data as any).error ?? "Erro ao enviar" });
+      }
+    } catch (e: any) {
+      setEmailResult({ ok: false, message: e.message ?? "Erro desconhecido" });
+    }
+    setTestingEmail(false);
   };
 
   if (isLoading) {
@@ -293,6 +344,80 @@ function IntegracoesPage() {
             </div>
           </Card>
 
+          {/* Resend — E-mails transacionais */}
+          <Card title="E-mails transacionais (Resend)">
+            <p className="mb-5 text-xs text-muted-foreground">
+              Configure o{" "}
+              <a
+                href="https://resend.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary hover:underline inline-flex items-center gap-0.5"
+              >
+                Resend <ExternalLink className="h-3 w-3" />
+              </a>{" "}
+              para enviar e-mails de confirmação de pedido, rastreamento, boas-vindas ao produtor e assinaturas do clube.
+              Plano gratuito inclui 3.000 e-mails/mês.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <SecretField
+                label="Resend API Key"
+                value={value("resend_api_key") ?? ""}
+                onChange={(v) => set("resend_api_key", v)}
+                placeholder="re_..."
+                hint={
+                  <span>
+                    Gere em:{" "}
+                    <a
+                      href="https://resend.com/api-keys"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-primary hover:underline"
+                    >
+                      resend.com/api-keys
+                    </a>
+                  </span>
+                }
+              />
+              <Field
+                label="Nome do remetente"
+                value={value("email_from_name") ?? ""}
+                onChange={(v) => set("email_from_name", v)}
+                placeholder="Cafezeira"
+                hint="Ex: Café EX — aparece no campo 'De:' do e-mail"
+              />
+              <Field
+                label="E-mail do remetente"
+                value={value("email_from_address") ?? ""}
+                onChange={(v) => set("email_from_address", v)}
+                placeholder="noreply@suaempresa.com.br"
+                hint="Deve ser de um domínio verificado no Resend"
+              />
+              <Field
+                label="E-mail de resposta (reply-to, opcional)"
+                value={value("email_reply_to") ?? ""}
+                onChange={(v) => set("email_reply_to", v)}
+                placeholder="contato@suaempresa.com.br"
+                hint="Para onde vão as respostas dos clientes"
+              />
+            </div>
+            <div className="mt-4 flex items-center gap-3">
+              <button
+                onClick={testResend}
+                disabled={testingEmail}
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:border-primary disabled:opacity-50"
+              >
+                {testingEmail ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Mail className="h-3.5 w-3.5" />
+                )}
+                Enviar e-mail de teste
+              </button>
+              {emailResult && <TestBadge result={emailResult} />}
+            </div>
+          </Card>
+
           <div className="flex justify-end">
             <button
               onClick={handleSave}
@@ -332,7 +457,7 @@ function Field({
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
-  hint?: string;
+  hint?: React.ReactNode;
   className?: string;
 }) {
   return (
@@ -360,7 +485,7 @@ function SecretField({
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
-  hint?: string;
+  hint?: React.ReactNode;
 }) {
   const [visible, setVisible] = useState(false);
   return (
