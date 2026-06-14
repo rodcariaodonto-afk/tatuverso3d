@@ -6,6 +6,7 @@ export type CatalogFilters = {
   categoryIds?: string[];
   roastLevels?: string[];
   origins?: string[];
+  grindOptions?: string[];
   noteIds?: string[];
   priceMax?: number;
   subscriptionOnly?: boolean;
@@ -163,6 +164,11 @@ export function applyCatalogFilters(
       (p) =>
         (p.origin_region && filters.origins!.includes(p.origin_region)) ||
         (p.origin_country && filters.origins!.includes(p.origin_country)),
+    );
+  }
+  if (filters.grindOptions?.length) {
+    list = list.filter((p) =>
+      p.variants.some((v) => filters.grindOptions!.includes(v.grind_option)),
     );
   }
   // noteIds filtering: not yet implemented (would need note ids in the join)

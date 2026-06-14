@@ -18,6 +18,7 @@ const searchSchema = z.object({
   cat: fallback(z.array(z.string()), []).default([]),
   roast: fallback(z.array(z.string()), []).default([]),
   origin: fallback(z.array(z.string()), []).default([]),
+  grind: fallback(z.array(z.string()), []).default([]),
   pmax: fallback(z.number().nullable(), null).default(null),
   sub: fallback(z.boolean(), false).default(false),
   sort: fallback(
@@ -50,6 +51,16 @@ const ROAST_LEVELS = [
   { value: "medium", label: "Média" },
   { value: "medium_dark", label: "Média-escura" },
   { value: "dark", label: "Escura" },
+];
+
+const GRIND_OPTIONS = [
+  { value: "whole_bean", label: "Grão inteiro" },
+  { value: "espresso", label: "Espresso" },
+  { value: "moka", label: "Moka" },
+  { value: "filter", label: "Filtrado" },
+  { value: "french_press", label: "French Press" },
+  { value: "aeropress", label: "Aeropress" },
+  { value: "cold_brew", label: "Cold Brew" },
 ];
 
 const SORTS = [
@@ -85,6 +96,7 @@ function CatalogPage() {
       categoryIds: search.cat,
       roastLevels: search.roast,
       origins: search.origin,
+      grindOptions: search.grind,
       priceMax: search.pmax ?? undefined,
       subscriptionOnly: search.sub,
       sort: search.sort,
@@ -103,7 +115,7 @@ function CatalogPage() {
       search: (prev: typeof search) => ({ ...prev, ...patch, page: 1 }),
     });
 
-  const toggleArray = (key: "cat" | "roast" | "origin", v: string) => {
+  const toggleArray = (key: "cat" | "roast" | "origin" | "grind", v: string) => {
     const cur = (search[key] ?? []) as string[];
     update({ [key]: cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v] } as any);
   };
@@ -115,6 +127,7 @@ function CatalogPage() {
         cat: [],
         roast: [],
         origin: [],
+        grind: [],
         pmax: null,
         sub: false,
         sort: "featured",
@@ -127,6 +140,7 @@ function CatalogPage() {
     search.cat.length +
     search.roast.length +
     search.origin.length +
+    search.grind.length +
     (search.pmax ? 1 : 0) +
     (search.sub ? 1 : 0);
 
@@ -199,6 +213,23 @@ function CatalogPage() {
           </div>
         </div>
       )}
+
+      <div>
+        <p className="eyebrow">Moagem</p>
+        <div className="mt-3 space-y-2">
+          {GRIND_OPTIONS.map((g) => (
+            <label key={g.value} className="flex items-center gap-2 text-sm text-foreground/80">
+              <input
+                type="checkbox"
+                checked={search.grind.includes(g.value)}
+                onChange={() => toggleArray("grind", g.value)}
+                className="h-4 w-4 rounded border-border accent-[var(--gold)]"
+              />
+              {g.label}
+            </label>
+          ))}
+        </div>
+      </div>
 
       <div>
         <p className="eyebrow">Preço máximo</p>
