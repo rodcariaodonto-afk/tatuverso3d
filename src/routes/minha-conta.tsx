@@ -1,15 +1,20 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { Package, Heart, MapPin, LogOut, User as UserIcon, Crown } from "lucide-react";
+import { Package, Heart, LogOut, User as UserIcon, Crown, Shield } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/minha-conta")({
   head: () => ({ meta: [{ title: "Minha conta — Café EX" }] }),
-  component: AccountPage,
+  component: AccountLayout,
 });
+
+function AccountLayout() {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  return path === "/minha-conta" ? <AccountPage /> : <Outlet />;
+}
 
 function AccountPage() {
   const { user, loading, signOut } = useAuth();
@@ -77,10 +82,11 @@ function AccountPage() {
         </button>
       </header>
 
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-4">
         <Card icon={UserIcon} title="Perfil" desc={user.email ?? ""} />
         <Card icon={Package} title="Pedidos" desc={`${orders?.length ?? 0} no histórico`} />
-        <Card icon={Heart} title="Assinatura" desc="Gerencie seus envios" link="/assinatura" />
+        <Card icon={Heart} title="Clube" desc="Gerencie sua assinatura" link="/clube" />
+        <Card icon={Shield} title="Privacidade" desc="Exporte ou exclua seus dados (LGPD)" link="/minha-conta/privacidade" />
       </div>
 
       {roles?.includes("producer" as any) && (

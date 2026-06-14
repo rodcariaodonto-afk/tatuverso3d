@@ -21,6 +21,7 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as ClubeRouteImport } from './routes/clube'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CarrinhoRouteImport } from './routes/carrinho'
@@ -34,6 +35,7 @@ import { Route as ProdutoresSlugRouteImport } from './routes/produtores.$slug'
 import { Route as ProdutorProdutosRouteImport } from './routes/produtor.produtos'
 import { Route as ProdutorPerfilRouteImport } from './routes/produtor.perfil'
 import { Route as ProdutorPedidosRouteImport } from './routes/produtor.pedidos'
+import { Route as MinhaContaPrivacidadeRouteImport } from './routes/minha-conta.privacidade'
 import { Route as CafeSlugRouteImport } from './routes/cafe.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminVendasRouteImport } from './routes/admin.vendas'
@@ -47,6 +49,7 @@ import { Route as AdminConteudoRouteImport } from './routes/admin.conteudo'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
 import { Route as AdminCandidaturasRouteImport } from './routes/admin.candidaturas'
+import { Route as AdminAssinaturasRouteImport } from './routes/admin.assinaturas'
 import { Route as AdminProdutosNovoRouteImport } from './routes/admin.produtos.novo'
 import { Route as AdminProdutosIdEditarRouteImport } from './routes/admin.produtos.$id.editar'
 
@@ -108,6 +111,11 @@ const LoginRoute = LoginRouteImport.update({
 const ContatoRoute = ContatoRouteImport.update({
   id: '/contato',
   path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClubeRoute = ClubeRouteImport.update({
+  id: '/clube',
+  path: '/clube',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -175,6 +183,11 @@ const ProdutorPedidosRoute = ProdutorPedidosRouteImport.update({
   path: '/pedidos',
   getParentRoute: () => ProdutorRoute,
 } as any)
+const MinhaContaPrivacidadeRoute = MinhaContaPrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => MinhaContaRoute,
+} as any)
 const CafeSlugRoute = CafeSlugRouteImport.update({
   id: '/cafe/$slug',
   path: '/cafe/$slug',
@@ -240,6 +253,11 @@ const AdminCandidaturasRoute = AdminCandidaturasRouteImport.update({
   path: '/candidaturas',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAssinaturasRoute = AdminAssinaturasRouteImport.update({
+  id: '/assinaturas',
+  path: '/assinaturas',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProdutosNovoRoute = AdminProdutosNovoRouteImport.update({
   id: '/novo',
   path: '/novo',
@@ -259,9 +277,10 @@ export interface FileRoutesByFullPath {
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
+  '/clube': typeof ClubeRoute
   '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
-  '/minha-conta': typeof MinhaContaRoute
+  '/minha-conta': typeof MinhaContaRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/private-label': typeof PrivateLabelRoute
   '/produtor': typeof ProdutorRouteWithChildren
@@ -271,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/candidaturas': typeof AdminCandidaturasRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
@@ -284,6 +304,7 @@ export interface FileRoutesByFullPath {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
+  '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
   '/produtor/produtos': typeof ProdutorProdutosRoute
@@ -301,9 +322,10 @@ export interface FileRoutesByTo {
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
+  '/clube': typeof ClubeRoute
   '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
-  '/minha-conta': typeof MinhaContaRoute
+  '/minha-conta': typeof MinhaContaRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/private-label': typeof PrivateLabelRoute
   '/produtor': typeof ProdutorRouteWithChildren
@@ -313,6 +335,7 @@ export interface FileRoutesByTo {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/candidaturas': typeof AdminCandidaturasRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
@@ -326,6 +349,7 @@ export interface FileRoutesByTo {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
+  '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
   '/produtor/produtos': typeof ProdutorProdutosRoute
@@ -344,9 +368,10 @@ export interface FileRoutesById {
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
+  '/clube': typeof ClubeRoute
   '/contato': typeof ContatoRoute
   '/login': typeof LoginRoute
-  '/minha-conta': typeof MinhaContaRoute
+  '/minha-conta': typeof MinhaContaRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/private-label': typeof PrivateLabelRoute
   '/produtor': typeof ProdutorRouteWithChildren
@@ -356,6 +381,7 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
+  '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/candidaturas': typeof AdminCandidaturasRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
@@ -369,6 +395,7 @@ export interface FileRoutesById {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/cafe/$slug': typeof CafeSlugRoute
+  '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
   '/produtor/produtos': typeof ProdutorProdutosRoute
@@ -388,6 +415,7 @@ export interface FileRouteTypes {
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
+    | '/clube'
     | '/contato'
     | '/login'
     | '/minha-conta'
@@ -400,6 +428,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/vender-na-plataforma'
+    | '/admin/assinaturas'
     | '/admin/candidaturas'
     | '/admin/clientes'
     | '/admin/config'
@@ -413,6 +442,7 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/cafe/$slug'
+    | '/minha-conta/privacidade'
     | '/produtor/pedidos'
     | '/produtor/perfil'
     | '/produtor/produtos'
@@ -430,6 +460,7 @@ export interface FileRouteTypes {
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
+    | '/clube'
     | '/contato'
     | '/login'
     | '/minha-conta'
@@ -442,6 +473,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/vender-na-plataforma'
+    | '/admin/assinaturas'
     | '/admin/candidaturas'
     | '/admin/clientes'
     | '/admin/config'
@@ -455,6 +487,7 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/cafe/$slug'
+    | '/minha-conta/privacidade'
     | '/produtor/pedidos'
     | '/produtor/perfil'
     | '/produtor/produtos'
@@ -472,6 +505,7 @@ export interface FileRouteTypes {
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
+    | '/clube'
     | '/contato'
     | '/login'
     | '/minha-conta'
@@ -484,6 +518,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/vender-na-plataforma'
+    | '/admin/assinaturas'
     | '/admin/candidaturas'
     | '/admin/clientes'
     | '/admin/config'
@@ -497,6 +532,7 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/cafe/$slug'
+    | '/minha-conta/privacidade'
     | '/produtor/pedidos'
     | '/produtor/perfil'
     | '/produtor/produtos'
@@ -515,9 +551,10 @@ export interface RootRouteChildren {
   CarrinhoRoute: typeof CarrinhoRoute
   CatalogoRoute: typeof CatalogoRoute
   CheckoutRoute: typeof CheckoutRoute
+  ClubeRoute: typeof ClubeRoute
   ContatoRoute: typeof ContatoRoute
   LoginRoute: typeof LoginRoute
-  MinhaContaRoute: typeof MinhaContaRoute
+  MinhaContaRoute: typeof MinhaContaRouteWithChildren
   PrivacidadeRoute: typeof PrivacidadeRoute
   PrivateLabelRoute: typeof PrivateLabelRoute
   ProdutorRoute: typeof ProdutorRouteWithChildren
@@ -620,6 +657,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/clube': {
+      id: '/clube'
+      path: '/clube'
+      fullPath: '/clube'
+      preLoaderRoute: typeof ClubeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/checkout': {
       id: '/checkout'
       path: '/checkout'
@@ -710,6 +754,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/produtor/pedidos'
       preLoaderRoute: typeof ProdutorPedidosRouteImport
       parentRoute: typeof ProdutorRoute
+    }
+    '/minha-conta/privacidade': {
+      id: '/minha-conta/privacidade'
+      path: '/privacidade'
+      fullPath: '/minha-conta/privacidade'
+      preLoaderRoute: typeof MinhaContaPrivacidadeRouteImport
+      parentRoute: typeof MinhaContaRoute
     }
     '/cafe/$slug': {
       id: '/cafe/$slug'
@@ -802,6 +853,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCandidaturasRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/assinaturas': {
+      id: '/admin/assinaturas'
+      path: '/assinaturas'
+      fullPath: '/admin/assinaturas'
+      preLoaderRoute: typeof AdminAssinaturasRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/produtos/novo': {
       id: '/admin/produtos/novo'
       path: '/novo'
@@ -834,6 +892,7 @@ const AdminProdutosRouteWithChildren = AdminProdutosRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminAssinaturasRoute: typeof AdminAssinaturasRoute
   AdminCandidaturasRoute: typeof AdminCandidaturasRoute
   AdminClientesRoute: typeof AdminClientesRoute
   AdminConfigRoute: typeof AdminConfigRoute
@@ -848,6 +907,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAssinaturasRoute: AdminAssinaturasRoute,
   AdminCandidaturasRoute: AdminCandidaturasRoute,
   AdminClientesRoute: AdminClientesRoute,
   AdminConfigRoute: AdminConfigRoute,
@@ -862,6 +922,18 @@ const AdminRouteChildren: AdminRouteChildren = {
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface MinhaContaRouteChildren {
+  MinhaContaPrivacidadeRoute: typeof MinhaContaPrivacidadeRoute
+}
+
+const MinhaContaRouteChildren: MinhaContaRouteChildren = {
+  MinhaContaPrivacidadeRoute: MinhaContaPrivacidadeRoute,
+}
+
+const MinhaContaRouteWithChildren = MinhaContaRoute._addFileChildren(
+  MinhaContaRouteChildren,
+)
 
 interface ProdutorRouteChildren {
   ProdutorPedidosRoute: typeof ProdutorPedidosRoute
@@ -887,9 +959,10 @@ const rootRouteChildren: RootRouteChildren = {
   CarrinhoRoute: CarrinhoRoute,
   CatalogoRoute: CatalogoRoute,
   CheckoutRoute: CheckoutRoute,
+  ClubeRoute: ClubeRoute,
   ContatoRoute: ContatoRoute,
   LoginRoute: LoginRoute,
-  MinhaContaRoute: MinhaContaRoute,
+  MinhaContaRoute: MinhaContaRouteWithChildren,
   PrivacidadeRoute: PrivacidadeRoute,
   PrivateLabelRoute: PrivateLabelRoute,
   ProdutorRoute: ProdutorRouteWithChildren,

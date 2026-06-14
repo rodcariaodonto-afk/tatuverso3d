@@ -14,6 +14,7 @@ import { Header } from "@/components/marketing/Header";
 import { Footer } from "@/components/marketing/Footer";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { Toaster } from "sonner";
+import { tenantConfig, applyTenantTheme } from "@/lib/tenant-config";
 
 function NotFoundComponent() {
   return (
@@ -77,16 +78,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Café EX" },
-      { name: "description", content: "Café EX Platform is a web application for managing and evaluating coffee-related data." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Café EX" },
-      { property: "og:description", content: "Café EX Platform is a web application for managing and evaluating coffee-related data." },
+      { title: tenantConfig.name },
+      { name: "description", content: tenantConfig.tagline },
+      { property: "og:title", content: tenantConfig.name },
+      { property: "og:description", content: tenantConfig.tagline },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Café EX" },
-      { name: "twitter:description", content: "Café EX Platform is a web application for managing and evaluating coffee-related data." },
+      { name: "twitter:title", content: tenantConfig.name },
+      { name: "twitter:description", content: tenantConfig.tagline },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/404fc7a8-102d-4ab4-b3a9-59f97aa2e470/id-preview-557cc6a3--d52f8edc-8dc1-4af7-8dca-0bbcce675809.lovable.app-1778186118502.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/404fc7a8-102d-4ab4-b3a9-59f97aa2e470/id-preview-557cc6a3--d52f8edc-8dc1-4af7-8dca-0bbcce675809.lovable.app-1778186118502.png" },
     ],
@@ -119,6 +118,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  // Aplica cores do tenant via CSS variables
+  applyTenantTheme();
 
   return (
     <QueryClientProvider client={queryClient}>

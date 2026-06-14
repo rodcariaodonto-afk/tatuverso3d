@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { tenantConfig } from "@/lib/tenant-config";
 import {
   LayoutDashboard,
   Package,
@@ -13,6 +14,7 @@ import {
   Image as ImageIcon,
   Plug,
   ClipboardList,
+  Crown,
   LogOut,
   Menu,
   X,
@@ -29,6 +31,7 @@ const NAV = [
   { to: "/admin/clientes", label: "Clientes", icon: Users },
   { to: "/admin/produtores", label: "Produtores", icon: Sprout },
   { to: "/admin/candidaturas", label: "Candidaturas", icon: ClipboardList },
+  { to: "/admin/assinaturas", label: "Assinaturas", icon: Crown },
   { to: "/admin/leads", label: "Leads B2B", icon: Briefcase },
   { to: "/admin/cupons", label: "Cupons", icon: TicketPercent },
   { to: "/admin/conteudo", label: "Conteúdo do site", icon: ImageIcon },
@@ -86,7 +89,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const SidebarBody = (
     <div className="flex h-full flex-col">
       <Link to="/admin" className="flex items-center gap-2 border-b border-border px-5 py-4">
-        <span className="font-display text-lg font-bold tracking-tight text-primary">CAFÉ EX</span>
+        <span className="font-display text-lg font-bold tracking-tight text-primary">{tenantConfig.name}</span>
         <span className="rounded-full bg-[var(--gold)]/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--gold)]">
           Admin
         </span>
