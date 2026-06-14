@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/privacidade")({
-  head: () => ({ meta: [{ title: "Privacidade — Cafezeira" }] }),
+  head: () => ({ meta: [{ title: "Privacidade — Café EX" }] }),
   component: () => (
     <div className="container mx-auto max-w-3xl px-4 py-16 md:px-6">
       <h1 className="font-display text-4xl text-primary">Política de Privacidade</h1>
       <div className="gold-divider mt-3" />
       <div className="prose mt-8 max-w-none space-y-4 text-sm leading-relaxed text-foreground/85">
         <p>
-          A Cafezeira respeita a sua privacidade. Coletamos apenas os dados necessários para prestar nossos
+          A Café EX respeita a sua privacidade. Coletamos apenas os dados necessários para prestar nossos
           serviços: cadastro, pedidos e atendimento. Não vendemos seus dados a terceiros.
         </p>
         <p>

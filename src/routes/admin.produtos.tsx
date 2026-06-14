@@ -1,23 +1,21 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState, useCallback } from "react";
+import { createFileRoute, useRouterState } from "@tanstack/react-router";
+import { useCallback, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Plus, Search, Star, Trash2, Pencil, Archive, X, Loader2, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
-import {
-  Plus,
-  Pencil,
-  Archive,
-  X,
-  Loader2,
-  Image as ImageIcon,
-} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/cart-store";
-import { useAdminRoles } from "./admin";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/produtos")({
-  head: () => ({ meta: [{ title: "Produtos — Admin · Cafezeira" }] }),
-  component: AdminProdutos,
+  head: () => ({ meta: [{ title: "Admin · Cafés — Café EX" }] }),
+  component: AdminProductsLayout,
 });
+
+function AdminProductsLayout() {
+  const path = useRouterState({ select: (state) => state.location.pathname });
+  return path === "/admin/produtos" ? <AdminProductsPage /> : null;
+}
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -57,15 +55,13 @@ type Product = {
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const ROAST_LABELS: Record<string, string> = {
-  light: "Clara",
-  medium_light: "Média-clara",
-  medium: "Média",
-  medium_dark: "Média-escura",
-  dark: "Escura",
-};
-
-const ROAST_LEVELS = Object.entries(ROAST_LABELS).map(([value, label]) => ({ value, label }));
+const ROAST_LEVELS = [
+  { value: "light", label: "Clara" },
+  { value: "medium_light", label: "Média-clara" },
+  { value: "medium", label: "Média" },
+  { value: "medium_dark", label: "Média-escura" },
+  { value: "dark", label: "Escura" },
+];
 
 const GRIND_OPTIONS = [
   { value: "whole_bean", label: "Grão inteiro" },
@@ -91,22 +87,20 @@ function slugify(text: string): string {
   return text
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[̀-ͯ]/g, "")
     .replace(/[^a-z0-9\s-]/g, "")
     .trim()
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
 }
 
-function minPrice(p: Product): number {
-  const prices = p.product_variants
-    .map((v) => Number(v.price))
-    .filter((n) => n > 0);
+function minPrice(variants: Variant[]): number {
+  const prices = variants.map((v) => Number(v.price)).filter((n) => n > 0);
   return prices.length ? Math.min(...prices) : 0;
 }
 
-function totalStock(p: Product): number {
-  return p.product_variants.reduce((s, v) => s + (v.stock_quantity ?? 0), 0);
+function totalStock(variants: Variant[]): number {
+  return variants.reduce((s, v) => s + (v.stock_quantity ?? 0), 0);
 }
 
 function emptyVariant(): VariantRow {
@@ -122,21 +116,82 @@ function emptyVariant(): VariantRow {
   };
 }
 
-// ── Main page ─────────────────────────────────────────────────────────────────
+// ── Page ──────────────────────────────────────────────────────────────────────
 
-function AdminProdutos() {
-  const qc = useQueryClient();
-  const { data: roles } = useAdminRoles();
-  const isAdmin =
-    roles?.includes("admin" as any) || roles?.includes("support" as any);
+type Tab = "products" | "categories" | "reviews";
 
+function AdminProductsPage() {
+  const [tab, setTab] = useState<Tab>("products");
   const [editing, setEditing] = useState<Product | null | "new">(null);
 
+  return (
+    <AdminShell>
+      <div className="mx-auto max-w-6xl">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="eyebrow">Administração</p>
+            <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Cafés</h1>
+            <div className="gold-divider mt-3" />
+          </div>
+          {tab === "products" && (
+            <button
+              onClick={() => setEditing("new")}
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+            >
+              <Plus className="h-4 w-4" /> Novo café
+            </button>
+          )}
+        </div>
+
+        <div className="mt-6 flex gap-1 border-b border-border">
+          {(
+            [
+              ["products", "Cafés"],
+              ["categories", "Categorias"],
+              ["reviews", "Avaliações"],
+            ] as const
+          ).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => setTab(key)}
+              className={`-mb-px border-b-2 px-4 py-2 text-sm font-semibold transition ${
+                tab === key
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-6">
+          {tab === "products" && <ProductsList onEdit={(p) => setEditing(p)} />}
+          {tab === "categories" && <CategoriesPanel />}
+          {tab === "reviews" && <ReviewsPanel />}
+        </div>
+      </div>
+
+      {editing !== null && (
+        <ProductForm
+          product={editing === "new" ? null : editing}
+          onClose={() => setEditing(null)}
+        />
+      )}
+    </AdminShell>
+  );
+}
+
+// ── ProductsList ──────────────────────────────────────────────────────────────
+
+function ProductsList({ onEdit }: { onEdit: (p: Product) => void }) {
+  const [q, setQ] = useState("");
+  const qc = useQueryClient();
+
   const { data: products, isLoading } = useQuery({
-    queryKey: ["admin-products"],
-    enabled: !!isAdmin,
+    queryKey: ["admin-products", q],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("products")
         .select(
           `id, name, slug, short_description, description, cover_url,
@@ -145,39 +200,63 @@ function AdminProdutos() {
            producers(id, name),
            product_variants(id, price, compare_at_price, weight_grams, grind_option, stock_quantity, is_default, sku)`,
         )
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .limit(200);
+      if (q.trim()) query = query.ilike("name", `%${q.trim()}%`);
+      const { data, error } = await query;
       if (error) throw error;
       return (data ?? []) as unknown as Product[];
     },
   });
 
-  const archiveProduct = async (id: string) => {
-    const { error } = await supabase
+  const duplicate = async (p: Product) => {
+    const { product_variants, id: _id, created_at, ...rest } = p as any;
+    const { data: created, error } = await supabase
       .from("products")
-      .update({ status: "archived" })
-      .eq("id", id);
+      .insert({
+        ...rest,
+        name: `${p.name} (cópia)`,
+        slug: `${p.slug}-copia-${Date.now().toString(36)}`,
+        status: "draft",
+        published_at: null,
+      })
+      .select("id")
+      .single();
+    if (error || !created) return toast.error(error?.message ?? "Erro ao duplicar");
+    if (product_variants?.length) {
+      await supabase.from("product_variants").insert(
+        product_variants.map((v: any) => {
+          const { id: _vid, created_at: _ca, updated_at: _ua, ...vrest } = v;
+          return { ...vrest, product_id: created.id };
+        }),
+      );
+    }
+    toast.success("Café duplicado como rascunho");
+    qc.invalidateQueries({ queryKey: ["admin-products"] });
+  };
+
+  const archive = async (id: string, name: string) => {
+    if (!confirm(`Arquivar "${name}"? Ele deixará de aparecer no catálogo.`)) return;
+    const { error } = await supabase.from("products").update({ status: "archived" }).eq("id", id);
     if (error) return toast.error(error.message);
-    toast.success("Produto arquivado");
+    toast.success("Arquivado");
     qc.invalidateQueries({ queryKey: ["admin-products"] });
     qc.invalidateQueries({ queryKey: ["catalog-products"] });
   };
 
   return (
-    <div className="container mx-auto px-4 py-12 md:px-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className="eyebrow">Administração</p>
-          <h1 className="mt-1 font-display text-3xl text-primary">Cafés</h1>
-        </div>
-        <button
-          onClick={() => setEditing("new")}
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold uppercase tracking-wider text-primary-foreground"
-        >
-          <Plus className="h-4 w-4" /> Novo café
-        </button>
+    <>
+      <div className="flex max-w-md items-center gap-2 rounded-full border border-border bg-card px-4 py-2">
+        <Search className="h-4 w-4 text-muted-foreground" />
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Buscar por nome..."
+          className="w-full bg-transparent text-sm focus:outline-none"
+        />
       </div>
 
-      <div className="mt-8 overflow-hidden rounded-lg border border-border bg-card">
+      <div className="mt-6 overflow-hidden rounded-lg border border-border bg-card">
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -193,7 +272,7 @@ function AdminProdutos() {
                   <th className="px-4 py-3 text-left">Estoque</th>
                   <th className="px-4 py-3 text-right">Preço mín.</th>
                   <th className="px-4 py-3 text-left">Status</th>
-                  <th className="px-4 py-3 text-right">Ações</th>
+                  <th className="px-4 py-3 text-right" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -208,8 +287,8 @@ function AdminProdutos() {
                             className="h-10 w-10 flex-shrink-0 rounded object-cover"
                           />
                         ) : (
-                          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded bg-muted text-muted-foreground">
-                            <ImageIcon className="h-4 w-4" />
+                          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded bg-muted">
+                            <ImageIcon className="h-4 w-4 text-muted-foreground" />
                           </div>
                         )}
                         <div>
@@ -230,14 +309,18 @@ function AdminProdutos() {
                     <td className="px-4 py-3">
                       <span
                         className={`text-xs font-medium ${
-                          totalStock(p) === 0 ? "text-destructive" : "text-foreground/70"
+                          totalStock(p.product_variants) === 0
+                            ? "text-destructive"
+                            : "text-foreground/70"
                         }`}
                       >
-                        {totalStock(p)} un.
+                        {totalStock(p.product_variants)} un.
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right font-medium text-primary">
-                      {minPrice(p) > 0 ? formatBRL(minPrice(p)) : "—"}
+                      {minPrice(p.product_variants) > 0
+                        ? formatBRL(minPrice(p.product_variants))
+                        : "—"}
                     </td>
                     <td className="px-4 py-3">
                       <span
@@ -252,16 +335,22 @@ function AdminProdutos() {
                         {STATUSES.find((s) => s.value === p.status)?.label ?? p.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="space-x-3 whitespace-nowrap px-4 py-3 text-right">
                       <button
-                        onClick={() => setEditing(p)}
-                        className="mr-3 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                        onClick={() => onEdit(p)}
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
                       >
                         <Pencil className="h-3 w-3" /> Editar
                       </button>
+                      <button
+                        onClick={() => duplicate(p)}
+                        className="text-xs font-semibold text-foreground/60 hover:underline"
+                      >
+                        Duplicar
+                      </button>
                       {p.status !== "archived" && (
                         <button
-                          onClick={() => archiveProduct(p.id)}
+                          onClick={() => archive(p.id, p.name)}
                           className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-destructive"
                         >
                           <Archive className="h-3 w-3" /> Arquivar
@@ -274,9 +363,9 @@ function AdminProdutos() {
                   <tr>
                     <td
                       colSpan={7}
-                      className="py-12 text-center text-sm text-muted-foreground"
+                      className="p-8 text-center text-sm text-muted-foreground"
                     >
-                      Nenhum produto cadastrado. Clique em &ldquo;Novo café&rdquo; para começar.
+                      Nenhum café encontrado.
                     </td>
                   </tr>
                 )}
@@ -285,14 +374,7 @@ function AdminProdutos() {
           </div>
         )}
       </div>
-
-      {editing !== null && (
-        <ProductForm
-          product={editing === "new" ? null : editing}
-          onClose={() => setEditing(null)}
-        />
-      )}
-    </div>
+    </>
   );
 }
 
@@ -364,10 +446,7 @@ function ProductForm({
   const { data: producers } = useQuery({
     queryKey: ["admin-producers"],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("producers")
-        .select("id, name")
-        .order("name");
+      const { data } = await supabase.from("producers").select("id, name").order("name");
       return data ?? [];
     },
     staleTime: 60_000,
@@ -378,11 +457,7 @@ function ProductForm({
 
   const handleNameChange = useCallback(
     (name: string) => {
-      setForm((f) => ({
-        ...f,
-        name,
-        slug: product ? f.slug : slugify(name),
-      }));
+      setForm((f) => ({ ...f, name, slug: product ? f.slug : slugify(name) }));
     },
     [product],
   );
@@ -423,37 +498,34 @@ function ProductForm({
     if (!form.producer_id) return toast.error("Selecione um produtor");
     if (variants.length === 0) return toast.error("Adicione ao menos uma variante");
     if (!variants.some((v) => Number(v.price) > 0))
-      return toast.error("Ao menos uma variante precisa ter preço maior que zero");
+      return toast.error("Ao menos uma variante precisa ter preço > 0");
 
     setSaving(true);
-
     const productId = product?.id ?? crypto.randomUUID();
 
-    // 1. Upload image if a new file was selected
+    // 1. Upload image
     let coverUrl = product?.cover_url ?? null;
     if (imageFile) {
       const ext = (imageFile.name.split(".").pop() ?? "jpg").toLowerCase();
-      const path = `${productId}/cover.${ext}`;
       const { error: uploadErr } = await supabase.storage
         .from("product-images")
-        .upload(path, imageFile, { upsert: true });
+        .upload(`${productId}/cover.${ext}`, imageFile, { upsert: true });
       if (uploadErr) {
-        toast.error(`Erro no upload da imagem: ${uploadErr.message}`);
+        toast.error(`Erro no upload: ${uploadErr.message}`);
         setSaving(false);
         return;
       }
       const {
         data: { publicUrl },
-      } = supabase.storage.from("product-images").getPublicUrl(path);
+      } = supabase.storage.from("product-images").getPublicUrl(`${productId}/cover.${ext}`);
       coverUrl = publicUrl;
     }
 
-    // 2. Upsert product row
+    // 2. Upsert product
     const badges = form.badges_raw
       .split(",")
       .map((b) => b.trim())
       .filter(Boolean);
-
     const { error: productErr } = await supabase.from("products").upsert({
       id: productId,
       name: form.name.trim(),
@@ -472,27 +544,22 @@ function ProductForm({
       cover_url: coverUrl,
       published_at: form.status === "active" ? new Date().toISOString() : null,
     });
-
     if (productErr) {
       toast.error(productErr.message);
       setSaving(false);
       return;
     }
 
-    // 3. Delete removed variants (best-effort: fails silently if FK prevents it)
+    // 3. Delete removed variants (best-effort)
     for (const id of deletedVariantIds) {
-      const { error } = await supabase
-        .from("product_variants")
-        .delete()
-        .eq("id", id);
-      if (error) {
+      const { error } = await supabase.from("product_variants").delete().eq("id", id);
+      if (error)
         toast.warning(
-          `Variante ${id.slice(0, 8)}… não removida — tem pedidos vinculados. Zere o estoque para desativá-la.`,
+          `Variante ${id.slice(0, 8)}… não removida — tem pedidos vinculados.`,
         );
-      }
     }
 
-    // 4. Upsert all remaining variants
+    // 4. Upsert remaining variants
     for (const v of variants) {
       const { error } = await supabase.from("product_variants").upsert({
         ...(v.id ? { id: v.id } : {}),
@@ -511,11 +578,9 @@ function ProductForm({
       if (error) toast.error(`Erro ao salvar variante: ${error.message}`);
     }
 
-    // 5. Refresh queries
     qc.invalidateQueries({ queryKey: ["admin-products"] });
     qc.invalidateQueries({ queryKey: ["catalog-products"] });
-
-    toast.success(product ? "Produto atualizado" : "Produto criado com sucesso");
+    toast.success(product ? "Produto atualizado" : "Produto criado");
     setSaving(false);
     onClose();
   };
@@ -529,31 +594,24 @@ function ProductForm({
         className="relative my-8 w-full max-w-3xl rounded-xl border border-border bg-background shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <h2 className="font-display text-xl text-primary">
             {product ? "Editar café" : "Novo café"}
           </h2>
-          <button
-            onClick={onClose}
-            className="rounded p-1 text-muted-foreground hover:bg-muted"
-          >
+          <button onClick={onClose} className="rounded p-1 text-muted-foreground hover:bg-muted">
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* Body */}
         <div className="space-y-8 px-6 py-6">
-          {/* ── Informações básicas ── */}
+          {/* Informações básicas */}
           <section>
             <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Informações básicas
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-foreground/70">
-                  Nome *
-                </label>
+                <label className="block text-xs font-medium text-foreground/70">Nome *</label>
                 <input
                   value={form.name}
                   onChange={(e) => handleNameChange(e.target.value)}
@@ -561,7 +619,6 @@ function ProductForm({
                   className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
                 />
               </div>
-
               <div>
                 <label className="block text-xs font-medium text-foreground/70">
                   Slug * (URL)
@@ -573,11 +630,8 @@ function ProductForm({
                   className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 font-mono text-sm focus:border-accent focus:outline-none"
                 />
               </div>
-
               <div>
-                <label className="block text-xs font-medium text-foreground/70">
-                  Produtor *
-                </label>
+                <label className="block text-xs font-medium text-foreground/70">Produtor *</label>
                 <select
                   value={form.producer_id}
                   onChange={(e) => setField("producer_id", e.target.value)}
@@ -591,7 +645,6 @@ function ProductForm({
                   ))}
                 </select>
               </div>
-
               <div className="sm:col-span-2">
                 <label className="block text-xs font-medium text-foreground/70">
                   Descrição curta
@@ -600,15 +653,11 @@ function ProductForm({
                   value={form.short_description}
                   onChange={(e) => setField("short_description", e.target.value)}
                   rows={2}
-                  placeholder="Uma frase sobre o café..."
                   className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
                 />
               </div>
-
               <div>
-                <label className="block text-xs font-medium text-foreground/70">
-                  Torra
-                </label>
+                <label className="block text-xs font-medium text-foreground/70">Torra</label>
                 <select
                   value={form.roast_level}
                   onChange={(e) => setField("roast_level", e.target.value)}
@@ -622,7 +671,6 @@ function ProductForm({
                   ))}
                 </select>
               </div>
-
               <div>
                 <label className="block text-xs font-medium text-foreground/70">
                   Região de origem
@@ -634,19 +682,14 @@ function ProductForm({
                   className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
                 />
               </div>
-
               <div>
-                <label className="block text-xs font-medium text-foreground/70">
-                  País
-                </label>
+                <label className="block text-xs font-medium text-foreground/70">País</label>
                 <input
                   value={form.origin_country}
                   onChange={(e) => setField("origin_country", e.target.value)}
-                  placeholder="Brasil"
                   className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
                 />
               </div>
-
               <div>
                 <label className="block text-xs font-medium text-foreground/70">
                   Pontuação SCA (0–100)
@@ -662,7 +705,6 @@ function ProductForm({
                   className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
                 />
               </div>
-
               <div className="sm:col-span-2">
                 <label className="block text-xs font-medium text-foreground/70">
                   Badges (separados por vírgula)
@@ -674,11 +716,8 @@ function ProductForm({
                   className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
                 />
               </div>
-
               <div>
-                <label className="block text-xs font-medium text-foreground/70">
-                  Status
-                </label>
+                <label className="block text-xs font-medium text-foreground/70">Status</label>
                 <select
                   value={form.status}
                   onChange={(e) => setField("status", e.target.value)}
@@ -691,7 +730,6 @@ function ProductForm({
                   ))}
                 </select>
               </div>
-
               <div className="flex flex-col justify-end gap-3 pb-1">
                 <label className="flex items-center gap-2 text-sm text-foreground/80">
                   <input
@@ -706,9 +744,7 @@ function ProductForm({
                   <input
                     type="checkbox"
                     checked={form.is_subscription_available}
-                    onChange={(e) =>
-                      setField("is_subscription_available", e.target.checked)
-                    }
+                    onChange={(e) => setField("is_subscription_available", e.target.checked)}
                     className="h-4 w-4 accent-[var(--gold)]"
                   />
                   Disponível para assinatura
@@ -717,7 +753,7 @@ function ProductForm({
             </div>
           </section>
 
-          {/* ── Imagem de capa ── */}
+          {/* Imagem de capa */}
           <section>
             <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Imagem de capa
@@ -747,16 +783,11 @@ function ProductForm({
                 <p className="mt-2 text-xs text-muted-foreground">
                   PNG, JPG ou WEBP · Recomendado: 800 × 1000 px.
                 </p>
-                {product?.cover_url && !imageFile && (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Imagem atual mantida se nenhuma nova for selecionada.
-                  </p>
-                )}
               </div>
             </div>
           </section>
 
-          {/* ── Variantes / SKUs ── */}
+          {/* Variantes / SKUs */}
           <section>
             <div className="mb-4 flex items-center justify-between">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -770,7 +801,6 @@ function ProductForm({
                 <Plus className="h-3 w-3" /> Adicionar variante
               </button>
             </div>
-
             <div className="overflow-x-auto rounded-lg border border-border">
               <table className="w-full text-xs">
                 <thead className="bg-muted text-[10px] uppercase tracking-wider text-muted-foreground">
@@ -795,9 +825,7 @@ function ProductForm({
                           step={50}
                           value={v.weight_grams}
                           onChange={(e) =>
-                            updateVariant(v._key, {
-                              weight_grams: Number(e.target.value),
-                            })
+                            updateVariant(v._key, { weight_grams: Number(e.target.value) })
                           }
                           className="w-20 rounded border border-border bg-card px-2 py-1 text-xs focus:border-accent focus:outline-none"
                         />
@@ -885,7 +913,6 @@ function ProductForm({
                             type="button"
                             onClick={() => removeVariant(v._key)}
                             className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                            title="Remover variante"
                           >
                             <X className="h-3.5 w-3.5" />
                           </button>
@@ -897,13 +924,12 @@ function ProductForm({
               </table>
             </div>
             <p className="mt-2 text-[11px] text-muted-foreground">
-              O botão &ldquo;Padrão&rdquo; define qual variante é exibida primeiro no catálogo.
-              Variantes com pedidos vinculados não podem ser removidas — zere o estoque para desativá-las.
+              Variantes com pedidos vinculados não podem ser removidas — zere o estoque para
+              desativá-las.
             </p>
           </section>
         </div>
 
-        {/* Footer */}
         <div className="flex justify-end gap-3 border-t border-border px-6 py-4">
           <button
             onClick={onClose}
@@ -921,6 +947,356 @@ function ProductForm({
             {saving ? "Salvando..." : product ? "Salvar alterações" : "Criar café"}
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ── CategoriesPanel ────────────────────────────────────────────────────────────
+
+function CategoriesPanel() {
+  const qc = useQueryClient();
+  const [editing, setEditing] = useState<any | null>(null);
+  const [form, setForm] = useState({
+    name: "",
+    slug: "",
+    description: "",
+    image_url: "",
+    sort_order: 0,
+  });
+
+  const { data: categories, isLoading } = useQuery({
+    queryKey: ["admin-categories"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .order("sort_order", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const catSlugify = (s: string) =>
+    s
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+  const reset = () => {
+    setEditing(null);
+    setForm({ name: "", slug: "", description: "", image_url: "", sort_order: 0 });
+  };
+
+  const save = async () => {
+    if (!form.name.trim()) return toast.error("Nome obrigatório");
+    const payload = {
+      name: form.name.trim(),
+      slug: form.slug.trim() || catSlugify(form.name),
+      description: form.description.trim() || null,
+      image_url: form.image_url.trim() || null,
+      sort_order: Number(form.sort_order) || 0,
+    };
+    const { error } = editing
+      ? await supabase.from("categories").update(payload).eq("id", editing.id)
+      : await supabase.from("categories").insert(payload);
+    if (error) return toast.error(error.message);
+    toast.success(editing ? "Categoria atualizada" : "Categoria criada");
+    reset();
+    qc.invalidateQueries({ queryKey: ["admin-categories"] });
+  };
+
+  const remove = async (id: string, name: string) => {
+    if (!confirm(`Remover categoria "${name}"?`)) return;
+    const { error } = await supabase.from("categories").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Removida");
+    qc.invalidateQueries({ queryKey: ["admin-categories"] });
+  };
+
+  const startEdit = (c: any) => {
+    setEditing(c);
+    setForm({
+      name: c.name,
+      slug: c.slug,
+      description: c.description ?? "",
+      image_url: c.image_url ?? "",
+      sort_order: c.sort_order ?? 0,
+    });
+  };
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+      <div className="overflow-hidden rounded-lg border border-border bg-card">
+        <table className="w-full text-sm">
+          <thead className="bg-muted text-xs uppercase tracking-wider text-muted-foreground">
+            <tr>
+              <th className="px-4 py-3 text-left">Categoria</th>
+              <th className="px-4 py-3 text-left">Slug</th>
+              <th className="px-4 py-3 text-right">Ordem</th>
+              <th className="px-4 py-3 text-right" />
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {isLoading && (
+              <tr>
+                <td colSpan={4} className="p-8 text-center text-sm text-muted-foreground">
+                  Carregando…
+                </td>
+              </tr>
+            )}
+            {(categories ?? []).map((c: any) => (
+              <tr key={c.id}>
+                <td className="px-4 py-3 font-medium text-primary">{c.name}</td>
+                <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{c.slug}</td>
+                <td className="px-4 py-3 text-right">{c.sort_order ?? 0}</td>
+                <td className="space-x-2 whitespace-nowrap px-4 py-3 text-right">
+                  <button
+                    onClick={() => startEdit(c)}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                  >
+                    <Pencil className="h-3 w-3" /> Editar
+                  </button>
+                  <button
+                    onClick={() => remove(c.id, c.name)}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-destructive hover:underline"
+                  >
+                    <Trash2 className="h-3 w-3" /> Remover
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {!isLoading && (categories ?? []).length === 0 && (
+              <tr>
+                <td colSpan={4} className="p-8 text-center text-sm text-muted-foreground">
+                  Nenhuma categoria ainda.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="rounded-lg border border-border bg-card p-5">
+        <h3 className="font-display text-lg text-primary">
+          {editing ? "Editar categoria" : "Nova categoria"}
+        </h3>
+        <div className="mt-4 space-y-3">
+          {(
+            [
+              ["Nome", "name"],
+              ["Slug", "slug"],
+              ["Descrição", "description"],
+              ["Imagem (URL)", "image_url"],
+            ] as const
+          ).map(([label, key]) => (
+            <div key={key}>
+              <label className="text-xs font-semibold uppercase text-muted-foreground">
+                {label}
+              </label>
+              {key === "description" ? (
+                <textarea
+                  value={(form as any)[key]}
+                  onChange={(e) =>
+                    setForm((f) => ({
+                      ...f,
+                      [key]: e.target.value,
+                      ...(key === "name" && !editing
+                        ? { slug: catSlugify(e.target.value) }
+                        : {}),
+                    }))
+                  }
+                  rows={3}
+                  className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+              ) : (
+                <input
+                  value={(form as any)[key]}
+                  onChange={(e) =>
+                    setForm((f) => ({
+                      ...f,
+                      [key]: e.target.value,
+                      ...(key === "name" && !editing
+                        ? { slug: catSlugify(e.target.value) }
+                        : {}),
+                    }))
+                  }
+                  className={`mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm ${key === "slug" ? "font-mono" : ""}`}
+                />
+              )}
+            </div>
+          ))}
+          <div>
+            <label className="text-xs font-semibold uppercase text-muted-foreground">
+              Ordem
+            </label>
+            <input
+              type="number"
+              value={form.sort_order}
+              onChange={(e) => setForm((f) => ({ ...f, sort_order: Number(e.target.value) }))}
+              className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </div>
+          <div className="flex gap-2 pt-2">
+            <button
+              onClick={save}
+              className="flex-1 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+            >
+              {editing ? "Salvar" : "Criar"}
+            </button>
+            {editing && (
+              <button
+                onClick={reset}
+                className="rounded-md border border-border px-4 py-2 text-sm"
+              >
+                Cancelar
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── ReviewsPanel ───────────────────────────────────────────────────────────────
+
+function ReviewsPanel() {
+  const qc = useQueryClient();
+  const [filter, setFilter] = useState<"all" | "pending" | "approved">("all");
+
+  const { data: reviews, isLoading } = useQuery({
+    queryKey: ["admin-reviews", filter],
+    queryFn: async () => {
+      let query = supabase
+        .from("reviews")
+        .select("*, products(name, slug, cover_url)")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      if (filter === "pending") query = query.eq("is_approved", false);
+      if (filter === "approved") query = query.eq("is_approved", true);
+      const { data, error } = await query;
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const toggle = async (id: string, approve: boolean) => {
+    const { error } = await supabase
+      .from("reviews")
+      .update({ is_approved: approve })
+      .eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success(approve ? "Aprovada" : "Ocultada");
+    qc.invalidateQueries({ queryKey: ["admin-reviews"] });
+  };
+
+  const remove = async (id: string) => {
+    if (!confirm("Remover avaliação permanentemente?")) return;
+    const { error } = await supabase.from("reviews").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Removida");
+    qc.invalidateQueries({ queryKey: ["admin-reviews"] });
+  };
+
+  return (
+    <div>
+      <div className="mb-4 flex gap-2">
+        {(
+          [
+            ["all", "Todas"],
+            ["pending", "Pendentes"],
+            ["approved", "Aprovadas"],
+          ] as const
+        ).map(([k, l]) => (
+          <button
+            key={k}
+            onClick={() => setFilter(k)}
+            className={`rounded-full px-3 py-1 text-xs font-semibold ${
+              filter === k
+                ? "bg-primary text-primary-foreground"
+                : "border border-border text-muted-foreground"
+            }`}
+          >
+            {l}
+          </button>
+        ))}
+      </div>
+
+      {isLoading && (
+        <div className="py-8 text-center text-sm text-muted-foreground">Carregando…</div>
+      )}
+
+      <div className="space-y-3">
+        {(reviews ?? []).map((r: any) => (
+          <div key={r.id} className="rounded-lg border border-border bg-card p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                {r.products?.cover_url ? (
+                  <img
+                    src={r.products.cover_url}
+                    alt=""
+                    className="h-12 w-12 rounded object-cover"
+                  />
+                ) : (
+                  <div className="h-12 w-12 rounded bg-muted" />
+                )}
+                <div>
+                  <div className="font-semibold text-primary">{r.products?.name ?? "—"}</div>
+                  <div className="mt-0.5 flex items-center gap-1">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`h-3.5 w-3.5 ${
+                          i < r.rating
+                            ? "fill-[var(--gold)] text-[var(--gold)]"
+                            : "text-muted-foreground/30"
+                        }`}
+                      />
+                    ))}
+                    <span className="ml-2 text-xs text-muted-foreground">
+                      {new Date(r.created_at).toLocaleDateString("pt-BR")}
+                    </span>
+                  </div>
+                  {r.title && <div className="mt-2 font-medium">{r.title}</div>}
+                  {r.body && <p className="mt-1 text-sm text-foreground/80">{r.body}</p>}
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-2">
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${
+                    r.is_approved
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-amber-100 text-amber-700"
+                  }`}
+                >
+                  {r.is_approved ? "Aprovada" : "Pendente"}
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => toggle(r.id, !r.is_approved)}
+                    className="text-xs font-semibold text-primary hover:underline"
+                  >
+                    {r.is_approved ? "Ocultar" : "Aprovar"}
+                  </button>
+                  <button
+                    onClick={() => remove(r.id)}
+                    className="text-xs font-semibold text-destructive hover:underline"
+                  >
+                    Remover
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+        {!isLoading && (reviews ?? []).length === 0 && (
+          <div className="rounded-lg border border-border bg-card p-8 text-center text-sm text-muted-foreground">
+            Nenhuma avaliação.
+          </div>
+        )}
       </div>
     </div>
   );

@@ -5,13 +5,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/produtores/")({
   head: () => ({
     meta: [
-      { title: "Produtores — Cafezeira" },
+      { title: "Produtores — Café EX" },
       {
         name: "description",
         content:
-          "Conheça as fazendas e torrefações latino-americanas selecionadas pela Cafezeira.",
+          "Conheça as fazendas e torrefações latino-americanas selecionadas pela Café EX.",
       },
-      { property: "og:title", content: "Produtores Cafezeira" },
+      { property: "og:title", content: "Produtores Café EX" },
       { property: "og:description", content: "Histórias de fazendas e torrefações." },
     ],
   }),
