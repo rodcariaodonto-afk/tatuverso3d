@@ -61,7 +61,7 @@ export function Header() {
             to="/vender-na-plataforma"
             className="hidden whitespace-nowrap rounded-full border border-accent/60 px-4 py-1.5 text-center text-xs font-semibold uppercase tracking-wider text-primary transition hover:bg-accent hover:text-accent-foreground lg:inline-flex lg:items-center"
           >
-            Vender na {tenantConfig.name}
+            Vender na CAFÉEX
           </Link>
           <Link
             to={user ? "/minha-conta" : "/login"}
@@ -128,7 +128,7 @@ export function Header() {
                 onClick={() => setMobileOpen(false)}
                 className="block rounded-lg px-4 py-3 text-base font-medium text-foreground hover:bg-muted"
               >
-                Vender na {tenantConfig.name}
+                Vender na CAFÉEX
               </Link>
             </nav>
           </aside>
