@@ -22,6 +22,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
+import logoAsset from "@/assets/cafe-ex-logo.png.asset.json";
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -89,7 +90,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const SidebarBody = (
     <div className="flex h-full flex-col">
       <Link to="/admin" className="flex items-center gap-2 border-b border-border px-5 py-4">
-        <span className="font-display text-lg font-bold tracking-tight text-primary">{tenantConfig.name}</span>
+        <img src={tenantConfig.logoUrl ?? logoAsset.url} alt={tenantConfig.name} className="h-7 w-auto" />
         <span className="rounded-full bg-[var(--gold)]/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--gold)]">
           Admin
         </span>

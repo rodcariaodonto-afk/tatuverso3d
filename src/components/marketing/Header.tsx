@@ -5,7 +5,8 @@ import { useCart } from "@/lib/cart-store";
 import { useAuth } from "@/lib/auth-context";
 import { useCartDrawer } from "@/components/cart/CartDrawer";
 import { tenantConfig } from "@/lib/tenant-config";
-import defaultLogo from "@/assets/cafe-ex-logo.jpeg";
+import logoAsset from "@/assets/cafe-ex-logo.png.asset.json";
+const defaultLogo = logoAsset.url;
 
 const NAV = [
   { to: "/catalogo", label: "Catálogo" },
@@ -38,20 +39,12 @@ export function Header() {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <Link to="/" className="flex items-center gap-2 leading-none">
+          <Link to="/" className="flex items-center leading-none" aria-label={tenantConfig.name}>
             <img
               src={tenantConfig.logoUrl ?? defaultLogo}
               alt={tenantConfig.name}
-              className="h-9 w-9 rounded-full object-cover md:h-10 md:w-10"
+              className="h-8 w-auto md:h-10"
             />
-            <span className="flex flex-col">
-              <span className="font-display text-xl font-bold tracking-tight text-primary md:text-2xl">
-                {tenantConfig.name}
-              </span>
-              <span className="mt-1 hidden text-[9px] uppercase tracking-[0.25em] text-muted-foreground sm:inline">
-                cafés especiais
-              </span>
-            </span>
           </Link>
         </div>
 
@@ -102,10 +95,7 @@ export function Header() {
           />
           <aside className="absolute left-0 top-0 flex h-full w-[82%] max-w-sm flex-col bg-background shadow-2xl animate-in slide-in-from-left">
             <div className="flex h-14 items-center justify-between border-b border-border px-4">
-              <div className="flex items-center gap-2">
-                <img src={tenantConfig.logoUrl ?? defaultLogo} alt={tenantConfig.name} className="h-8 w-8 rounded-full object-cover" />
-                <span className="font-display text-xl font-bold text-primary">{tenantConfig.name}</span>
-              </div>
+              <img src={tenantConfig.logoUrl ?? defaultLogo} alt={tenantConfig.name} className="h-7 w-auto" />
               <button
                 onClick={() => setMobileOpen(false)}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-muted"
