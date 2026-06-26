@@ -60,6 +60,7 @@ export function Header() {
           <Link
             to="/vender-na-plataforma"
             className="hidden whitespace-nowrap rounded-full border border-accent/60 px-4 py-1.5 text-center text-xs font-semibold uppercase tracking-wider text-primary transition hover:bg-accent hover:text-accent-foreground lg:inline-flex lg:items-center"
+            style={{ wordSpacing: "0.25em" }}
           >
             Vender na {tenantConfig.name}
           </Link>
