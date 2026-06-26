@@ -184,7 +184,7 @@ function PrivacidadePage() {
               </button>
             )}
 
-            {deleteStep === "confirm1" && (
+            {(deleteStep === "confirm1" || deleteStep === "deleting") && (
               <div className="mt-4 rounded-lg border border-destructive/30 bg-background p-4">
                 <p className="text-sm font-semibold text-destructive">
                   Tem certeza? Esta ação não pode ser desfeita.

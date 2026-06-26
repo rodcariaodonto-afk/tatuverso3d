@@ -616,7 +616,7 @@ function ReviewStep({
   onPay,
   onBack,
 }: {
-  items: ReturnType<typeof useCart>["items"];
+  items: CartItem[];
   subtotal: number;
   identity: Identity;
   address: Address;
@@ -634,7 +634,7 @@ function ReviewStep({
       <StepCard>
         <h2 className="font-display text-xl text-primary">Resumo do pedido</h2>
         <ul className="mt-4 space-y-2 text-sm">
-          {items.map((i) => (
+          {items.map((i: CartItem) => (
             <li key={i.variant_id} className="flex items-start justify-between gap-3">
               <span className="text-foreground/80">
                 {i.quantity}× {i.name}

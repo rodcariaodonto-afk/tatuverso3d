@@ -48,7 +48,7 @@ function IntegracoesPage() {
         .eq("tenant_id", "default")
         .single();
       if (error) throw error;
-      return data as PlatformSettings;
+      return data as unknown as PlatformSettings;
     },
   });
 

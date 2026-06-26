@@ -526,7 +526,9 @@ function ProductForm({
       .split(",")
       .map((b) => b.trim())
       .filter(Boolean);
+    const minPrice = Math.min(...variants.map((v) => Number(v.price) || 0).filter((n) => n > 0));
     const { error: productErr } = await supabase.from("products").upsert({
+      price: minPrice,
       id: productId,
       name: form.name.trim(),
       slug: form.slug.trim(),
@@ -1103,9 +1105,6 @@ function CategoriesPanel() {
                     setForm((f) => ({
                       ...f,
                       [key]: e.target.value,
-                      ...(key === "name" && !editing
-                        ? { slug: catSlugify(e.target.value) }
-                        : {}),
                     }))
                   }
                   rows={3}
