@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { CheckCircle2, Loader2, Copy, QrCode, ChevronRight, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
-import { formatBRL, useCart } from "@/lib/cart-store";
+import { formatBRL, useCart, type CartItem } from "@/lib/cart-store";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -616,7 +616,7 @@ function ReviewStep({
   onPay,
   onBack,
 }: {
-  items: ReturnType<typeof useCart>["items"];
+  items: CartItem[];
   subtotal: number;
   identity: Identity;
   address: Address;
@@ -634,7 +634,7 @@ function ReviewStep({
       <StepCard>
         <h2 className="font-display text-xl text-primary">Resumo do pedido</h2>
         <ul className="mt-4 space-y-2 text-sm">
-          {items.map((i) => (
+          {items.map((i: CartItem) => (
             <li key={i.variant_id} className="flex items-start justify-between gap-3">
               <span className="text-foreground/80">
                 {i.quantity}× {i.name}
