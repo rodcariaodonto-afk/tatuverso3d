@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { CheckCircle2, Loader2, Copy, QrCode, ChevronRight, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
-import { formatBRL, useCart } from "@/lib/cart-store";
+import { formatBRL, useCart, type CartItem } from "@/lib/cart-store";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 
