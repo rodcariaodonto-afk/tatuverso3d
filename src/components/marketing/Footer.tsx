@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="mt-24 border-t border-border bg-[oklch(0.16_0.03_45)] text-[oklch(0.92_0.02_80)]">
       <div className="container mx-auto grid gap-10 px-4 py-16 md:grid-cols-4 md:px-6">
         <div>
-          <img src={tenantConfig.logoUrl ?? logoAsset.url} alt={tenantConfig.name} className="h-8 w-auto invert" />
+          <img src={tenantConfig.logoUrl ?? logoAsset.url} alt={tenantConfig.name} className="h-8 w-auto brightness-0 invert" />
           <p className="mt-3 text-sm text-white/70">{tenantConfig.tagline}</p>
         </div>
         <div>
