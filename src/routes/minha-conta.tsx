@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Package, Heart, LogOut, User as UserIcon, Crown, Shield } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 import { formatBRL } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/minha-conta")({
@@ -50,7 +51,7 @@ function AccountPage() {
   const isStaff = roles?.includes("admin" as any) || roles?.includes("support" as any);
   const preferences =
     profile?.preferences && typeof profile.preferences === "object" && !Array.isArray(profile.preferences)
-      ? profile.preferences
+      ? (profile.preferences as Record<string, Json | undefined>)
       : {};
   const mustChangePassword = preferences.must_change_password === true;
 
