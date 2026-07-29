@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Package, Heart, LogOut, User as UserIcon, Crown, Shield } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,6 +20,10 @@ function AccountLayout() {
 function AccountPage() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const qc = useQueryClient();
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [savingPassword, setSavingPassword] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -43,6 +48,47 @@ function AccountPage() {
   });
 
   const isStaff = roles?.includes("admin" as any) || roles?.includes("support" as any);
+  const preferences =
+    profile?.preferences && typeof profile.preferences === "object" && !Array.isArray(profile.preferences)
+      ? profile.preferences
+      : {};
+  const mustChangePassword = preferences.must_change_password === true;
+
+  const changePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user?.id) return;
+    if (newPassword !== confirmPassword) {
+      toast.error("As senhas não conferem.");
+      return;
+    }
+
+    setSavingPassword(true);
+    const { error: passwordError } = await supabase.auth.updateUser({ password: newPassword });
+    if (passwordError) {
+      setSavingPassword(false);
+      toast.error("Não foi possível atualizar a senha", { description: passwordError.message });
+      return;
+    }
+
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .update({ preferences: { ...preferences, must_change_password: false } })
+      .eq("id", user.id);
+
+    setSavingPassword(false);
+
+    if (profileError) {
+      toast.error("Senha atualizada, mas não conseguimos liberar a troca obrigatória", {
+        description: profileError.message,
+      });
+      return;
+    }
+
+    setNewPassword("");
+    setConfirmPassword("");
+    toast.success("Senha atualizada com sucesso.");
+    qc.invalidateQueries({ queryKey: ["profile", user.id] });
+  };
 
   const { data: orders } = useQuery({
     queryKey: ["my-orders", user?.id, isStaff],
@@ -60,6 +106,40 @@ function AccountPage() {
   });
 
   if (!user) return null;
+
+  if (mustChangePassword) {
+    return (
+      <div className="container mx-auto max-w-xl px-4 py-12 md:px-6">
+        <header>
+          <p className="eyebrow">Segurança da conta</p>
+          <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Defina sua nova senha</h1>
+          <div className="gold-divider mt-3" />
+          <p className="mt-4 text-sm text-muted-foreground">
+            Você entrou com uma senha temporária. Troque por uma senha própria para continuar.
+          </p>
+        </header>
+        <PasswordForm
+          className="mt-8"
+          newPassword={newPassword}
+          confirmPassword={confirmPassword}
+          savingPassword={savingPassword}
+          submitLabel="Salvar nova senha"
+          onNewPasswordChange={setNewPassword}
+          onConfirmPasswordChange={setConfirmPassword}
+          onSubmit={changePassword}
+        />
+        <button
+          onClick={async () => {
+            await signOut();
+            navigate({ to: "/" });
+          }}
+          className="mt-4 text-sm font-semibold text-muted-foreground underline-offset-4 hover:underline"
+        >
+          Sair e trocar depois
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-12 md:px-6">
@@ -121,6 +201,21 @@ function AccountPage() {
         </Link>
       )}
 
+      <section className="mt-12 max-w-xl">
+        <h2 className="font-display text-2xl text-primary">Alterar senha</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Atualize sua senha de acesso quando precisar.</p>
+        <PasswordForm
+          className="mt-4"
+          newPassword={newPassword}
+          confirmPassword={confirmPassword}
+          savingPassword={savingPassword}
+          submitLabel="Atualizar senha"
+          onNewPasswordChange={setNewPassword}
+          onConfirmPasswordChange={setConfirmPassword}
+          onSubmit={changePassword}
+        />
+      </section>
+
       <section className="mt-12">
         <h2 className="font-display text-2xl text-primary">{isStaff ? "Pedidos da plataforma" : "Meus pedidos"}</h2>
         {isStaff && (
@@ -165,6 +260,59 @@ function AccountPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+function PasswordForm({
+  className,
+  newPassword,
+  confirmPassword,
+  savingPassword,
+  submitLabel,
+  onNewPasswordChange,
+  onConfirmPasswordChange,
+  onSubmit,
+}: {
+  className?: string;
+  newPassword: string;
+  confirmPassword: string;
+  savingPassword: boolean;
+  submitLabel: string;
+  onNewPasswordChange: (value: string) => void;
+  onConfirmPasswordChange: (value: string) => void;
+  onSubmit: (e: React.FormEvent) => void;
+}) {
+  return (
+    <form onSubmit={onSubmit} className={`${className ?? ""} space-y-4 rounded-lg border border-border bg-card p-5`}>
+      <div>
+        <label className="text-xs uppercase tracking-wider text-muted-foreground">Nova senha</label>
+        <input
+          required
+          type="password"
+          minLength={8}
+          value={newPassword}
+          onChange={(e) => onNewPasswordChange(e.target.value)}
+          className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none"
+        />
+      </div>
+      <div>
+        <label className="text-xs uppercase tracking-wider text-muted-foreground">Confirmar nova senha</label>
+        <input
+          required
+          type="password"
+          minLength={8}
+          value={confirmPassword}
+          onChange={(e) => onConfirmPasswordChange(e.target.value)}
+          className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none"
+        />
+      </div>
+      <button
+        disabled={savingPassword}
+        className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
+      >
+        {savingPassword ? "Salvando..." : submitLabel}
+      </button>
+    </form>
   );
 }
 
