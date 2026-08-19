@@ -7,6 +7,9 @@ import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
 import { formatBRL } from "@/lib/cart-store";
+import { useServerFn } from "@tanstack/react-start";
+import { listMyOrders } from "@/lib/orders.functions";
+import { ORDER_STATUS_LABEL, PAYMENT_STATUS_LABEL, orderStatusTone, type OrderStatus } from "@/lib/orders.shared";
 
 export const Route = createFileRoute("/minha-conta")({
   head: () => ({ meta: [{ title: "Minha conta — TatuVerso3D" }] }),
@@ -91,19 +94,11 @@ function AccountPage() {
     qc.invalidateQueries({ queryKey: ["profile", user.id] });
   };
 
+  const fetchMyOrders = useServerFn(listMyOrders);
   const { data: orders } = useQuery({
-    queryKey: ["my-orders", user?.id, isStaff],
-    enabled: !!user?.id && roles !== undefined,
-    queryFn: async () => {
-      let q = supabase
-        .from("orders")
-        .select("id, status, payment_status, total, created_at, customer_id, order_items(product_name, quantity)")
-        .order("created_at", { ascending: false });
-      if (!isStaff) q = q.eq("customer_id", user!.id);
-      const { data, error } = await q;
-      if (error) throw error;
-      return data;
-    },
+    queryKey: ["my-orders", user?.id],
+    enabled: !!user?.id,
+    queryFn: () => fetchMyOrders({ data: undefined as never }),
   });
 
   if (!user) return null;
@@ -218,9 +213,14 @@ function AccountPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="font-display text-2xl text-primary">{isStaff ? "Pedidos da plataforma" : "Meus pedidos"}</h2>
+        <h2 className="font-display text-2xl text-primary">Meus pedidos</h2>
         {isStaff && (
-          <p className="mt-1 text-xs text-muted-foreground">Visão administrativa · todos os pedidos. <Link to="/admin/pedidos" className="font-semibold text-primary underline">Abrir gestão completa</Link></p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Aqui ficam apenas os seus pedidos.{" "}
+            <Link to="/admin/pedidos" className="font-semibold text-primary underline">
+              Abrir gestão completa
+            </Link>
+          </p>
         )}
         <div className="mt-4 overflow-hidden rounded-lg border border-border bg-card">
           {(orders ?? []).length === 0 ? (
@@ -238,6 +238,7 @@ function AccountPage() {
                   <th className="px-4 py-3 text-left">Itens</th>
                   <th className="px-4 py-3 text-left">Status</th>
                   <th className="px-4 py-3 text-right">Total</th>
+                  <th className="px-4 py-3" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -248,11 +249,23 @@ function AccountPage() {
                       {o.order_items?.map((i: any) => `${i.quantity}× ${i.product_name}`).join(", ")}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="rounded-full bg-[var(--surface-soft)] px-2 py-0.5 text-xs font-semibold text-primary">
-                        {o.status}
+                      <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${orderStatusTone(o.status)}`}>
+                        {ORDER_STATUS_LABEL[o.status as OrderStatus] ?? o.status}
                       </span>
+                      <p className="mt-1 text-[11px] text-muted-foreground">
+                        {PAYMENT_STATUS_LABEL[o.payment_status] ?? o.payment_status}
+                      </p>
                     </td>
                     <td className="px-4 py-3 text-right font-semibold">{formatBRL(Number(o.total))}</td>
+                    <td className="px-4 py-3 text-right">
+                      <Link
+                        to="/minha-conta/pedido/$id"
+                        params={{ id: o.id }}
+                        className="text-xs font-semibold text-primary underline"
+                      >
+                        Detalhes
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>
