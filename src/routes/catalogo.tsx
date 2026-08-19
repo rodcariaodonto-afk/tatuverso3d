@@ -182,10 +182,6 @@ function CatalogPage() {
         </div>
       )}
 
-      {activeCount > 0 && (
-        <></>
-      )}
-
       <div>
         <p className="eyebrow">Faixa de preço</p>
         <div className="mt-3 flex flex-wrap gap-2">
