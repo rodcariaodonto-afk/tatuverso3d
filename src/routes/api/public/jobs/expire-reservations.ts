@@ -5,10 +5,12 @@ export const Route = createFileRoute("/api/public/jobs/expire-reservations")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const expected =
-          process.env["SUPABASE_ANON_KEY"] ?? process.env["SUPABASE_PUBLISHABLE_KEY"] ?? "";
+        const accepted = [
+          process.env["SUPABASE_ANON_KEY"],
+          process.env["SUPABASE_PUBLISHABLE_KEY"],
+        ].filter((v): v is string => !!v);
         const provided = request.headers.get("apikey") ?? "";
-        if (!expected || provided !== expected) {
+        if (!accepted.length || !accepted.includes(provided)) {
           return new Response("unauthorized", { status: 401 });
         }
 
