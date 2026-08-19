@@ -113,13 +113,13 @@ export const adminUpdateOrderStatus = createServerFn({ method: "POST" })
       throw new Error(`Transição inválida: ${current} → ${data.status}.`);
     }
 
-    const patch: Record<string, unknown> = { status: data.status };
+    const patch: { status: OrderStatus; payment_status?: "refunded" } = { status: data.status };
 
     if (data.status === "cancelled") {
       await supabaseAdmin.rpc("release_stock", { _order_id: order.id, _reason: "cancelled_by_admin" });
     }
     if (data.status === "refunded") {
-      patch["payment_status"] = "refunded";
+      patch.payment_status = "refunded";
     }
 
     const { error: updErr } = await supabaseAdmin.from("orders").update(patch).eq("id", order.id);
