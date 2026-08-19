@@ -204,8 +204,18 @@ export const validateCart = createServerFn({ method: "POST" })
             const { data: listed, error: listErr } = await userClient.storage
               .from(CUSTOM_BUCKET)
               .list(folder, { search: file, limit: 100 });
-            if (listErr || !listed?.some((o: any) => o.name === file)) {
+            const found: any = listed?.find((o: any) => o.name === file);
+            if (listErr || !found) {
               throw new Error(`${f.label}: arquivo não encontrado para o seu usuário`);
+            }
+            /* limites aplicados no servidor (o bucket é privado e por prefixo do usuário) */
+            const size = Number(found.metadata?.size ?? 0);
+            const mime = String(found.metadata?.mimetype ?? "");
+            if (size > MAX_UPLOAD_BYTES) {
+              throw new Error(`${f.label}: arquivo acima de 10 MB`);
+            }
+            if (mime && !ALLOWED_UPLOAD_MIME.includes(mime)) {
+              throw new Error(`${f.label}: tipo de arquivo não permitido`);
             }
             break;
           }
