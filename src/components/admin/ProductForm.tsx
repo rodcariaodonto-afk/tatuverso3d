@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Trash2, Plus, Upload, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getVariantCosts, saveVariantCosts } from "@/lib/admin-costs.functions";
 import { PRODUCT_TYPE_LABEL, OPTION_TYPE_LABEL } from "@/hooks/useProducts";
 
 /* ── tipos ─────────────────────────────────────────────────────────────── */
@@ -198,7 +200,7 @@ export function ProductForm({ productId }: ProductFormProps) {
           product_categories ( category_id ),
           product_options ( id, name, option_type, is_required, sort_order,
             product_option_values ( id, label, value, color_hex, price_adjustment, sort_order ) ),
-          product_variants ( id, name, sku, barcode, price, compare_at_price, cost_price,
+          product_variants ( id, name, sku, barcode, price, compare_at_price,
             stock_quantity, low_stock_threshold, dimensions_text, weight_grams, image_url,
             is_default, is_active, sort_order,
             variant_option_values ( option_value_id ) ),
@@ -209,6 +211,15 @@ export function ProductForm({ productId }: ProductFormProps) {
       if (error) throw error;
       return data;
     },
+  });
+
+  /* preço de custo: somente admin, via server function protegida */
+  const fetchVariantCosts = useServerFn(getVariantCosts);
+  const persistVariantCosts = useServerFn(saveVariantCosts);
+  const { data: variantCosts } = useQuery({
+    queryKey: ["admin-variant-costs", productId],
+    enabled: isEdit,
+    queryFn: () => fetchVariantCosts({ data: { product_id: productId! } }),
   });
 
   useEffect(() => {
@@ -259,7 +270,7 @@ export function ProductForm({ productId }: ProductFormProps) {
           id: v.id, tempId: v.id, name: v.name ?? "", sku: v.sku ?? "", barcode: v.barcode ?? "",
           price: Number(v.price ?? 0),
           compare_at_price: v.compare_at_price != null ? Number(v.compare_at_price) : null,
-          cost_price: v.cost_price != null ? Number(v.cost_price) : null,
+          cost_price: null,
           stock_quantity: v.stock_quantity ?? 0, low_stock_threshold: v.low_stock_threshold ?? 5,
           dimensions_text: v.dimensions_text ?? "", weight_grams: v.weight_grams ?? null,
           image_url: v.image_url ?? null, is_default: !!v.is_default, is_active: v.is_active !== false,
@@ -280,6 +291,14 @@ export function ProductForm({ productId }: ProductFormProps) {
         })),
     );
   }, [loaded]);
+
+  /* injeta os custos carregados pela server function admin */
+  useEffect(() => {
+    if (!variantCosts) return;
+    setVariants((prev) =>
+      prev.map((v) => (v.id && v.id in variantCosts ? { ...v, cost_price: variantCosts[v.id] ?? null } : v)),
+    );
+  }, [variantCosts]);
 
   const allValues = useMemo(
     () => options.flatMap((o) => o.values.map((v) => ({ ...v, optionName: o.name }))),
@@ -424,10 +443,11 @@ export function ProductForm({ productId }: ProductFormProps) {
       const toDelete = (existingVariants ?? []).map((v) => v.id).filter((id) => !keptIds.includes(id));
       if (toDelete.length) await supabase.from("product_variants").delete().in("id", toDelete);
 
+      const costUpdates: Array<{ variant_id: string; cost_price: number | null }> = [];
       for (const [idx, v] of variants.entries()) {
         const vPayload = {
           product_id: pid!, name: v.name || null, sku: v.sku || null, barcode: v.barcode || null,
-          price: Number(v.price), compare_at_price: v.compare_at_price, cost_price: v.cost_price,
+          price: Number(v.price), compare_at_price: v.compare_at_price,
           stock_quantity: v.stock_quantity, low_stock_threshold: v.low_stock_threshold,
           dimensions_text: v.dimensions_text || null, weight_grams: v.weight_grams,
           image_url: v.image_url, is_default: v.is_default, is_active: v.is_active, sort_order: idx,
@@ -441,12 +461,18 @@ export function ProductForm({ productId }: ProductFormProps) {
           if (error) throw error;
           variantId = data.id;
         }
+        if (variantId) costUpdates.push({ variant_id: variantId, cost_price: v.cost_price });
         await supabase.from("variant_option_values").delete().eq("variant_id", variantId!);
         const refs = v.valueRefs.map((r) => valueIdMap.get(r) ?? null).filter(Boolean) as string[];
         if (refs.length)
           await supabase.from("variant_option_values").insert(
             refs.map((option_value_id) => ({ variant_id: variantId!, option_value_id })),
           );
+      }
+
+      /* preço de custo gravado apenas pela server function protegida */
+      if (costUpdates.length) {
+        await persistVariantCosts({ data: { items: costUpdates } });
       }
 
       /* campos de personalização */

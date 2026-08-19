@@ -145,7 +145,10 @@ function CheckoutPage() {
             product_id: i.product_id,
             variant_id: i.variant_id,
             quantity: i.quantity,
-            customization_field_ids: i.customizations.map((c) => c.field_id),
+            customizations: i.customizations.map((c) => ({
+              field_id: c.field_id,
+              value: c.value,
+            })),
           })),
         },
       });
@@ -164,18 +167,17 @@ function CheckoutPage() {
           guest_email: identity.type === "guest" ? identity.email : undefined,
           guest_name: identity.type === "guest" ? identity.name : undefined,
           guest_cpf: identity.type === "guest" ? identity.cpf : undefined,
-          items: items.map((i) => ({
+          // Itens e preços vêm da revalidação do servidor, nunca do navegador.
+          items: validated.items.map((i) => ({
             variant_id: i.variant_id,
             product_id: i.product_id,
-            product_name: i.name,
+            product_name: i.product_name,
             unit_price: i.unit_price,
             quantity: i.quantity,
-            variant_label: i.variant_label,
-            customization_data: Object.fromEntries(
-              i.customizations.map((c) => [c.label, c.value]),
-            ),
+            variant_label: i.variant_name,
+            customization_data: i.customization_data,
           })),
-          subtotal,
+          subtotal: validated.subtotal,
           shipping_total: selectedShipping.price,
           discount_total: 0,
           total,

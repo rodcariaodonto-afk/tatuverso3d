@@ -14,6 +14,12 @@ Marca, paleta Cosmic Blue, tipografia Fredoka/Nunito Sans, navegação, home, p�
   (Básico, Preço, Categorias, Imagens, Variações, Personalização, Estoque, SEO) com geração de combinações
   e registro de movimentações de estoque.
 
+## Hotfix de segurança pós-Onda 2 (concluído)
+- `cost_price` inacessível pela Data API (grants por coluna) e exposto apenas via server function admin.
+- `validateCart` valida integralmente as personalizações e recalcula todos os preços no servidor.
+- Buckets, políticas de storage e unicidade cruzada de SKU garantidas por migração.
+- Detalhes em `TATUVERSO3D_PROJECT.md`.
+
 ## Onda 3 — Limpeza do esquema legado e operação
 Próxima etapa:
 1. Remover com segurança colunas e tabelas legadas de café (`roast_level`, `score`, `acidity`, `body`,
