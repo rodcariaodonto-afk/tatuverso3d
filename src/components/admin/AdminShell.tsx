@@ -25,6 +25,7 @@ const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/produtos", label: "Produtos", icon: Package },
   { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
+  { to: "/admin/estoque", label: "Estoque", icon: Package },
   { to: "/admin/vendas", label: "Vendas", icon: TrendingUp },
   { to: "/admin/clientes", label: "Clientes", icon: Users },
   { to: "/admin/cupons", label: "Cupons", icon: TicketPercent },
