@@ -270,7 +270,7 @@ export function ProductForm({ productId }: ProductFormProps) {
           id: v.id, tempId: v.id, name: v.name ?? "", sku: v.sku ?? "", barcode: v.barcode ?? "",
           price: Number(v.price ?? 0),
           compare_at_price: v.compare_at_price != null ? Number(v.compare_at_price) : null,
-          cost_price: v.cost_price != null ? Number(v.cost_price) : null,
+          cost_price: null,
           stock_quantity: v.stock_quantity ?? 0, low_stock_threshold: v.low_stock_threshold ?? 5,
           dimensions_text: v.dimensions_text ?? "", weight_grams: v.weight_grams ?? null,
           image_url: v.image_url ?? null, is_default: !!v.is_default, is_active: v.is_active !== false,
@@ -291,6 +291,14 @@ export function ProductForm({ productId }: ProductFormProps) {
         })),
     );
   }, [loaded]);
+
+  /* injeta os custos carregados pela server function admin */
+  useEffect(() => {
+    if (!variantCosts) return;
+    setVariants((prev) =>
+      prev.map((v) => (v.id && v.id in variantCosts ? { ...v, cost_price: variantCosts[v.id] ?? null } : v)),
+    );
+  }, [variantCosts]);
 
   const allValues = useMemo(
     () => options.flatMap((o) => o.values.map((v) => ({ ...v, optionName: o.name }))),
