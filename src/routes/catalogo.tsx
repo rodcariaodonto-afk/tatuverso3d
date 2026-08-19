@@ -8,21 +8,27 @@ import {
 } from "@/components/catalog/ProductCard";
 import {
   applyCatalogFilters,
+  productColors,
+  productMaterials,
   useCatalogProducts,
   useCategories,
+  useSalesCounts,
+  PRODUCT_TYPE_LABEL,
 } from "@/hooks/useProducts";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
   cat: fallback(z.array(z.string()), []).default([]),
-  roast: fallback(z.array(z.string()), []).default([]),
-  origin: fallback(z.array(z.string()), []).default([]),
-  grind: fallback(z.array(z.string()), []).default([]),
+  mat: fallback(z.array(z.string()), []).default([]),
+  color: fallback(z.array(z.string()), []).default([]),
+  type: fallback(z.array(z.string()), []).default([]),
   pmax: fallback(z.number().nullable(), null).default(null),
-  sub: fallback(z.boolean(), false).default(false),
+  pers: fallback(z.boolean(), false).default(false),
+  stock: fallback(z.boolean(), false).default(false),
+  order: fallback(z.boolean(), false).default(false),
   sort: fallback(
-    z.enum(["featured", "price_asc", "price_desc", "score_desc", "newest"]),
+    z.enum(["featured", "price_asc", "price_desc", "newest", "best_sellers"]),
     "featured",
   ).default("featured"),
   page: fallback(z.number().int().positive(), 1).default(1),
@@ -50,29 +56,12 @@ export const Route = createFileRoute("/catalogo")({
   component: CatalogPage,
 });
 
-const ROAST_LEVELS = [
-  { value: "light", label: "Clara" },
-  { value: "medium_light", label: "Média-clara" },
-  { value: "medium", label: "Média" },
-  { value: "medium_dark", label: "Média-escura" },
-  { value: "dark", label: "Escura" },
-];
-
-const GRIND_OPTIONS = [
-  { value: "whole_bean", label: "Grão inteiro" },
-  { value: "espresso", label: "Pequeno" },
-  { value: "moka", label: "Moka" },
-  { value: "filter", label: "Filtrado" },
-  { value: "french_press", label: "French Press" },
-  { value: "aeropress", label: "Aeropress" },
-  { value: "cold_brew", label: "Cold Brew" },
-];
-
 const SORTS = [
   { value: "featured", label: "Destaques" },
+  { value: "newest", label: "Mais recentes" },
+  { value: "best_sellers", label: "Mais vendidos" },
   { value: "price_asc", label: "Menor preço" },
   { value: "price_desc", label: "Maior preço" },
-  { value: "newest", label: "Mais recentes" },
 ] as const;
 
 const PAGE_SIZE = 12;
@@ -84,12 +73,23 @@ function CatalogPage() {
 
   const { data: products, isLoading } = useCatalogProducts();
   const { data: categories } = useCategories();
+  const { data: salesCounts } = useSalesCounts();
 
-  const origins = useMemo(() => {
+  const materials = useMemo(() => {
     const set = new Set<string>();
-    (products ?? []).forEach((p) => {
-      if (p.origin_region) set.add(p.origin_region);
-    });
+    (products ?? []).forEach((p) => productMaterials(p).forEach((m) => set.add(m)));
+    return Array.from(set).sort();
+  }, [products]);
+
+  const colors = useMemo(() => {
+    const map = new Map<string, string | null>();
+    (products ?? []).forEach((p) => productColors(p).forEach((c) => map.set(c.label, c.hex)));
+    return Array.from(map, ([label, hex]) => ({ label, hex })).sort((a, b) => a.label.localeCompare(b.label));
+  }, [products]);
+
+  const types = useMemo(() => {
+    const set = new Set<string>();
+    (products ?? []).forEach((p) => set.add(p.product_type));
     return Array.from(set).sort();
   }, [products]);
 
@@ -98,14 +98,17 @@ function CatalogPage() {
     return applyCatalogFilters(products, {
       search: search.q,
       categoryIds: search.cat,
-      roastLevels: search.roast,
-      origins: search.origin,
-      grindOptions: search.grind,
+      materials: search.mat,
+      colors: search.color,
+      types: search.type,
       priceMax: search.pmax ?? undefined,
-      subscriptionOnly: search.sub,
+      personalizableOnly: search.pers,
+      inStockOnly: search.stock,
+      madeToOrderOnly: search.order,
       sort: search.sort,
+      salesCounts,
     });
-  }, [products, search]);
+  }, [products, search, salesCounts]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(search.page, totalPages);
@@ -119,7 +122,7 @@ function CatalogPage() {
       search: (prev: typeof search) => ({ ...prev, ...patch, page: 1 }),
     });
 
-  const toggleArray = (key: "cat" | "roast" | "origin" | "grind", v: string) => {
+  const toggleArray = (key: "cat" | "mat" | "color" | "type", v: string) => {
     const cur = (search[key] ?? []) as string[];
     update({ [key]: cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v] } as any);
   };
@@ -129,11 +132,13 @@ function CatalogPage() {
       search: {
         q: "",
         cat: [],
-        roast: [],
-        origin: [],
-        grind: [],
+        mat: [],
+        color: [],
+        type: [],
         pmax: null,
-        sub: false,
+        pers: false,
+        stock: false,
+        order: false,
         sort: "featured",
         page: 1,
       },
@@ -142,11 +147,13 @@ function CatalogPage() {
   const activeCount =
     (search.q ? 1 : 0) +
     search.cat.length +
-    search.roast.length +
-    search.origin.length +
-    search.grind.length +
+    search.mat.length +
+    search.color.length +
+    search.type.length +
     (search.pmax ? 1 : 0) +
-    (search.sub ? 1 : 0);
+    (search.pers ? 1 : 0) +
+    (search.stock ? 1 : 0) +
+    (search.order ? 1 : 0);
 
   const Filters = (
     <div className="space-y-8">
@@ -198,6 +205,92 @@ function CatalogPage() {
               até R$ {v}
             </button>
           ))}
+        </div>
+      </div>
+
+      {types.length > 0 && (
+        <div>
+          <p className="eyebrow">Tipo</p>
+          <div className="mt-3 space-y-2">
+            {types.map((t) => (
+              <label key={t} className="flex items-center gap-2 text-sm text-foreground/80">
+                <input
+                  type="checkbox"
+                  checked={search.type.includes(t)}
+                  onChange={() => toggleArray("type", t)}
+                  className="h-4 w-4 rounded border-border accent-[var(--brand-accent)]"
+                />
+                {PRODUCT_TYPE_LABEL[t] ?? t}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {materials.length > 0 && (
+        <div>
+          <p className="eyebrow">Material</p>
+          <div className="mt-3 space-y-2">
+            {materials.map((m) => (
+              <label key={m} className="flex items-center gap-2 text-sm text-foreground/80">
+                <input
+                  type="checkbox"
+                  checked={search.mat.includes(m)}
+                  onChange={() => toggleArray("mat", m)}
+                  className="h-4 w-4 rounded border-border accent-[var(--brand-accent)]"
+                />
+                {m}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {colors.length > 0 && (
+        <div>
+          <p className="eyebrow">Cor</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {colors.map((c) => {
+              const active = search.color.includes(c.label);
+              return (
+                <button
+                  key={c.label}
+                  onClick={() => toggleArray("color", c.label)}
+                  title={c.label}
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition ${
+                    active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card"
+                  }`}
+                >
+                  <span
+                    className="h-3 w-3 rounded-full border border-border"
+                    style={{ backgroundColor: c.hex ?? "var(--surface-soft)" }}
+                  />
+                  {c.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      <div>
+        <p className="eyebrow">Disponibilidade</p>
+        <div className="mt-3 space-y-2 text-sm text-foreground/80">
+          <label className="flex items-center gap-2">
+            <input type="checkbox" checked={search.pers} onChange={() => update({ pers: !search.pers })}
+              className="h-4 w-4 rounded border-border accent-[var(--brand-accent)]" />
+            Personalizável
+          </label>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" checked={search.stock} onChange={() => update({ stock: !search.stock })}
+              className="h-4 w-4 rounded border-border accent-[var(--brand-accent)]" />
+            Em estoque
+          </label>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" checked={search.order} onChange={() => update({ order: !search.order })}
+              className="h-4 w-4 rounded border-border accent-[var(--brand-accent)]" />
+            Sob encomenda
+          </label>
         </div>
       </div>
 

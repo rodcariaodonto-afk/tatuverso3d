@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Trash2, Minus, Plus, ArrowRight, ShoppingBag } from "lucide-react";
-import { formatBRL, GRIND_LABEL, useCart } from "@/lib/cart-store";
+import { formatBRL, useCart } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/carrinho")({
   head: () => ({ meta: [{ title: "Carrinho — TatuVerso3D" }] }),
@@ -44,34 +44,50 @@ function CartPage() {
       <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_380px]">
         <ul className="divide-y divide-border rounded-lg border border-border bg-card">
           {items.map((i) => (
-            <li key={i.variant_id} className="flex gap-4 p-4">
+            <li key={i.key} className="flex gap-4 p-4">
               <div className="h-24 w-24 shrink-0 overflow-hidden rounded-md bg-muted">
                 {i.cover_url && <img src={i.cover_url} alt={i.name} className="h-full w-full object-cover" />}
               </div>
               <div className="flex-1">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{i.producer_name}</p>
                 <Link
-                  to="/cafe/$slug"
+                  to="/produto/$slug"
                   params={{ slug: i.slug }}
                   className="font-display text-lg text-primary hover:underline"
                 >
                   {i.name}
                 </Link>
-                <p className="text-xs text-muted-foreground">
-                  {GRIND_LABEL[i.grind_option]} · {i.weight_grams ?? 250}g
-                </p>
+                {i.variant_label && (
+                  <p className="text-xs text-muted-foreground">{i.variant_label}</p>
+                )}
+                {i.customizations.map((c) => (
+                  <p key={c.field_id} className="text-[11px] text-muted-foreground">
+                    {c.label}: {c.value.includes("/") ? c.value.split("/").pop() : c.value}
+                  </p>
+                ))}
+                {i.adjustments > 0 && (
+                  <p className="text-[11px] text-muted-foreground">
+                    Acréscimos de personalização: {formatBRL(i.adjustments)}
+                  </p>
+                )}
+                {(i.made_to_order || i.production_time_days) && (
+                  <p className="text-[11px] font-semibold text-[var(--brand-accent)]">
+                    {i.made_to_order ? "Sob encomenda" : "Pronta entrega"}
+                    {i.production_time_days ? ` · produção em até ${i.production_time_days} dia(s) úteis` : ""}
+                  </p>
+                )}
                 <div className="mt-2 flex items-center gap-3">
                   <div className="flex items-center rounded-full border border-border">
-                    <button onClick={() => setQty(i.variant_id, i.quantity - 1)} className="px-2 py-1">
+                    <button onClick={() => setQty(i.key, i.quantity - 1)} className="px-2 py-1">
                       <Minus className="h-3 w-3" />
                     </button>
                     <span className="w-8 text-center text-sm font-semibold">{i.quantity}</span>
-                    <button onClick={() => setQty(i.variant_id, i.quantity + 1)} className="px-2 py-1">
+                    <button onClick={() => setQty(i.key, i.quantity + 1)} className="px-2 py-1">
                       <Plus className="h-3 w-3" />
                     </button>
                   </div>
                   <button
-                    onClick={() => remove(i.variant_id)}
+                    onClick={() => remove(i.key)}
                     className="text-xs text-muted-foreground hover:text-destructive"
                   >
                     <Trash2 className="h-4 w-4" />
