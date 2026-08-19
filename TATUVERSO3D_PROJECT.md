@@ -36,3 +36,29 @@ Lógica de servidor em `createServerFn` (`src/lib/*.functions.ts`).
 - `*.functions.ts` contém apenas imports, tipos e declarações de server function;
   helpers e schemas ficam em módulos irmãos (`cart-validation.ts`, `admin-costs.shared.ts`).
 - Cores sempre por tokens semânticos definidos em `src/styles.css`.
+
+
+## Onda 3A — Checkout, entrega e padronização visual
+
+### Cards
+`src/components/catalog/ProductCard.tsx` expõe um `BaseProductCard` único (imagem quadrada,
+alturas reservadas para título/descrição/badges e preço ancorado com `mt-auto`), consumido por
+catálogo, home e blocos de destaque. Todos os cards de uma grade têm a mesma altura.
+
+### Checkout
+`/checkout` é um fluxo autenticado em três etapas (Endereço → Entrega → Revisão) com resumo
+fixo, busca de CEP, validação de UF/telefone e tela de confirmação.
+
+### Entrega
+- Tabelas: `shipping_settings`, `shipping_methods`, `shipping_quotes`, `tracking_events`;
+  `orders` guarda `shipping_snapshot`, `shipping_quote_id` e `production_days`.
+- Provedores em `src/lib/shipping.server.ts`: `manual`, `pickup` e `melhor_envio`
+  (ativado apenas com `MELHOR_ENVIO_TOKEN`; falha de API nunca vira frete grátis).
+- Painel `/admin/entrega` para origem, prazos, retirada, markup e métodos manuais.
+
+### Segurança
+- `INSERT` direto em `orders` e `order_items` foi revogado de `anon` e `authenticated`.
+  Pedidos só nascem em `createOrder`, que recalcula preços, valida personalizações,
+  confere a cotação (dono, validade, hash do carrinho e CEP) e grava via service role.
+- Cotações são persistidas com `cart_hash` e expiram em 30 minutos.
+- Funções administrativas de frete validam `is_admin` antes de qualquer escrita.
