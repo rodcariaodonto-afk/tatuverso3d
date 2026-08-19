@@ -4,7 +4,6 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Clock,
@@ -794,5 +793,3 @@ function Row({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-
-/* ── Confirmação ─────────────────────────────────────────────────────────── */
