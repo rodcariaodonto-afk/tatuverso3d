@@ -58,6 +58,7 @@ import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
 import { Route as AdminCandidaturasRouteImport } from './routes/admin.candidaturas'
 import { Route as AdminAssinaturasRouteImport } from './routes/admin.assinaturas'
+import { Route as MinhaContaPedidoIdRouteImport } from './routes/minha-conta.pedido.$id'
 import { Route as AdminProdutosNovoRouteImport } from './routes/admin.produtos.novo'
 import { Route as AdminPedidosIdRouteImport } from './routes/admin.pedidos.$id'
 import { Route as ApiPublicWebhooksMercadopagoRouteImport } from './routes/api/public/webhooks/mercadopago'
@@ -309,6 +310,11 @@ const AdminAssinaturasRoute = AdminAssinaturasRouteImport.update({
   path: '/assinaturas',
   getParentRoute: () => AdminRoute,
 } as any)
+const MinhaContaPedidoIdRoute = MinhaContaPedidoIdRouteImport.update({
+  id: '/pedido/$id',
+  path: '/pedido/$id',
+  getParentRoute: () => MinhaContaRoute,
+} as any)
 const AdminProdutosNovoRoute = AdminProdutosNovoRouteImport.update({
   id: '/novo',
   path: '/novo',
@@ -389,6 +395,7 @@ export interface FileRoutesByFullPath {
   '/produtores/': typeof ProdutoresIndexRoute
   '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
+  '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
   '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
@@ -445,6 +452,7 @@ export interface FileRoutesByTo {
   '/produtores': typeof ProdutoresIndexRoute
   '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
+  '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
   '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
@@ -502,6 +510,7 @@ export interface FileRoutesById {
   '/produtores/': typeof ProdutoresIndexRoute
   '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
+  '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
   '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
@@ -560,6 +569,7 @@ export interface FileRouteTypes {
     | '/produtores/'
     | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
+    | '/minha-conta/pedido/$id'
     | '/admin/produtos/$id/editar'
     | '/api/public/jobs/expire-reservations'
     | '/api/public/webhooks/mercadopago'
@@ -616,6 +626,7 @@ export interface FileRouteTypes {
     | '/produtores'
     | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
+    | '/minha-conta/pedido/$id'
     | '/admin/produtos/$id/editar'
     | '/api/public/jobs/expire-reservations'
     | '/api/public/webhooks/mercadopago'
@@ -672,6 +683,7 @@ export interface FileRouteTypes {
     | '/produtores/'
     | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
+    | '/minha-conta/pedido/$id'
     | '/admin/produtos/$id/editar'
     | '/api/public/jobs/expire-reservations'
     | '/api/public/webhooks/mercadopago'
@@ -1058,6 +1070,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAssinaturasRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/minha-conta/pedido/$id': {
+      id: '/minha-conta/pedido/$id'
+      path: '/pedido/$id'
+      fullPath: '/minha-conta/pedido/$id'
+      preLoaderRoute: typeof MinhaContaPedidoIdRouteImport
+      parentRoute: typeof MinhaContaRoute
+    }
     '/admin/produtos/novo': {
       id: '/admin/produtos/novo'
       path: '/novo'
@@ -1160,10 +1179,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface MinhaContaRouteChildren {
   MinhaContaPrivacidadeRoute: typeof MinhaContaPrivacidadeRoute
+  MinhaContaPedidoIdRoute: typeof MinhaContaPedidoIdRoute
 }
 
 const MinhaContaRouteChildren: MinhaContaRouteChildren = {
   MinhaContaPrivacidadeRoute: MinhaContaPrivacidadeRoute,
+  MinhaContaPedidoIdRoute: MinhaContaPedidoIdRoute,
 }
 
 const MinhaContaRouteWithChildren = MinhaContaRoute._addFileChildren(
