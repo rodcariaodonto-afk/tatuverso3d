@@ -38,7 +38,7 @@ function PostPage() {
       <Link to="/blog" className="inline-flex items-center gap-1 text-xs uppercase tracking-wider text-muted-foreground hover:text-primary">
         <ArrowLeft className="h-3 w-3" /> Blog
       </Link>
-      {post.category && <p className="eyebrow mt-6 !text-[var(--gold)]">{post.category}</p>}
+      {post.category && <p className="eyebrow mt-6 !text-[var(--brand-accent)]">{post.category}</p>}
       <h1 className="mt-3 font-display text-4xl text-primary md:text-5xl">{post.title}</h1>
       <p className="mt-3 text-sm text-muted-foreground">
         {post.author_name} ·{" "}

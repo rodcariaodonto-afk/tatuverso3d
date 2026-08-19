@@ -8,7 +8,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { ProductForm } from "@/components/admin/ProductForm";
 
 export const Route = createFileRoute("/admin/produtos/novo")({
-  head: () => ({ meta: [{ title: "Novo café — Admin Café EX" }] }),
+  head: () => ({ meta: [{ title: "Novo café — Admin TatuVerso3D" }] }),
   component: NewProductPage,
 });
 
@@ -44,7 +44,7 @@ function NewProductPage() {
         <ArrowLeft className="h-3 w-3" /> Voltar
       </Link>
       <h1 className="mt-4 font-display text-4xl text-primary md:text-5xl">Novo café</h1>
-      <div className="gold-divider mt-3 mb-8" />
+      <div className="brand-divider mt-3 mb-8" />
 
       {producers && producers.length > 0 && (
         <div className="mb-8 max-w-md">

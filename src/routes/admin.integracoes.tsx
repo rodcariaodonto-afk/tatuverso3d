@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/integracoes")({
-  head: () => ({ meta: [{ title: "Admin · Integrações — Café EX" }] }),
+  head: () => ({ meta: [{ title: "Admin · Integrações — TatuVerso3D" }] }),
   component: IntegracoesPage,
 });
 
@@ -164,7 +164,7 @@ function IntegracoesPage() {
           body: JSON.stringify({
             to: adminEmail,
             template: "test_email",
-            vars: { store_name: value("store_name") ?? "Cafezeira" },
+            vars: { store_name: value("store_name") ?? "TatuVerso3D" },
           }),
         },
       );
@@ -196,7 +196,7 @@ function IntegracoesPage() {
         <div>
           <p className="eyebrow">Administração</p>
           <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Integrações</h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
           <p className="mt-3 text-sm text-muted-foreground">
             Configure as credenciais do Mercado Pago, Melhor Envio e os dados da sua loja.
             Os tokens são armazenados com restrição de acesso (RLS) — somente admins podem lê-los.
@@ -211,7 +211,7 @@ function IntegracoesPage() {
                 label="Nome da loja"
                 value={value("store_name") ?? ""}
                 onChange={(v) => set("store_name", v)}
-                placeholder="Café EX"
+                placeholder="TatuVerso3D"
               />
               <Field
                 label="CEP de origem (expedição)"
@@ -269,7 +269,7 @@ function IntegracoesPage() {
                       name="mp_env"
                       checked={(value("mp_environment") ?? "sandbox") === env}
                       onChange={() => set("mp_environment", env)}
-                      className="accent-[var(--gold)]"
+                      className="accent-[var(--brand-accent)]"
                     />
                     {env === "sandbox" ? "Sandbox (testes)" : "Produção"}
                   </label>
@@ -317,7 +317,7 @@ function IntegracoesPage() {
                       name="me_env"
                       checked={(value("me_environment") ?? "sandbox") === env}
                       onChange={() => set("me_environment", env)}
-                      className="accent-[var(--gold)]"
+                      className="accent-[var(--brand-accent)]"
                     />
                     {env === "sandbox" ? "Sandbox (testes)" : "Produção"}
                   </label>
@@ -383,8 +383,8 @@ function IntegracoesPage() {
                 label="Nome do remetente"
                 value={value("email_from_name") ?? ""}
                 onChange={(v) => set("email_from_name", v)}
-                placeholder="Cafezeira"
-                hint="Ex: Café EX — aparece no campo 'De:' do e-mail"
+                placeholder="TatuVerso3D"
+                hint="Ex: TatuVerso3D — aparece no campo 'De:' do e-mail"
               />
               <Field
                 label="E-mail do remetente"

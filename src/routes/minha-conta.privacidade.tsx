@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 
 export const Route = createFileRoute("/minha-conta/privacidade")({
-  head: () => ({ meta: [{ title: "Privacidade & LGPD — Café EX" }] }),
+  head: () => ({ meta: [{ title: "Privacidade & LGPD — TatuVerso3D" }] }),
   component: PrivacidadePage,
 });
 
@@ -127,7 +127,7 @@ function PrivacidadePage() {
       <header className="mt-6">
         <p className="eyebrow">LGPD</p>
         <h1 className="mt-2 font-display text-4xl text-primary">Privacidade e seus dados</h1>
-        <div className="gold-divider mt-3" />
+        <div className="brand-divider mt-3" />
         <p className="mt-4 text-sm text-muted-foreground">
           De acordo com a Lei Geral de Proteção de Dados (Lei 13.709/2018), você tem o direito de
           acessar, corrigir, exportar e solicitar a exclusão dos seus dados pessoais.
@@ -137,7 +137,7 @@ function PrivacidadePage() {
       {/* Exportar dados */}
       <section className="mt-10 rounded-xl border border-border bg-card p-6">
         <div className="flex items-start gap-4">
-          <Download className="mt-0.5 h-5 w-5 shrink-0 text-[var(--gold)]" />
+          <Download className="mt-0.5 h-5 w-5 shrink-0 text-[var(--brand-accent)]" />
           <div className="flex-1">
             <h2 className="font-display text-xl text-primary">Exportar meus dados</h2>
             <p className="mt-1 text-sm text-muted-foreground">

@@ -9,7 +9,7 @@ import { formatBRL } from "@/lib/cart-store";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin")({
-  head: () => ({ meta: [{ title: "Admin — Café EX" }] }),
+  head: () => ({ meta: [{ title: "Admin — TatuVerso3D" }] }),
   component: AdminLayout,
 });
 
@@ -139,8 +139,8 @@ function AdminDashboard() {
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Administração</p>
-          <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Painel Café EX</h1>
-          <div className="gold-divider mt-3" />
+          <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Painel TatuVerso3D</h1>
+          <div className="brand-divider mt-3" />
         </div>
         <Link to="/admin/produtos" className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-primary hover:border-primary">
           Gerenciar cafés →
@@ -226,9 +226,9 @@ function AdminDashboard() {
                 <tr key={p.id}>
                   <td className="px-4 py-3 font-medium text-primary">{p.name}</td>
                   <td className="px-4 py-3 text-muted-foreground">{p.region} · {p.country}</td>
-                  <td className="px-4 py-3"><span className="rounded-full bg-[var(--sand)] px-2 py-0.5 text-xs">{p.status}</span></td>
+                  <td className="px-4 py-3"><span className="rounded-full bg-[var(--surface-soft)] px-2 py-0.5 text-xs">{p.status}</span></td>
                   <td className="px-4 py-3 text-right">
-                    <button onClick={() => setProducerStatus(p.id, "active")} className="mr-2 text-xs font-semibold text-[var(--farm)] hover:underline">Aprovar</button>
+                    <button onClick={() => setProducerStatus(p.id, "active")} className="mr-2 text-xs font-semibold text-[var(--brand-primary)] hover:underline">Aprovar</button>
                     <button onClick={() => setProducerStatus(p.id, "rejected")} className="text-xs font-semibold text-destructive hover:underline">Rejeitar</button>
                   </td>
                 </tr>
@@ -257,9 +257,9 @@ function AdminDashboard() {
                   <td className="px-4 py-3 font-medium text-primary">{p.name}</td>
                   <td className="px-4 py-3 text-muted-foreground">{p.producers?.name}</td>
                   <td className="px-4 py-3 text-right">{formatBRL(Number(p.price))}</td>
-                  <td className="px-4 py-3"><span className="rounded-full bg-[var(--sand)] px-2 py-0.5 text-xs">{p.status}</span></td>
+                  <td className="px-4 py-3"><span className="rounded-full bg-[var(--surface-soft)] px-2 py-0.5 text-xs">{p.status}</span></td>
                   <td className="px-4 py-3 text-right">
-                    <button onClick={() => setProductStatus(p.id, "active")} className="mr-2 text-xs font-semibold text-[var(--farm)] hover:underline">Publicar</button>
+                    <button onClick={() => setProductStatus(p.id, "active")} className="mr-2 text-xs font-semibold text-[var(--brand-primary)] hover:underline">Publicar</button>
                     <button onClick={() => setProductStatus(p.id, "draft")} className="text-xs font-semibold text-muted-foreground hover:underline">Pausar</button>
                   </td>
                 </tr>
@@ -276,7 +276,7 @@ function AdminDashboard() {
 function Metric({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
   return (
     <div className="rounded-lg border border-border bg-card p-5">
-      <Icon className="h-5 w-5 text-[var(--gold)]" />
+      <Icon className="h-5 w-5 text-[var(--brand-accent)]" />
       <p className="mt-3 text-xs uppercase tracking-wider text-muted-foreground">{label}</p>
       <p className="mt-1 font-display text-3xl text-primary">{value}</p>
     </div>

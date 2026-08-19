@@ -9,13 +9,14 @@ export type GrindOption =
   | "french_press"
   | "aeropress";
 
+/** Rótulos das variações de produto (temporário até a Onda 2 remodelar o schema). */
 export const GRIND_LABEL: Record<GrindOption, string> = {
-  whole_bean: "Em grãos",
-  espresso: "Espresso",
-  filter: "Filtro / V60",
-  moka: "Moka",
-  french_press: "Prensa francesa",
-  aeropress: "Aeropress",
+  whole_bean: "Padrão",
+  espresso: "Pequeno",
+  filter: "Médio",
+  moka: "Grande",
+  french_press: "Kit",
+  aeropress: "Personalizado",
 };
 
 export type CartItem = {

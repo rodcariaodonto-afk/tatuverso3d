@@ -1,27 +1,35 @@
 /**
- * Configuração whitelabel do tenant.
- * Todas as referências de marca e identidade visual devem usar estas variáveis
+ * Configuração whitelabel do tenant (TatuVerso3D).
+ * Todas as referências de marca devem usar estas variáveis
  * em vez de strings hardcoded.
- *
- * Configure via variáveis de ambiente VITE_* no arquivo .env (ver .env.example).
  */
 export const tenantConfig = {
-  name: import.meta.env.VITE_TENANT_NAME ?? "Café EX",
+  name: import.meta.env.VITE_TENANT_NAME ?? "TatuVerso3D",
   tagline:
     import.meta.env.VITE_STORE_TAGLINE ??
-    "Cafés especiais com origem e curadoria",
+    "Um universo de ideias que ganham forma",
+  description:
+    "A TatuVerso3D transforma criatividade em produtos únicos por meio da impressão 3D. Criamos itens sensoriais, decoração, utilidades, presentes, colecionáveis e produtos personalizados, combinando tecnologia, cuidado e imaginação.",
+  seoTitle: "TatuVerso3D | Produtos criativos em impressão 3D",
+  seoDescription:
+    "Produtos sensoriais, decoração, utilidades, presentes, colecionáveis e itens personalizados feitos em impressão 3D.",
   logoUrl: (import.meta.env.VITE_LOGO_URL as string | undefined) ?? null,
   primaryColor: (import.meta.env.VITE_PRIMARY_COLOR as string | undefined) ?? null,
   storeUrl: import.meta.env.VITE_STORE_URL ?? "",
-  supportEmail: import.meta.env.VITE_SUPPORT_EMAIL ?? "contato@cafezeira.com",
-  instagram: (import.meta.env.VITE_INSTAGRAM as string | undefined) ?? null,
-  clubeName: import.meta.env.VITE_CLUB_NAME ?? "Clube do Café",
+  supportEmail: import.meta.env.VITE_SUPPORT_EMAIL ?? "contato@tatuverso3d.com.br",
+  instagram:
+    (import.meta.env.VITE_INSTAGRAM as string | undefined) ??
+    "https://instagram.com/tatuverso3d",
+  tiktok:
+    (import.meta.env.VITE_TIKTOK as string | undefined) ??
+    "https://tiktok.com/@tatuverso3d",
 };
 
 /** Aplica a cor primária do tenant como variável CSS no documento. */
 export function applyTenantTheme() {
   if (typeof document === "undefined") return;
   if (tenantConfig.primaryColor) {
+    document.documentElement.style.setProperty("--brand-primary", tenantConfig.primaryColor);
     document.documentElement.style.setProperty("--primary", tenantConfig.primaryColor);
   }
 }

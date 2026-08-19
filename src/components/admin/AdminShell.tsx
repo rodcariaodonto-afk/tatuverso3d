@@ -7,14 +7,10 @@ import {
   ShoppingBag,
   TrendingUp,
   Users,
-  Sprout,
-  Briefcase,
   TicketPercent,
   Settings,
   Image as ImageIcon,
   Plug,
-  ClipboardList,
-  Crown,
   LogOut,
   Menu,
   X,
@@ -22,18 +18,14 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import logoAsset from "@/assets/cafe-ex-logo.png.asset.json";
+import logoAsset from "@/assets/tatuverso3d-logo.png.asset.json";
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/admin/produtos", label: "Cafés", icon: Package },
+  { to: "/admin/produtos", label: "Produtos", icon: Package },
   { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
   { to: "/admin/vendas", label: "Vendas", icon: TrendingUp },
   { to: "/admin/clientes", label: "Clientes", icon: Users },
-  { to: "/admin/produtores", label: "Produtores", icon: Sprout },
-  { to: "/admin/candidaturas", label: "Candidaturas", icon: ClipboardList },
-  { to: "/admin/assinaturas", label: "Assinaturas", icon: Crown },
-  { to: "/admin/leads", label: "Leads B2B", icon: Briefcase },
   { to: "/admin/cupons", label: "Cupons", icon: TicketPercent },
   { to: "/admin/conteudo", label: "Conteúdo do site", icon: ImageIcon },
   { to: "/admin/integracoes", label: "Integrações", icon: Plug },
@@ -65,7 +57,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   if (!user) {
     return (
       <div className="container mx-auto max-w-md py-20 text-center">
-        <h1 className="font-display text-3xl text-primary">Entre na Café EX</h1>
+        <h1 className="font-display text-3xl text-primary">Entre na TatuVerso3D</h1>
         <p className="mt-2 text-sm text-muted-foreground">Você precisa estar autenticado para acessar o painel.</p>
         <Link to="/login" className="mt-6 inline-flex rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground">
           Entrar
@@ -78,7 +70,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <div className="container mx-auto max-w-md py-20 text-center">
         <h1 className="font-display text-3xl text-primary">403 — Acesso restrito</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Esta área é exclusiva para administradores Café EX.
+          Esta área é exclusiva para administradores TatuVerso3D.
         </p>
         <Link to="/" className="mt-6 inline-flex rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground">
           Voltar para o site
@@ -91,7 +83,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     <div className="flex h-full flex-col">
       <Link to="/admin" className="flex items-center gap-2 border-b border-border px-5 py-4">
         <img src={tenantConfig.logoUrl ?? logoAsset.url} alt={tenantConfig.name} className="h-7 w-auto" />
-        <span className="rounded-full bg-[var(--gold)]/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--gold)]">
+        <span className="rounded-full bg-[var(--brand-accent)]/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--brand-accent)]">
           Admin
         </span>
       </Link>
@@ -144,7 +136,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] w-full bg-[var(--sand)]/30">
+    <div className="flex min-h-[calc(100vh-4rem)] w-full bg-[var(--surface-soft)]/30">
       <aside className="hidden w-64 shrink-0 border-r border-border bg-card lg:block">{SidebarBody}</aside>
 
       {mobileOpen && (

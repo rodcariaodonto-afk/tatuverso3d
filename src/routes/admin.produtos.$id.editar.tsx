@@ -7,7 +7,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { ProductForm } from "@/components/admin/ProductForm";
 
 export const Route = createFileRoute("/admin/produtos/$id/editar")({
-  head: () => ({ meta: [{ title: "Editar café — Admin Café EX" }] }),
+  head: () => ({ meta: [{ title: "Editar café — Admin TatuVerso3D" }] }),
   component: EditProductPage,
 });
 
@@ -36,7 +36,7 @@ function EditProductPage() {
         <ArrowLeft className="h-3 w-3" /> Voltar
       </Link>
       <h1 className="mt-4 font-display text-4xl text-primary md:text-5xl">Editar café</h1>
-      <div className="gold-divider mt-3 mb-8" />
+      <div className="brand-divider mt-3 mb-8" />
 
       {producerId && <ProductForm productId={id} producerId={producerId} />}
     </div></AdminShell>

@@ -8,7 +8,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { adminCreateUser, adminPromoteUser, adminSetTemporaryPassword } from "@/lib/admin-actions.functions";
 
 export const Route = createFileRoute("/admin/clientes")({
-  head: () => ({ meta: [{ title: "Clientes — Admin Café EX" }] }),
+  head: () => ({ meta: [{ title: "Clientes — Admin TatuVerso3D" }] }),
   component: ClientesPage,
 });
 
@@ -81,7 +81,7 @@ function ClientesPage() {
         <header>
           <p className="eyebrow">Pessoas</p>
           <h1 className="mt-2 font-display text-4xl text-primary">Clientes</h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
           <p className="mt-3 text-sm text-muted-foreground">{profiles?.length ?? 0} perfis cadastrados</p>
         </header>
 

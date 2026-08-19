@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowLeft, Coffee, Leaf, Mountain, Star, Award, ShoppingBag } from "lucide-react";
+import { ArrowLeft, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { GRIND_LABEL, formatBRL, useCart, type GrindOption } from "@/lib/cart-store";
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/cafe/$slug")({
     const router = useRouter();
     return (
       <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="font-display text-2xl">Erro ao carregar café</h1>
+        <h1 className="font-display text-2xl">Erro ao carregar produto</h1>
         <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
         <button
           onClick={() => {
@@ -29,31 +29,13 @@ export const Route = createFileRoute("/cafe/$slug")({
   },
   notFoundComponent: () => (
     <div className="container mx-auto px-4 py-20 text-center">
-      <h1 className="font-display text-3xl">Café não encontrado</h1>
+      <h1 className="font-display text-3xl">Produto não encontrado</h1>
       <Link to="/catalogo" className="mt-6 inline-flex text-sm font-semibold text-primary underline">
         Ver catálogo
       </Link>
     </div>
   ),
 });
-
-function SensoryBar({ label, value }: { label: string; value: number | null }) {
-  if (value == null) return null;
-  return (
-    <div>
-      <div className="flex items-center justify-between text-xs uppercase tracking-wider text-muted-foreground">
-        <span>{label}</span>
-        <span>{value}/5</span>
-      </div>
-      <div className="mt-1 h-1.5 w-full rounded-full bg-muted">
-        <div
-          className="h-full rounded-full bg-[var(--gold)]"
-          style={{ width: `${(value / 5) * 100}%` }}
-        />
-      </div>
-    </div>
-  );
-}
 
 function ProductPage() {
   const { slug } = Route.useParams();
@@ -125,7 +107,6 @@ function ProductPage() {
     : product.compare_at_price != null
       ? Number(product.compare_at_price)
       : null;
-  const displayWeight = selectedVariant?.weight_grams ?? product.weight_grams ?? 250;
   const displayStock = selectedVariant?.stock_quantity ?? product.stock_quantity ?? 0;
   const onSale = displayCompare != null && displayCompare > displayPrice;
 
@@ -155,7 +136,7 @@ function ProductPage() {
   return (
     <div className="container mx-auto px-4 py-10 md:px-6">
       <Link to="/catalogo" className="inline-flex items-center gap-1 text-xs uppercase tracking-wider text-muted-foreground hover:text-primary">
-        <ArrowLeft className="h-3 w-3" /> Voltar ao catálogo
+        <ArrowLeft className="h-3 w-3" /> Voltar à loja
       </Link>
 
       <div className="mt-6 grid gap-12 lg:grid-cols-2">
@@ -177,79 +158,11 @@ function ProductPage() {
 
         {/* DETAILS */}
         <div>
-          {product.producers && (
-            <Link
-              to="/produtores/$slug"
-              params={{ slug: product.producers.slug }}
-              className="text-xs uppercase tracking-[0.18em] text-muted-foreground hover:text-primary"
-            >
-              {product.producers.name} · {product.origin_region ?? product.producers.region} · {product.origin_country}
-            </Link>
-          )}
           <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">{product.name}</h1>
-          {product.score && (
-            <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-              <Star className="h-3 w-3 fill-[var(--gold)] text-[var(--gold)]" />
-              {product.score} pontos SCA
-            </div>
-          )}
           <p className="mt-5 leading-relaxed text-foreground/80">{product.short_description}</p>
 
-          {/* Notes pills */}
-          {notes.length > 0 && (
-            <div className="mt-6">
-              <p className="eyebrow">Notas sensoriais</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {notes.map((n) => (
-                  <span
-                    key={n.name}
-                    className="rounded-full border border-accent/40 bg-[var(--sand)] px-3 py-1 text-xs font-medium text-primary"
-                  >
-                    {n.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Sensory bars */}
-          <div className="mt-6 grid gap-3 rounded-lg border border-border bg-card p-4 sm:grid-cols-2">
-            <SensoryBar label="Intensidade" value={product.intensity} />
-            <SensoryBar label="Doçura" value={product.sweetness} />
-            <SensoryBar label="Corpo" value={product.body} />
-            <SensoryBar label="Acidez" value={product.acidity} />
-          </div>
-
-          {/* Origin chips */}
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {product.variety && (
-              <div className="rounded-md bg-muted p-3">
-                <p className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground">
-                  <Leaf className="h-3 w-3" /> Variedade
-                </p>
-                <p className="mt-1 text-sm font-semibold text-primary">{product.variety}</p>
-              </div>
-            )}
-            {product.process && (
-              <div className="rounded-md bg-muted p-3">
-                <p className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground">
-                  <Coffee className="h-3 w-3" /> Processo
-                </p>
-                <p className="mt-1 text-sm font-semibold text-primary">{product.process}</p>
-              </div>
-            )}
-            {product.altitude_meters && (
-              <div className="rounded-md bg-muted p-3">
-                <p className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground">
-                  <Mountain className="h-3 w-3" /> Altitude
-                </p>
-                <p className="mt-1 text-sm font-semibold text-primary">{product.altitude_meters} m</p>
-              </div>
-            )}
-          </div>
-
           {/* Buy box */}
-          <div className="mt-8 rounded-xl border border-border bg-[var(--sand)] p-5">
+          <div className="mt-8 rounded-xl border border-border bg-[var(--surface-soft)] p-5">
             <div className="flex items-baseline gap-3">
               {onSale && displayCompare != null && (
                 <span className="text-sm text-muted-foreground line-through">
@@ -259,12 +172,11 @@ function ProductPage() {
               <span className="font-display text-3xl font-semibold text-primary">
                 {formatBRL(displayPrice)}
               </span>
-              <span className="text-xs text-muted-foreground">/ {displayWeight}g</span>
             </div>
 
             {variants.length > 0 && (
               <div className="mt-5">
-                <p className="eyebrow">Variante</p>
+                <p className="eyebrow">Opções</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {variants.map((v) => {
                     const active = (selectedVariant?.id ?? variants[0]?.id) === v.id;
@@ -279,7 +191,7 @@ function ProductPage() {
                             : "border-border bg-card text-foreground/80 hover:border-primary"
                         }`}
                       >
-                        {v.weight_grams}g · {GRIND_LABEL[v.grind_option]}
+                        {GRIND_LABEL[v.grind_option]} · {v.weight_grams}g
                       </button>
                     );
                   })}
@@ -303,17 +215,11 @@ function ProductPage() {
               </button>
             </div>
 
-            {product.is_subscription_available && (
-              <div className="mt-4 flex items-start gap-2 rounded-md bg-card p-3 text-xs text-muted-foreground">
-                <Award className="h-4 w-4 shrink-0 text-[var(--gold)]" />
-                Disponível também na assinatura mensal Café EX.
-              </div>
-            )}
           </div>
 
           {product.description && (
             <div className="prose mt-10 max-w-none text-foreground/80">
-              <p className="eyebrow">Sobre este café</p>
+              <p className="eyebrow">Sobre este produto</p>
               <p className="mt-3 whitespace-pre-line text-sm leading-relaxed">{product.description}</p>
             </div>
           )}

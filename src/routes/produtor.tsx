@@ -8,7 +8,7 @@ import { formatBRL } from "@/lib/cart-store";
 import { ProducerShell } from "@/components/producer/ProducerShell";
 
 export const Route = createFileRoute("/produtor")({
-  head: () => ({ meta: [{ title: "Painel do Produtor — Café EX" }] }),
+  head: () => ({ meta: [{ title: "Painel do Produtor — TatuVerso3D" }] }),
   component: ProducerLayout,
 });
 
@@ -100,12 +100,12 @@ function ProducerDashboard() {
           <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">
             {producer?.name ?? "Minha marca"}
           </h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
           {producer?.status && (
             <span
               className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider ${
                 producer.status === "active"
-                  ? "bg-[var(--farm)]/15 text-[var(--farm)]"
+                  ? "bg-[var(--brand-primary)]/15 text-[var(--brand-primary)]"
                   : "bg-muted text-muted-foreground"
               }`}
             >
@@ -150,13 +150,13 @@ function ProducerDashboard() {
             <Link
               key={q.to}
               to={q.to as any}
-              className="group flex items-center justify-between rounded-xl border border-border bg-card p-5 transition hover:border-[var(--gold)]"
+              className="group flex items-center justify-between rounded-xl border border-border bg-card p-5 transition hover:border-[var(--brand-accent)]"
             >
               <div>
                 <p className="font-semibold text-primary">{q.label}</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">{q.desc}</p>
               </div>
-              <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-[var(--gold)]" />
+              <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-[var(--brand-accent)]" />
             </Link>
           ))}
         </div>
@@ -184,7 +184,7 @@ function ProducerDashboard() {
                       <td className="px-4 py-3 text-right">{i.quantity}</td>
                       <td className="px-4 py-3 text-right">{formatBRL(Number(i.total_price))}</td>
                       <td className="px-4 py-3">
-                        <span className="rounded-full bg-[var(--sand)] px-2 py-0.5 text-xs">
+                        <span className="rounded-full bg-[var(--surface-soft)] px-2 py-0.5 text-xs">
                           {(i as any).orders?.status ?? "—"}
                         </span>
                       </td>
@@ -213,7 +213,7 @@ function Metric({
 }) {
   return (
     <div className="rounded-lg border border-border bg-card p-5">
-      <Icon className="h-5 w-5 text-[var(--gold)]" />
+      <Icon className="h-5 w-5 text-[var(--brand-accent)]" />
       <p className="mt-3 text-xs uppercase tracking-wider text-muted-foreground">{label}</p>
       <p className="mt-1 font-display text-3xl text-primary">{value}</p>
       {sub && <p className="mt-1 text-xs text-muted-foreground">{sub}</p>}

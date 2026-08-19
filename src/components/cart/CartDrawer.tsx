@@ -29,7 +29,7 @@ export function CartDrawer() {
       <aside className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-background shadow-2xl">
         <header className="flex items-center justify-between border-b border-border px-5 py-4">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="h-4 w-4 text-[var(--gold)]" />
+            <ShoppingBag className="h-4 w-4 text-[var(--brand-accent)]" />
             <h2 className="font-display text-lg text-primary">Seu carrinho</h2>
           </div>
           <button onClick={() => setOpen(false)} aria-label="Fechar" className="rounded-md p-1 hover:bg-muted">
@@ -90,7 +90,7 @@ export function CartDrawer() {
               ))}
             </div>
 
-            <footer className="border-t border-border bg-[var(--sand)] p-5">
+            <footer className="border-t border-border bg-[var(--surface-soft)] p-5">
               <div className="flex items-center justify-between">
                 <span className="text-sm uppercase tracking-wider text-muted-foreground">Subtotal</span>
                 <span className="font-display text-2xl text-primary">{formatBRL(subtotal)}</span>

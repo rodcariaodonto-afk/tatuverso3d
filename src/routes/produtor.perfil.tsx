@@ -136,7 +136,7 @@ function ProducerPerfilPage() {
         <header>
           <p className="eyebrow">Minha marca</p>
           <h1 className="mt-2 font-display text-4xl text-primary">Perfil da marca</h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
         </header>
 
         <form onSubmit={handleSave} className="mt-10 space-y-8">
@@ -286,7 +286,7 @@ function ProducerPerfilPage() {
             {producer && (
               <p className="mt-1 text-xs text-muted-foreground">
                 Comissão da plataforma: <strong>{producer.commission_rate ?? 12}%</strong> (definida
-                pelo time Café EX).
+                pelo time TatuVerso3D).
               </p>
             )}
           </Card>

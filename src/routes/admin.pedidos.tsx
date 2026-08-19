@@ -7,7 +7,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { formatBRL } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/admin/pedidos")({
-  head: () => ({ meta: [{ title: "Pedidos — Admin Café EX" }] }),
+  head: () => ({ meta: [{ title: "Pedidos — Admin TatuVerso3D" }] }),
   component: PedidosPage,
 });
 
@@ -50,7 +50,7 @@ function PedidosPage() {
         <header>
           <p className="eyebrow">Operação</p>
           <h1 className="mt-2 font-display text-4xl text-primary">Pedidos</h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
         </header>
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -95,7 +95,7 @@ function PedidosPage() {
                     </td>
                     <td className="px-4 py-3 text-right font-semibold text-primary">{formatBRL(Number(o.total))}</td>
                     <td className="px-4 py-3">
-                      <span className="rounded-full bg-[var(--sand)] px-2 py-0.5 text-xs">{o.payment_status}</span>
+                      <span className="rounded-full bg-[var(--surface-soft)] px-2 py-0.5 text-xs">{o.payment_status}</span>
                     </td>
                     <td className="px-4 py-3">
                       <select value={o.status} onChange={(e) => setStatus(o.id, e.target.value)} className="rounded-full border border-border bg-card px-2 py-0.5 text-xs">

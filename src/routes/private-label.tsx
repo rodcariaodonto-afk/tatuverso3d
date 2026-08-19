@@ -9,13 +9,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/private-label")({
   head: () => ({
     meta: [
-      { title: "Café com sua marca · Private Label — Café EX" },
+      { title: "Café com sua marca · Private Label — TatuVerso3D" },
       {
         name: "description",
         content:
           "Crie cafés especiais com a sua marca. Embalagem personalizada, branding e curadoria de grãos para presentes corporativos e empresas.",
       },
-      { property: "og:title", content: "Private Label Café EX — Café com sua marca" },
+      { property: "og:title", content: "Private Label TatuVerso3D — Café com sua marca" },
       {
         property: "og:description",
         content:
@@ -151,9 +151,9 @@ function PrivateLabelPage() {
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[oklch(0.13_0.03_45)]/95 via-[oklch(0.16_0.03_45)]/85 to-[oklch(0.22_0.045_45)]/70" />
         <div className="container mx-auto px-4 py-24 md:px-6 md:py-32">
           <div className="max-w-2xl">
-            <p className="eyebrow !text-[var(--gold)]">Private Label · B2B</p>
+            <p className="eyebrow !text-[var(--brand-accent)]">Private Label · B2B</p>
             <h1 className="mt-4 font-display text-4xl leading-[1.05] md:text-6xl">
-              Café especial <em className="text-[var(--gold)] not-italic">com a sua marca</em>.
+              Café especial <em className="text-[var(--brand-accent)] not-italic">com a sua marca</em>.
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">
               Criamos cafés corporativos sob medida: grão 100% arábica da Serra da Mantiqueira,
@@ -162,7 +162,7 @@ function PrivateLabelPage() {
             </p>
             <a
               href="#briefing"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-[var(--gold)] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[var(--espresso)] hover:brightness-110"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-[var(--brand-accent)] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[var(--brand-dark)] hover:brightness-110"
             >
               Solicitar orçamento <ArrowRight className="h-4 w-4" />
             </a>
@@ -171,7 +171,7 @@ function PrivateLabelPage() {
       </section>
 
       {/* WHAT WE DO */}
-      <section className="border-b border-border bg-[var(--sand)]">
+      <section className="border-b border-border bg-[var(--surface-soft)]">
         <div className="container mx-auto grid gap-8 px-4 py-14 md:grid-cols-4 md:px-6">
           {[
             { icon: Coffee, title: "Curadoria de grãos", desc: "Microlotes 100% arábica selecionados para o seu perfil." },
@@ -197,12 +197,12 @@ function PrivateLabelPage() {
         <div className="text-center">
           <p className="eyebrow">Como funciona</p>
           <h2 className="mt-2 font-display text-3xl md:text-4xl">Do briefing à entrega</h2>
-          <div className="gold-divider mx-auto mt-3" />
+          <div className="brand-divider mx-auto mt-3" />
         </div>
         <div className="mt-12 grid gap-8 md:grid-cols-4">
           {STEPS.map((s) => (
             <div key={s.n} className="rounded-lg border border-border bg-card p-6">
-              <p className="font-display text-3xl text-[var(--gold)]">{s.n}</p>
+              <p className="font-display text-3xl text-[var(--brand-accent)]">{s.n}</p>
               <p className="mt-3 font-display text-lg text-primary">{s.title}</p>
               <p className="mt-1 text-sm text-muted-foreground">{s.desc}</p>
             </div>
@@ -211,22 +211,22 @@ function PrivateLabelPage() {
       </section>
 
       {/* PACKAGING OPTIONS */}
-      <section className="bg-[var(--cream)]">
+      <section className="bg-[var(--surface-highlight)]">
         <div className="container mx-auto px-4 py-20 md:px-6">
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="eyebrow">Opções de embalagem</p>
               <h2 className="mt-2 font-display text-3xl md:text-4xl">Escolha o formato ideal</h2>
-              <div className="gold-divider mt-3" />
+              <div className="brand-divider mt-3" />
             </div>
           </div>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {(packagingOptions ?? []).map((p) => (
               <div key={p.id} className="rounded-lg border border-border bg-card p-6">
-                <PackageIcon className="h-6 w-6 text-[var(--gold)]" />
+                <PackageIcon className="h-6 w-6 text-[var(--brand-accent)]" />
                 <p className="mt-3 font-display text-lg text-primary">{p.name}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{p.description}</p>
-                <p className="mt-3 text-xs uppercase tracking-wider text-[var(--farm)]">
+                <p className="mt-3 text-xs uppercase tracking-wider text-[var(--brand-primary)]">
                   Mín. {p.min_quantity} unid.
                 </p>
               </div>
@@ -240,9 +240,9 @@ function PrivateLabelPage() {
         <div className="text-center">
           <p className="eyebrow">Cases</p>
           <h2 className="mt-2 font-display text-3xl md:text-4xl">Marcas que já confiaram</h2>
-          <div className="gold-divider mx-auto mt-3" />
+          <div className="brand-divider mx-auto mt-3" />
           <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
-            Empresas que escolheram a Café EX para criar cafés corporativos com identidade própria.
+            Empresas que escolheram a TatuVerso3D para criar cafés corporativos com identidade própria.
           </p>
         </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -259,7 +259,7 @@ function PrivateLabelPage() {
       <section id="briefing" className="bg-[oklch(0.22_0.045_45)] py-20 text-[oklch(0.95_0.02_80)]">
         <div className="container mx-auto grid gap-12 px-4 md:grid-cols-[1fr_1.3fr] md:px-6">
           <div>
-            <p className="eyebrow !text-[var(--gold)]">Briefing</p>
+            <p className="eyebrow !text-[var(--brand-accent)]">Briefing</p>
             <h2 className="mt-2 font-display text-3xl md:text-5xl">
               Vamos criar o café da sua marca.
             </h2>
@@ -268,15 +268,15 @@ function PrivateLabelPage() {
               proposta personalizada.
             </p>
             <ul className="mt-8 space-y-3 text-sm text-white/80">
-              <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--gold)]" /> Resposta em até 1 dia útil</li>
-              <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--gold)]" /> Mockup digital antes da produção</li>
-              <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--gold)]" /> A partir de 30 unidades</li>
+              <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--brand-accent)]" /> Resposta em até 1 dia útil</li>
+              <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--brand-accent)]" /> Mockup digital antes da produção</li>
+              <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--brand-accent)]" /> A partir de 30 unidades</li>
             </ul>
           </div>
 
           {submitted ? (
             <div className="flex flex-col items-center justify-center rounded-lg border border-white/15 bg-white/5 p-12 text-center">
-              <CheckCircle2 className="h-12 w-12 text-[var(--gold)]" />
+              <CheckCircle2 className="h-12 w-12 text-[var(--brand-accent)]" />
               <p className="mt-4 font-display text-2xl">Briefing recebido!</p>
               <p className="mt-2 max-w-sm text-sm text-white/70">
                 Em breve nossa equipe entra em contato no e-mail informado para alinhar os próximos
@@ -307,7 +307,7 @@ function PrivateLabelPage() {
                 </select>
               </div>
               <label className="mt-4 flex items-center gap-2 text-sm text-white/80">
-                <input type="checkbox" name="has_brand" className="h-4 w-4 accent-[var(--gold)]" />
+                <input type="checkbox" name="has_brand" className="h-4 w-4 accent-[var(--brand-accent)]" />
                 Já tenho marca/logotipo
               </label>
               <div className="mt-4">
@@ -332,7 +332,7 @@ function PrivateLabelPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--gold)] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[var(--espresso)] hover:brightness-110 disabled:opacity-60"
+                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--brand-accent)] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[var(--brand-dark)] hover:brightness-110 disabled:opacity-60"
               >
                 {loading ? "Enviando..." : "Enviar briefing"}
               </button>
@@ -345,7 +345,7 @@ function PrivateLabelPage() {
 }
 
 const inputClass =
-  "mt-1 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-[var(--gold)] focus:outline-none";
+  "mt-1 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-[var(--brand-accent)] focus:outline-none";
 
 function Field({
   name,

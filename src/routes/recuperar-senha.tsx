@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/recuperar-senha")({
   head: () => ({
-    meta: [{ title: "Recuperar senha — Café EX" }],
+    meta: [{ title: "Recuperar senha — TatuVerso3D" }],
   }),
   component: RecoverPage,
 });
@@ -32,7 +32,7 @@ function RecoverPage() {
   return (
     <div className="container mx-auto max-w-md px-4 py-16 md:px-6">
       <h1 className="font-display text-3xl text-primary md:text-4xl">Recuperar senha</h1>
-      <div className="gold-divider mt-3" />
+      <div className="brand-divider mt-3" />
       {sent ? (
         <div className="mt-8 rounded-lg border border-border bg-card p-6 text-sm">
           <p className="font-semibold text-primary">Pronto!</p>

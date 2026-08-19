@@ -5,13 +5,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/produtores/")({
   head: () => ({
     meta: [
-      { title: "Produtores — Café EX" },
+      { title: "Produtores — TatuVerso3D" },
       {
         name: "description",
         content:
-          "Conheça as fazendas e torrefações latino-americanas selecionadas pela Café EX.",
+          "Conheça as fazendas e torrefações latino-americanas selecionadas pela TatuVerso3D.",
       },
-      { property: "og:title", content: "Produtores Café EX" },
+      { property: "og:title", content: "Produtores TatuVerso3D" },
       { property: "og:description", content: "Histórias de fazendas e torrefações." },
     ],
   }),
@@ -37,7 +37,7 @@ function ProducersPage() {
       <header>
         <p className="eyebrow">Produtores</p>
         <h1 className="mt-2 font-display text-4xl md:text-5xl">Histórias por trás do café</h1>
-        <div className="gold-divider mt-3" />
+        <div className="brand-divider mt-3" />
         <p className="mt-4 max-w-2xl text-sm text-muted-foreground">
           Famílias e cooperativas que cultivam, processam e torram com cuidado obsessivo. Conheça quem está
           por trás de cada xícara.
@@ -66,7 +66,7 @@ function ProducersPage() {
               {p.certifications && p.certifications.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1">
                   {p.certifications.slice(0, 3).map((c: string) => (
-                    <span key={c} className="rounded-full bg-[var(--sand)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-primary">
+                    <span key={c} className="rounded-full bg-[var(--surface-soft)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-primary">
                       {c}
                     </span>
                   ))}

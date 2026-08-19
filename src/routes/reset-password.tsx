@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/reset-password")({
-  head: () => ({ meta: [{ title: "Redefinir senha — Café EX" }] }),
+  head: () => ({ meta: [{ title: "Redefinir senha — TatuVerso3D" }] }),
   component: ResetPage,
 });
 
@@ -29,7 +29,7 @@ function ResetPage() {
   return (
     <div className="container mx-auto max-w-md px-4 py-16 md:px-6">
       <h1 className="font-display text-3xl text-primary md:text-4xl">Definir nova senha</h1>
-      <div className="gold-divider mt-3" />
+      <div className="brand-divider mt-3" />
       <form onSubmit={onSubmit} className="mt-8 space-y-4 rounded-xl border border-border bg-card p-6">
         <input
           type="password"

@@ -85,7 +85,7 @@ function ProducerProdutosPage() {
           <div>
             <p className="eyebrow">Minha marca</p>
             <h1 className="mt-2 font-display text-4xl text-primary">Meus cafés</h1>
-            <div className="gold-divider mt-3" />
+            <div className="brand-divider mt-3" />
           </div>
           <button
             onClick={() => { setEditing(null); setCreating(true); }}
@@ -172,7 +172,7 @@ function ProducerProdutosPage() {
         </div>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          Novos cafés ficam em curadoria até serem publicados pelo time Café EX.
+          Novos cafés ficam em curadoria até serem publicados pelo time TatuVerso3D.
         </p>
       </div>
 

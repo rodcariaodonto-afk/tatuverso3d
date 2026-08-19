@@ -386,7 +386,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <section>
       <h2 className="font-display text-xl text-primary">{title}</h2>
-      <div className="gold-divider mt-2 mb-5" />
+      <div className="brand-divider mt-2 mb-5" />
       {children}
     </section>
   );

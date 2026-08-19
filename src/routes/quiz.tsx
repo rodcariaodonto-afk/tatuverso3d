@@ -10,12 +10,12 @@ import { useAuth } from "@/lib/auth-context";
 export const Route = createFileRoute("/quiz")({
   head: () => ({
     meta: [
-      { title: "Quiz Sensorial — Café EX" },
+      { title: "Quiz Sensorial — TatuVerso3D" },
       {
         name: "description",
         content: "Descubra qual perfil de café especial combina com você em 5 perguntas rápidas.",
       },
-      { property: "og:title", content: "Quiz Sensorial Café EX" },
+      { property: "og:title", content: "Quiz Sensorial TatuVerso3D" },
       { property: "og:description", content: "Encontre seu café ideal." },
     ],
   }),
@@ -133,12 +133,12 @@ function QuizPage() {
     return (
       <div className="container mx-auto max-w-4xl px-4 py-16 md:px-6">
         <div className="text-center">
-          <Sparkles className="mx-auto h-10 w-10 text-[var(--gold)]" />
+          <Sparkles className="mx-auto h-10 w-10 text-[var(--brand-accent)]" />
           <p className="eyebrow mt-4">Seu perfil sensorial</p>
           <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">
             Selecionamos cafés perfeitos para você
           </h1>
-          <div className="gold-divider mx-auto mt-3" />
+          <div className="brand-divider mx-auto mt-3" />
           <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
             Com base nas suas respostas, estes são os microlotes mais alinhados ao seu paladar.
           </p>
@@ -172,7 +172,7 @@ function QuizPage() {
       <div className="mb-8">
         <p className="eyebrow text-center">Quiz sensorial</p>
         <div className="mt-4 h-1 w-full rounded-full bg-muted">
-          <div className="h-full rounded-full bg-[var(--gold)] transition-all" style={{ width: `${progress}%` }} />
+          <div className="h-full rounded-full bg-[var(--brand-accent)] transition-all" style={{ width: `${progress}%` }} />
         </div>
         <p className="mt-2 text-center text-xs text-muted-foreground">
           Passo {step + 1} de {STEPS.length}
@@ -195,13 +195,13 @@ function QuizPage() {
               <button
                 key={o.value}
                 onClick={() => choose(o.value)}
-                className="group flex items-center justify-between rounded-xl border border-border bg-card p-5 text-left transition hover:border-[var(--gold)] hover:bg-[var(--sand)]"
+                className="group flex items-center justify-between rounded-xl border border-border bg-card p-5 text-left transition hover:border-[var(--brand-accent)] hover:bg-[var(--surface-soft)]"
               >
                 <div>
                   <p className="font-display text-lg text-primary">{o.label}</p>
                   {o.desc && <p className="mt-1 text-xs text-muted-foreground">{o.desc}</p>}
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:text-[var(--gold)]" />
+                <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:text-[var(--brand-accent)]" />
               </button>
             ))}
           </div>

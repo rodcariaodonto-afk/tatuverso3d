@@ -82,7 +82,7 @@ function ProducerPedidosPage() {
         <header>
           <p className="eyebrow">Marketplace</p>
           <h1 className="mt-2 font-display text-4xl text-primary">Pedidos</h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
           <p className="mt-2 text-sm text-muted-foreground">
             {orderItems?.length ?? 0} itens · {formatBRL(totalRevenue)} em vendas
           </p>

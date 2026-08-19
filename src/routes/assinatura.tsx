@@ -9,12 +9,12 @@ import { formatBRL } from "@/lib/cart-store";
 export const Route = createFileRoute("/assinatura")({
   head: () => ({
     meta: [
-      { title: "Assinatura — Café EX" },
+      { title: "Assinatura — TatuVerso3D" },
       {
         name: "description",
         content: "Receba microlotes premiados todos os meses na sua casa. Três planos para todos os perfis.",
       },
-      { property: "og:title", content: "Assinatura Café EX" },
+      { property: "og:title", content: "Assinatura TatuVerso3D" },
     ],
   }),
   component: SubscriptionPage,
@@ -59,9 +59,9 @@ function SubscriptionPage() {
 
   return (
     <div>
-      <section className="bg-[var(--espresso)] py-20 text-[oklch(0.95_0.02_80)]">
+      <section className="bg-[var(--brand-dark)] py-20 text-[oklch(0.95_0.02_80)]">
         <div className="container mx-auto px-4 text-center md:px-6">
-          <p className="eyebrow !text-[var(--gold)]">Clube Café EX</p>
+          <p className="eyebrow !text-[var(--brand-accent)]">Clube TatuVerso3D</p>
           <h1 className="mt-3 font-display text-4xl md:text-6xl">Microlotes premiados, todos os meses.</h1>
           <p className="mx-auto mt-5 max-w-2xl text-base text-white/80">
             Curadoria sensorial sazonal, feita por especialistas. Receba cafés selecionados de fazendas
@@ -76,11 +76,11 @@ function SubscriptionPage() {
             <div
               key={plan.id}
               className={`relative flex flex-col rounded-xl border bg-card p-8 transition ${
-                plan.is_featured ? "border-[var(--gold)] shadow-[0_30px_60px_-30px_oklch(0.74_0.13_80/0.4)]" : "border-border"
+                plan.is_featured ? "border-[var(--brand-accent)] shadow-[0_30px_60px_-30px_oklch(0.74_0.13_80/0.4)]" : "border-border"
               }`}
             >
               {plan.is_featured && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--gold)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--espresso)]">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--brand-accent)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--brand-dark)]">
                   <Crown className="mr-1 inline h-3 w-3" /> Mais escolhido
                 </div>
               )}
@@ -99,7 +99,7 @@ function SubscriptionPage() {
                 <ul className="mt-6 space-y-2 text-sm">
                   {plan.features.map((f: string) => (
                     <li key={f} className="flex items-start gap-2 text-foreground/80">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--gold)]" />
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-accent)]" />
                       {f}
                     </li>
                   ))}
@@ -110,7 +110,7 @@ function SubscriptionPage() {
                 onClick={() => subscribe(plan.id)}
                 className={`mt-8 w-full rounded-full py-3 text-sm font-semibold uppercase tracking-wider transition ${
                   plan.is_featured
-                    ? "bg-[var(--gold)] text-[var(--espresso)] hover:brightness-110"
+                    ? "bg-[var(--brand-accent)] text-[var(--brand-dark)] hover:brightness-110"
                     : "bg-primary text-primary-foreground hover:bg-primary/90"
                 }`}
               >
@@ -124,7 +124,7 @@ function SubscriptionPage() {
         </div>
       </section>
 
-      <section className="bg-[var(--sand)] py-20">
+      <section className="bg-[var(--surface-soft)] py-20">
         <div className="container mx-auto grid gap-12 px-4 md:grid-cols-3 md:px-6">
           {[
             { title: "Curadoria sensorial", desc: "Selecionados por baristas e Q-graders." },

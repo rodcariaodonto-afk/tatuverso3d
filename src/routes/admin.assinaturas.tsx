@@ -7,7 +7,7 @@ import { formatBRL } from "@/lib/cart-store";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/assinaturas")({
-  head: () => ({ meta: [{ title: "Assinaturas — Admin Café EX" }] }),
+  head: () => ({ meta: [{ title: "Assinaturas — Admin TatuVerso3D" }] }),
   component: AssinaturasAdminPage,
 });
 
@@ -65,13 +65,13 @@ function AssinaturasAdminPage() {
         <header>
           <p className="eyebrow">Clube</p>
           <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Assinaturas</h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
         </header>
 
         {/* Metrics */}
         <div className="mt-8 grid gap-6 sm:grid-cols-3">
           <div className="rounded-lg border border-border bg-card p-5">
-            <TrendingUp className="h-5 w-5 text-[var(--gold)]" />
+            <TrendingUp className="h-5 w-5 text-[var(--brand-accent)]" />
             <p className="mt-3 text-xs uppercase tracking-wider text-muted-foreground">MRR</p>
             <p className="mt-1 font-display text-3xl text-primary">{formatBRL(mrr)}</p>
             <p className="mt-1 text-xs text-muted-foreground">receita recorrente mensal</p>
