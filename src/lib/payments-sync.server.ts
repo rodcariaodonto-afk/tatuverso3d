@@ -1,4 +1,5 @@
 /** Reconciliação de pagamento → pedido → estoque. Somente servidor. */
+import type { Json } from "@/integrations/supabase/types";
 import { getMpPayment, mapPaymentStatus, type MpPayment } from "./payments.server";
 
 export type SyncResult = {
@@ -40,7 +41,7 @@ export async function syncPaymentFromProvider(
     qr_code_base64: td?.qr_code_base64 ?? null,
     ticket_url: td?.ticket_url ?? null,
     expires_at: (mp.date_of_expiration as string | null) ?? null,
-    raw_payload: mp as unknown as Record<string, unknown>,
+    raw_payload: JSON.parse(JSON.stringify(mp)) as Json,
   };
 
   if (row?.id) {
