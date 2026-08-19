@@ -506,22 +506,27 @@ export function ProductForm({ productId }: ProductFormProps) {
   const registerMovement = async () => {
     if (!movement.variantId || !movement.quantity)
       return toast.error("Escolha a variação e a quantidade");
+    if ((movement.reason ?? "").trim().length < 3)
+      return toast.error("Informe o motivo do ajuste (mínimo 3 caracteres)");
     const variant = variants.find((v) => v.id === movement.variantId);
-    if (!variant?.id) return;
-    const delta = movement.type === "in" ? movement.quantity : -movement.quantity;
-    const resulting = Math.max(0, variant.stock_quantity + delta);
-    const { error: mErr } = await supabase.from("inventory_movements").insert({
-      product_id: productId!, variant_id: variant.id, movement_type: movement.type,
-      quantity: Math.abs(movement.quantity), previous_quantity: variant.stock_quantity,
-      resulting_quantity: resulting, reason: movement.reason || null,
-    });
-    if (mErr) return toast.error("Erro ao registrar", { description: mErr.message });
-    const { error: uErr } = await supabase
-      .from("product_variants").update({ stock_quantity: resulting }).eq("id", variant.id);
-    if (uErr) return toast.error("Erro ao atualizar estoque", { description: uErr.message });
-    patchVariant(variant.tempId, { stock_quantity: resulting });
-    setMovement({ variantId: "", type: "in", quantity: 0, reason: "" });
-    toast.success("Movimentação registrada");
+    if (!variant?.id || !productId) return;
+    try {
+      // Escrita de estoque acontece somente no servidor, com auditoria.
+      const result = await adjustStockFn({
+        data: {
+          product_id: productId,
+          variant_id: variant.id,
+          movement_type: movement.type as "in" | "out" | "adjust",
+          quantity: Math.abs(movement.quantity),
+          reason: movement.reason,
+        },
+      });
+      patchVariant(variant.tempId, { stock_quantity: result.resulting });
+      setMovement({ variantId: "", type: "in", quantity: 0, reason: "" });
+      toast.success(`Movimentação registrada (${result.previous} → ${result.resulting})`);
+    } catch (err: any) {
+      toast.error("Erro ao registrar", { description: err?.message });
+    }
   };
 
   if (isEdit && loadingProduct)
