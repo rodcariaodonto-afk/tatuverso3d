@@ -70,7 +70,7 @@ export const saveShippingMethod = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { error } = await context.supabase
       .from("shipping_methods")
-      .upsert({ provider: "manual", ...data }, { onConflict: "id" });
+      .upsert({ provider: "manual", ...data, regions: data.regions ?? undefined } as never, { onConflict: "id" });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
