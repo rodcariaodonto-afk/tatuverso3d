@@ -58,6 +58,7 @@ import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
 import { Route as AdminCandidaturasRouteImport } from './routes/admin.candidaturas'
 import { Route as AdminAssinaturasRouteImport } from './routes/admin.assinaturas'
 import { Route as AdminProdutosNovoRouteImport } from './routes/admin.produtos.novo'
+import { Route as AdminPedidosIdRouteImport } from './routes/admin.pedidos.$id'
 import { Route as ApiPublicWebhooksMercadopagoRouteImport } from './routes/api/public/webhooks/mercadopago'
 import { Route as ApiPublicJobsExpireReservationsRouteImport } from './routes/api/public/jobs/expire-reservations'
 import { Route as AdminProdutosIdEditarRouteImport } from './routes/admin.produtos.$id.editar'
@@ -307,6 +308,11 @@ const AdminProdutosNovoRoute = AdminProdutosNovoRouteImport.update({
   path: '/novo',
   getParentRoute: () => AdminProdutosRoute,
 } as any)
+const AdminPedidosIdRoute = AdminPedidosIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminPedidosRoute,
+} as any)
 const ApiPublicWebhooksMercadopagoRoute =
   ApiPublicWebhooksMercadopagoRouteImport.update({
     id: '/api/public/webhooks/mercadopago',
@@ -360,7 +366,7 @@ export interface FileRoutesByFullPath {
   '/admin/entrega': typeof AdminEntregaRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/leads': typeof AdminLeadsRoute
-  '/admin/pedidos': typeof AdminPedidosRoute
+  '/admin/pedidos': typeof AdminPedidosRouteWithChildren
   '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/admin/vendas': typeof AdminVendasRoute
@@ -374,6 +380,7 @@ export interface FileRoutesByFullPath {
   '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
+  '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
@@ -414,7 +421,7 @@ export interface FileRoutesByTo {
   '/admin/entrega': typeof AdminEntregaRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/leads': typeof AdminLeadsRoute
-  '/admin/pedidos': typeof AdminPedidosRoute
+  '/admin/pedidos': typeof AdminPedidosRouteWithChildren
   '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/admin/vendas': typeof AdminVendasRoute
@@ -428,6 +435,7 @@ export interface FileRoutesByTo {
   '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog': typeof BlogIndexRoute
   '/produtores': typeof ProdutoresIndexRoute
+  '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
@@ -469,7 +477,7 @@ export interface FileRoutesById {
   '/admin/entrega': typeof AdminEntregaRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/leads': typeof AdminLeadsRoute
-  '/admin/pedidos': typeof AdminPedidosRoute
+  '/admin/pedidos': typeof AdminPedidosRouteWithChildren
   '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/admin/vendas': typeof AdminVendasRoute
@@ -483,6 +491,7 @@ export interface FileRoutesById {
   '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
+  '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
@@ -539,6 +548,7 @@ export interface FileRouteTypes {
     | '/produtores/$slug'
     | '/blog/'
     | '/produtores/'
+    | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
     | '/admin/produtos/$id/editar'
     | '/api/public/jobs/expire-reservations'
@@ -593,6 +603,7 @@ export interface FileRouteTypes {
     | '/produtores/$slug'
     | '/blog'
     | '/produtores'
+    | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
     | '/admin/produtos/$id/editar'
     | '/api/public/jobs/expire-reservations'
@@ -647,6 +658,7 @@ export interface FileRouteTypes {
     | '/produtores/$slug'
     | '/blog/'
     | '/produtores/'
+    | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
     | '/admin/produtos/$id/editar'
     | '/api/public/jobs/expire-reservations'
@@ -1034,6 +1046,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProdutosNovoRouteImport
       parentRoute: typeof AdminProdutosRoute
     }
+    '/admin/pedidos/$id': {
+      id: '/admin/pedidos/$id'
+      path: '/$id'
+      fullPath: '/admin/pedidos/$id'
+      preLoaderRoute: typeof AdminPedidosIdRouteImport
+      parentRoute: typeof AdminPedidosRoute
+    }
     '/api/public/webhooks/mercadopago': {
       id: '/api/public/webhooks/mercadopago'
       path: '/api/public/webhooks/mercadopago'
@@ -1057,6 +1076,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AdminPedidosRouteChildren {
+  AdminPedidosIdRoute: typeof AdminPedidosIdRoute
+}
+
+const AdminPedidosRouteChildren: AdminPedidosRouteChildren = {
+  AdminPedidosIdRoute: AdminPedidosIdRoute,
+}
+
+const AdminPedidosRouteWithChildren = AdminPedidosRoute._addFileChildren(
+  AdminPedidosRouteChildren,
+)
 
 interface AdminProdutosRouteChildren {
   AdminProdutosNovoRoute: typeof AdminProdutosNovoRoute
@@ -1082,7 +1113,7 @@ interface AdminRouteChildren {
   AdminEntregaRoute: typeof AdminEntregaRoute
   AdminIntegracoesRoute: typeof AdminIntegracoesRoute
   AdminLeadsRoute: typeof AdminLeadsRoute
-  AdminPedidosRoute: typeof AdminPedidosRoute
+  AdminPedidosRoute: typeof AdminPedidosRouteWithChildren
   AdminProdutoresRoute: typeof AdminProdutoresRoute
   AdminProdutosRoute: typeof AdminProdutosRouteWithChildren
   AdminVendasRoute: typeof AdminVendasRoute
@@ -1098,7 +1129,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminEntregaRoute: AdminEntregaRoute,
   AdminIntegracoesRoute: AdminIntegracoesRoute,
   AdminLeadsRoute: AdminLeadsRoute,
-  AdminPedidosRoute: AdminPedidosRoute,
+  AdminPedidosRoute: AdminPedidosRouteWithChildren,
   AdminProdutoresRoute: AdminProdutoresRoute,
   AdminProdutosRoute: AdminProdutosRouteWithChildren,
   AdminVendasRoute: AdminVendasRoute,
