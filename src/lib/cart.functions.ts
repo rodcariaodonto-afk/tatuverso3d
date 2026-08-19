@@ -1,70 +1,16 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeader } from "@tanstack/react-start/server";
-import { z } from "zod";
+import {
+  ALLOWED_UPLOAD_MIME,
+  CUSTOM_BUCKET,
+  MAX_UPLOAD_BYTES,
+  cartPayloadSchema,
+  optionLabels,
+  optionValues,
+} from "./cart-validation";
+import type { ValidatedCartItem, ValidatedCustomization } from "./cart-validation";
 
-const customizationSchema = z.object({
-  field_id: z.string().uuid(),
-  /** Valor escolhido pelo cliente. Nunca aceitamos preço vindo do navegador. */
-  value: z.string().max(5000),
-});
-
-const itemSchema = z.object({
-  product_id: z.string().uuid(),
-  variant_id: z.string().uuid().nullable(),
-  quantity: z.number().int().positive().max(999),
-  customizations: z.array(customizationSchema).max(50).default([]),
-});
-
-const payloadSchema = z.object({ items: z.array(itemSchema).min(1).max(50) });
-
-export type ValidatedCustomization = {
-  field_id: string;
-  label: string;
-  field_type: string;
-  value: string;
-  price_adjustment: number;
-};
-
-export type ValidatedCartItem = {
-  product_id: string;
-  variant_id: string | null;
-  product_name: string;
-  variant_name: string | null;
-  sku: string | null;
-  unit_price: number;
-  quantity: number;
-  total_price: number;
-  made_to_order: boolean;
-  production_time_days: number | null;
-  customization_data: ValidatedCustomization[];
-};
-
-const CUSTOM_BUCKET = "customization-uploads";
-const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
-const ALLOWED_UPLOAD_MIME = [
-  "image/png",
-  "image/jpeg",
-  "image/webp",
-  "image/svg+xml",
-  "application/pdf",
-  "model/stl",
-  "application/sla",
-  "application/octet-stream",
-];
-
-function optionValues(raw: unknown): string[] {
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .map((o: any) => (o && typeof o === "object" ? String(o.value ?? o.label ?? "") : String(o)))
-    .filter(Boolean);
-}
-
-function optionLabels(raw: unknown): string[] {
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .map((o: any) => (o && typeof o === "object" ? String(o.label ?? o.value ?? "") : String(o)))
-    .filter(Boolean);
-}
+export type { ValidatedCartItem, ValidatedCustomization };
 
 /**
  * Revalida o carrinho inteiramente no servidor:
@@ -72,7 +18,7 @@ function optionLabels(raw: unknown): string[] {
  * Nada de preço, acréscimo ou total enviado pelo navegador é aceito.
  */
 export const validateCart = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => payloadSchema.parse(data))
+  .inputValidator((data: unknown) => cartPayloadSchema.parse(data))
   .handler(async ({ data }): Promise<{ items: ValidatedCartItem[]; subtotal: number }> => {
     const { createClient } = await import("@supabase/supabase-js");
     const supabase = createClient(
