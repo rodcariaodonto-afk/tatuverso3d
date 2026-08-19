@@ -183,6 +183,29 @@ function CatalogPage() {
       )}
 
       {activeCount > 0 && (
+        <></>
+      )}
+
+      <div>
+        <p className="eyebrow">Faixa de preço</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {[40, 70, 120, 200].map((v) => (
+            <button
+              key={v}
+              onClick={() => update({ pmax: search.pmax === v ? undefined : v })}
+              className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+                search.pmax === v
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-card text-foreground/80 hover:border-accent"
+              }`}
+            >
+              até R$ {v}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {activeCount > 0 && (
         <button
           onClick={clearAll}
           className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-3 py-2 text-xs font-medium text-foreground hover:border-accent"
