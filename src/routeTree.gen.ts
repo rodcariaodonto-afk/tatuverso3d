@@ -41,6 +41,7 @@ import { Route as ProdutorProdutosRouteImport } from './routes/produtor.produtos
 import { Route as ProdutorPerfilRouteImport } from './routes/produtor.perfil'
 import { Route as ProdutorPedidosRouteImport } from './routes/produtor.pedidos'
 import { Route as ProdutoSlugRouteImport } from './routes/produto.$slug'
+import { Route as PagamentoOrderIdRouteImport } from './routes/pagamento.$orderId'
 import { Route as MinhaContaPrivacidadeRouteImport } from './routes/minha-conta.privacidade'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminVendasRouteImport } from './routes/admin.vendas'
@@ -221,6 +222,11 @@ const ProdutoSlugRoute = ProdutoSlugRouteImport.update({
   path: '/produto/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PagamentoOrderIdRoute = PagamentoOrderIdRouteImport.update({
+  id: '/pagamento/$orderId',
+  path: '/pagamento/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MinhaContaPrivacidadeRoute = MinhaContaPrivacidadeRouteImport.update({
   id: '/privacidade',
   path: '/privacidade',
@@ -360,6 +366,7 @@ export interface FileRoutesByFullPath {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
+  '/pagamento/$orderId': typeof PagamentoOrderIdRoute
   '/produto/$slug': typeof ProdutoSlugRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
@@ -413,6 +420,7 @@ export interface FileRoutesByTo {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
+  '/pagamento/$orderId': typeof PagamentoOrderIdRoute
   '/produto/$slug': typeof ProdutoSlugRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
@@ -467,6 +475,7 @@ export interface FileRoutesById {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
+  '/pagamento/$orderId': typeof PagamentoOrderIdRoute
   '/produto/$slug': typeof ProdutoSlugRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
@@ -522,6 +531,7 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/minha-conta/privacidade'
+    | '/pagamento/$orderId'
     | '/produto/$slug'
     | '/produtor/pedidos'
     | '/produtor/perfil'
@@ -575,6 +585,7 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/minha-conta/privacidade'
+    | '/pagamento/$orderId'
     | '/produto/$slug'
     | '/produtor/pedidos'
     | '/produtor/perfil'
@@ -628,6 +639,7 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/minha-conta/privacidade'
+    | '/pagamento/$orderId'
     | '/produto/$slug'
     | '/produtor/pedidos'
     | '/produtor/perfil'
@@ -668,6 +680,7 @@ export interface RootRouteChildren {
   TrocasRoute: typeof TrocasRoute
   VenderNaPlataformaRoute: typeof VenderNaPlataformaRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  PagamentoOrderIdRoute: typeof PagamentoOrderIdRoute
   ProdutoSlugRoute: typeof ProdutoSlugRoute
   ProdutoresSlugRoute: typeof ProdutoresSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -900,6 +913,13 @@ declare module '@tanstack/react-router' {
       path: '/produto/$slug'
       fullPath: '/produto/$slug'
       preLoaderRoute: typeof ProdutoSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pagamento/$orderId': {
+      id: '/pagamento/$orderId'
+      path: '/pagamento/$orderId'
+      fullPath: '/pagamento/$orderId'
+      preLoaderRoute: typeof PagamentoOrderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/minha-conta/privacidade': {
@@ -1141,6 +1161,7 @@ const rootRouteChildren: RootRouteChildren = {
   TrocasRoute: TrocasRoute,
   VenderNaPlataformaRoute: VenderNaPlataformaRoute,
   BlogSlugRoute: BlogSlugRoute,
+  PagamentoOrderIdRoute: PagamentoOrderIdRoute,
   ProdutoSlugRoute: ProdutoSlugRoute,
   ProdutoresSlugRoute: ProdutoresSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
