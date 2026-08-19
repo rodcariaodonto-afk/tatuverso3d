@@ -83,9 +83,7 @@ export const listAddresses = createServerFn({ method: "POST" })
 
 export const saveAddress = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
-    addressInputSchema.extend({ id: addressInputSchema.shape.label.optional() }).parse(input),
-  )
+  .inputValidator((input: unknown) => addressInputSchema.parse(input))
   .handler(async ({ data, context }) => {
     if (data.phone && !isValidPhoneBR(data.phone)) throw new Error("Telefone inválido");
     const payload = {
