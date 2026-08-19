@@ -70,6 +70,8 @@ export type CatalogProduct = {
   is_personalizable: boolean;
   is_sensory: boolean;
   is_featured: boolean | null;
+  status: string;
+  low_stock_threshold: number | null;
   allow_backorder: boolean;
   track_inventory: boolean;
   created_at: string;
