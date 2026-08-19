@@ -170,7 +170,7 @@ function ProductsList() {
   const changeStatus = async (p: CatalogProduct, next: string) => {
     const { error } = await supabase
       .from("products")
-      .update({ status: next, published_at: next === "active" ? new Date().toISOString() : null })
+      .update({ status: next as any, published_at: next === "active" ? new Date().toISOString() : null })
       .eq("id", p.id);
     if (error) return toast.error("Erro", { description: error.message });
     toast.success(`Status: ${STATUS_LABEL[next] ?? next}`);

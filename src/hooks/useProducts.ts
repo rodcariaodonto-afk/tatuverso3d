@@ -85,7 +85,7 @@ export type CatalogProduct = {
 
 const PRODUCT_SELECT = `
   id, slug, name, short_description, cover_url, badges, price, compare_at_price,
-  stock_quantity, product_type, material_description, production_time_days,
+  stock_quantity, status, low_stock_threshold, product_type, material_description, production_time_days,
   made_to_order, is_personalizable, is_sensory, is_featured, allow_backorder,
   track_inventory, created_at,
   product_categories ( category_id ),
@@ -162,6 +162,8 @@ export function mapCatalogProduct(p: any): CatalogProduct {
     is_personalizable: !!p.is_personalizable,
     is_sensory: !!p.is_sensory,
     is_featured: p.is_featured,
+    status: p.status ?? "active",
+    low_stock_threshold: p.low_stock_threshold ?? null,
     allow_backorder: !!p.allow_backorder,
     track_inventory: p.track_inventory !== false,
     created_at: p.created_at,

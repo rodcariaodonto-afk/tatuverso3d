@@ -49,7 +49,9 @@ function CartPage() {
                 {i.cover_url && <img src={i.cover_url} alt={i.name} className="h-full w-full object-cover" />}
               </div>
               <div className="flex-1">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{i.producer_name}</p>
+                {i.variant_label && (
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{i.variant_label}</p>
+                )}
                 <Link
                   to="/produto/$slug"
                   params={{ slug: i.slug }}

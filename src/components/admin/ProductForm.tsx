@@ -398,7 +398,7 @@ export function ProductForm({ productId }: ProductFormProps) {
         const { data: optRow, error: optErr } = await supabase
           .from("product_options")
           .insert({
-            product_id: pid!, name: o.name, option_type: o.option_type,
+            product_id: pid!, name: o.name, option_type: o.option_type as any,
             is_required: o.is_required, sort_order: oi,
           })
           .select("id").single();
@@ -455,7 +455,7 @@ export function ProductForm({ productId }: ProductFormProps) {
       if (activeFields.length)
         await supabase.from("product_customization_fields").insert(
           activeFields.map((f, idx) => ({
-            product_id: pid!, label: f.label, field_type: f.field_type,
+            product_id: pid!, label: f.label, field_type: f.field_type as any,
             placeholder: f.placeholder || null, help_text: f.help_text || null,
             is_required: f.is_required, max_length: f.max_length,
             price_adjustment: f.price_adjustment,
