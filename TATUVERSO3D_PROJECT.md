@@ -62,3 +62,37 @@ fixo, busca de CEP, validação de UF/telefone e tela de confirmação.
   confere a cotação (dono, validade, hash do carrinho e CEP) e grava via service role.
 - Cotações são persistidas com `cart_hash` e expiram em 30 minutos.
 - Funções administrativas de frete validam `is_admin` antes de qualquer escrita.
+
+
+## Onda 3B — Pagamentos, webhook e estoque reservado
+
+### Pagamentos (Mercado Pago, Checkout Transparente)
+- `src/lib/payments.server.ts` — cliente da API (idempotência, timeout, mapeamento de status,
+  verificação HMAC da assinatura do webhook). Somente servidor.
+- `src/lib/payments.functions.ts` — `getPaymentConfig` (só a chave pública), `startPayment`
+  (Pix e cartão; o valor vem sempre do pedido no banco), `getPaymentStatus` (reconsulta o provedor),
+  `cancelOrder` (libera reserva).
+- `src/lib/payments-sync.server.ts` — única fonte de reconciliação: provedor → `payments` → `orders`
+  → estoque. O corpo do webhook nunca é confiável; o pagamento é sempre reconsultado na API.
+- `src/routes/pagamento.$orderId.tsx` — Pix (QR + copia e cola + contagem regressiva + polling) e
+  cartão tokenizado no navegador pelo SDK oficial. A loja nunca recebe o número do cartão.
+
+### Webhook e job
+- `POST /api/public/webhooks/mercadopago` — valida assinatura `x-signature` (HMAC-SHA256 em tempo
+  constante), grava `payment_events` com índice único (idempotência) e responde 500 apenas para
+  forçar reenvio em falha de processamento.
+- `POST /api/public/jobs/expire-reservations` — protegido por `apikey`; agendado no pg_cron a cada
+  5 minutos para liberar reservas vencidas.
+
+### Estoque reservado
+- `stock_reservations` + `products.reserved_quantity` / `product_variants.reserved_quantity`.
+- Funções `reserve_stock` (na criação do pedido, com `FOR UPDATE`), `commit_stock` (pagamento
+  aprovado, gera `inventory_movements`), `release_stock` (recusa/cancelamento) e
+  `expire_stock_reservations`. Todas `SECURITY DEFINER` com `EXECUTE` revogado de `public`, `anon`
+  e `authenticated` — apenas o servidor da loja executa.
+
+### Segurança
+- Credenciais do provedor em secrets (`MERCADOPAGO_ACCESS_TOKEN`, `MERCADOPAGO_PUBLIC_KEY`,
+  `MERCADOPAGO_WEBHOOK_SECRET`); o navegador só recebe a chave pública.
+- `payment_events` e `stock_reservations` com RLS: leitura apenas para admin; escrita só service role.
+- Nenhum valor de pagamento vem do navegador: total, frete e acréscimos são lidos do pedido no banco.

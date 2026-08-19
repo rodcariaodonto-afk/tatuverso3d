@@ -41,6 +41,7 @@ import { Route as ProdutorProdutosRouteImport } from './routes/produtor.produtos
 import { Route as ProdutorPerfilRouteImport } from './routes/produtor.perfil'
 import { Route as ProdutorPedidosRouteImport } from './routes/produtor.pedidos'
 import { Route as ProdutoSlugRouteImport } from './routes/produto.$slug'
+import { Route as PagamentoOrderIdRouteImport } from './routes/pagamento.$orderId'
 import { Route as MinhaContaPrivacidadeRouteImport } from './routes/minha-conta.privacidade'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminVendasRouteImport } from './routes/admin.vendas'
@@ -57,6 +58,8 @@ import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
 import { Route as AdminCandidaturasRouteImport } from './routes/admin.candidaturas'
 import { Route as AdminAssinaturasRouteImport } from './routes/admin.assinaturas'
 import { Route as AdminProdutosNovoRouteImport } from './routes/admin.produtos.novo'
+import { Route as ApiPublicWebhooksMercadopagoRouteImport } from './routes/api/public/webhooks/mercadopago'
+import { Route as ApiPublicJobsExpireReservationsRouteImport } from './routes/api/public/jobs/expire-reservations'
 import { Route as AdminProdutosIdEditarRouteImport } from './routes/admin.produtos.$id.editar'
 
 const VenderNaPlataformaRoute = VenderNaPlataformaRouteImport.update({
@@ -219,6 +222,11 @@ const ProdutoSlugRoute = ProdutoSlugRouteImport.update({
   path: '/produto/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PagamentoOrderIdRoute = PagamentoOrderIdRouteImport.update({
+  id: '/pagamento/$orderId',
+  path: '/pagamento/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MinhaContaPrivacidadeRoute = MinhaContaPrivacidadeRouteImport.update({
   id: '/privacidade',
   path: '/privacidade',
@@ -299,6 +307,18 @@ const AdminProdutosNovoRoute = AdminProdutosNovoRouteImport.update({
   path: '/novo',
   getParentRoute: () => AdminProdutosRoute,
 } as any)
+const ApiPublicWebhooksMercadopagoRoute =
+  ApiPublicWebhooksMercadopagoRouteImport.update({
+    id: '/api/public/webhooks/mercadopago',
+    path: '/api/public/webhooks/mercadopago',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicJobsExpireReservationsRoute =
+  ApiPublicJobsExpireReservationsRouteImport.update({
+    id: '/api/public/jobs/expire-reservations',
+    path: '/api/public/jobs/expire-reservations',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AdminProdutosIdEditarRoute = AdminProdutosIdEditarRouteImport.update({
   id: '/$id/editar',
   path: '/$id/editar',
@@ -346,6 +366,7 @@ export interface FileRoutesByFullPath {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
+  '/pagamento/$orderId': typeof PagamentoOrderIdRoute
   '/produto/$slug': typeof ProdutoSlugRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
@@ -355,6 +376,8 @@ export interface FileRoutesByFullPath {
   '/produtores/': typeof ProdutoresIndexRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
+  '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
+  '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -397,6 +420,7 @@ export interface FileRoutesByTo {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
+  '/pagamento/$orderId': typeof PagamentoOrderIdRoute
   '/produto/$slug': typeof ProdutoSlugRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
@@ -406,6 +430,8 @@ export interface FileRoutesByTo {
   '/produtores': typeof ProdutoresIndexRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
+  '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
+  '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -449,6 +475,7 @@ export interface FileRoutesById {
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
+  '/pagamento/$orderId': typeof PagamentoOrderIdRoute
   '/produto/$slug': typeof ProdutoSlugRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
@@ -458,6 +485,8 @@ export interface FileRoutesById {
   '/produtores/': typeof ProdutoresIndexRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
+  '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
+  '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -502,6 +531,7 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/minha-conta/privacidade'
+    | '/pagamento/$orderId'
     | '/produto/$slug'
     | '/produtor/pedidos'
     | '/produtor/perfil'
@@ -511,6 +541,8 @@ export interface FileRouteTypes {
     | '/produtores/'
     | '/admin/produtos/novo'
     | '/admin/produtos/$id/editar'
+    | '/api/public/jobs/expire-reservations'
+    | '/api/public/webhooks/mercadopago'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -553,6 +585,7 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/minha-conta/privacidade'
+    | '/pagamento/$orderId'
     | '/produto/$slug'
     | '/produtor/pedidos'
     | '/produtor/perfil'
@@ -562,6 +595,8 @@ export interface FileRouteTypes {
     | '/produtores'
     | '/admin/produtos/novo'
     | '/admin/produtos/$id/editar'
+    | '/api/public/jobs/expire-reservations'
+    | '/api/public/webhooks/mercadopago'
   id:
     | '__root__'
     | '/'
@@ -604,6 +639,7 @@ export interface FileRouteTypes {
     | '/admin/vendas'
     | '/blog/$slug'
     | '/minha-conta/privacidade'
+    | '/pagamento/$orderId'
     | '/produto/$slug'
     | '/produtor/pedidos'
     | '/produtor/perfil'
@@ -613,6 +649,8 @@ export interface FileRouteTypes {
     | '/produtores/'
     | '/admin/produtos/novo'
     | '/admin/produtos/$id/editar'
+    | '/api/public/jobs/expire-reservations'
+    | '/api/public/webhooks/mercadopago'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -642,10 +680,13 @@ export interface RootRouteChildren {
   TrocasRoute: typeof TrocasRoute
   VenderNaPlataformaRoute: typeof VenderNaPlataformaRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  PagamentoOrderIdRoute: typeof PagamentoOrderIdRoute
   ProdutoSlugRoute: typeof ProdutoSlugRoute
   ProdutoresSlugRoute: typeof ProdutoresSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ProdutoresIndexRoute: typeof ProdutoresIndexRoute
+  ApiPublicJobsExpireReservationsRoute: typeof ApiPublicJobsExpireReservationsRoute
+  ApiPublicWebhooksMercadopagoRoute: typeof ApiPublicWebhooksMercadopagoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -874,6 +915,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProdutoSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pagamento/$orderId': {
+      id: '/pagamento/$orderId'
+      path: '/pagamento/$orderId'
+      fullPath: '/pagamento/$orderId'
+      preLoaderRoute: typeof PagamentoOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/minha-conta/privacidade': {
       id: '/minha-conta/privacidade'
       path: '/privacidade'
@@ -985,6 +1033,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/produtos/novo'
       preLoaderRoute: typeof AdminProdutosNovoRouteImport
       parentRoute: typeof AdminProdutosRoute
+    }
+    '/api/public/webhooks/mercadopago': {
+      id: '/api/public/webhooks/mercadopago'
+      path: '/api/public/webhooks/mercadopago'
+      fullPath: '/api/public/webhooks/mercadopago'
+      preLoaderRoute: typeof ApiPublicWebhooksMercadopagoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/jobs/expire-reservations': {
+      id: '/api/public/jobs/expire-reservations'
+      path: '/api/public/jobs/expire-reservations'
+      fullPath: '/api/public/jobs/expire-reservations'
+      preLoaderRoute: typeof ApiPublicJobsExpireReservationsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/produtos/$id/editar': {
       id: '/admin/produtos/$id/editar'
@@ -1099,10 +1161,13 @@ const rootRouteChildren: RootRouteChildren = {
   TrocasRoute: TrocasRoute,
   VenderNaPlataformaRoute: VenderNaPlataformaRoute,
   BlogSlugRoute: BlogSlugRoute,
+  PagamentoOrderIdRoute: PagamentoOrderIdRoute,
   ProdutoSlugRoute: ProdutoSlugRoute,
   ProdutoresSlugRoute: ProdutoresSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ProdutoresIndexRoute: ProdutoresIndexRoute,
+  ApiPublicJobsExpireReservationsRoute: ApiPublicJobsExpireReservationsRoute,
+  ApiPublicWebhooksMercadopagoRoute: ApiPublicWebhooksMercadopagoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

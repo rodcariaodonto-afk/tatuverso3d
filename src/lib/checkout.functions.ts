@@ -212,6 +212,17 @@ export const createOrder = createServerFn({ method: "POST" })
     );
     if (itemsErr) throw new Error(itemsErr.message);
 
+    // Reserva o estoque enquanto o pagamento não é concluído.
+    const { error: reserveErr } = await supabaseAdmin.rpc("reserve_stock", {
+      _order_id: order.id,
+      _minutes: 30,
+    });
+    if (reserveErr) {
+      await supabaseAdmin.rpc("release_stock", { _order_id: order.id, _reason: "reserve_failed" });
+      await supabaseAdmin.from("orders").update({ status: "cancelled" }).eq("id", order.id);
+      throw new Error(reserveErr.message || "Estoque insuficiente para um dos itens.");
+    }
+
     return {
       order_id: order.id as string,
       subtotal: cart.subtotal,

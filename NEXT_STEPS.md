@@ -1,37 +1,26 @@
 # TatuVerso3D — Próximos passos
 
 ## Concluído
+- **Onda 1** — Identidade visual Cosmic Blue, navegação, home e páginas institucionais.
+- **Onda 2** — Produtos 3D, variações, personalização, estoque e painel admin.
+- **Hotfix pós-Onda 2** — Proteção de `cost_price`, validação de personalização no servidor, buckets e SKU.
+- **Onda 3A** — Cards padronizados, checkout em etapas, modelagem de entrega e provedores de frete.
+- **Onda 3B** — Pagamentos Mercado Pago (Pix e cartão), webhook assinado, estoque reservado e job de expiração.
 
-- **Onda 1** — Identidade visual Cosmic Blue, navegação, home, páginas institucionais.
-- **Onda 2** — Produtos 3D, variações, personalização, estoque e painel administrativo.
-- **Hotfix pós-Onda 2** — Proteção de `cost_price`, validação de personalização no servidor,
-  buckets em migração idempotente e unicidade cruzada de SKU.
-- **Onda 3A** — Cards padronizados, checkout profissional em etapas, modelagem de entrega
-  (dimensões, pacotes, cotações, rastreio) e arquitetura de provedores de frete
-  (Manual, Retirada, Melhor Envio preparado para sandbox) com painel `/admin/entrega`.
+## Próxima etapa — Onda 3C: Operação de pedidos, rastreio e área do cliente
+1. **Painel de pedidos (admin)**: lista com filtros por status/pagamento, detalhe do pedido, itens com
+   personalização e arquivos, fila de produção e mudança de status com histórico.
+2. **Envio e rastreio**: registro de `shipments`, código de rastreio, `tracking_events` e notificação
+   de mudanças ao cliente.
+3. **Área do cliente**: "Meus pedidos" com linha do tempo (pago → produção → enviado → entregue),
+   segunda via do Pix, nota de personalização e endereço.
+4. **Estoque na operação**: tela de movimentações (`inventory_movements`), alerta de estoque baixo e
+   ajuste manual auditado.
+5. **Pagamentos na operação**: visão de `payments`/`payment_events`, reprocessamento manual de webhook
+   e estorno registrado.
+6. **Testes ponta a ponta** com credenciais de teste do Mercado Pago (Pix aprovado, cartão aprovado,
+   cartão recusado, expiração de reserva).
 
-## Próxima etapa
-
-### Onda 3B — Pagamentos Mercado Pago, webhooks e baixa de estoque
-
-1. Checkout Transparente com Pix (QR + copia e cola) e cartão (tokenização no navegador,
-   nenhum dado sensível trafega pelo backend da loja).
-2. Server functions de criação de pagamento e consulta de status; nenhuma credencial no cliente.
-3. Webhook em `/api/public/webhooks/mercadopago` com verificação de assinatura, idempotência
-   e reconciliação de `payments` e `orders`.
-4. Baixa e reserva de estoque vinculadas ao pagamento aprovado, com registro em
-   `inventory_movements` e liberação automática de reservas expiradas.
-5. Fila de produção por item (`production_status`) e transições auditadas.
-6. Testes ponta a ponta em ambiente de teste — nenhuma cobrança real.
-
-Pré-requisito: credenciais de teste do Mercado Pago (`MERCADOPAGO_ACCESS_TOKEN` e chave pública).
-
-### Onda 3C — Operação, área do cliente e envio
-
-- Painel de pedidos com etiquetas, rastreio e histórico de status.
-- Área do cliente com acompanhamento de produção e entrega.
-- Integração real do Melhor Envio (token sandbox) e emissão de etiqueta.
-
-### Onda 4 — Limpeza segura do esquema legado CAFEX
-
-Somente após 3B e 3C estáveis, com backup e migração reversível.
+## Onda 4 (planejada)
+Limpeza segura do esquema legado CAFEX (café, assinaturas, produtores) após confirmação de que nenhuma
+tela depende mais dessas tabelas.
