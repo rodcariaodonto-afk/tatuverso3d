@@ -188,7 +188,7 @@ function CatalogPage() {
           {[40, 70, 120, 200].map((v) => (
             <button
               key={v}
-              onClick={() => update({ pmax: search.pmax === v ? undefined : v })}
+              onClick={() => update({ pmax: search.pmax === v ? null : v })}
               className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
                 search.pmax === v
                   ? "border-primary bg-primary text-primary-foreground"
