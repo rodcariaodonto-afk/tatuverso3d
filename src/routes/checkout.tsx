@@ -48,7 +48,7 @@ export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
 });
 
-type Step = "address" | "shipping" | "review" | "done";
+type Step = "address" | "shipping" | "review";
 
 const STEPS: Array<{ key: Step; label: string }> = [
   { key: "address", label: "Endereço" },
@@ -82,17 +82,6 @@ function CheckoutPage() {
   const [addressId, setAddressId] = useState<string | null>(null);
   const [options, setOptions] = useState<ShippingQuoteOption[]>([]);
   const [selected, setSelected] = useState<ShippingQuoteOption | null>(null);
-  const [result, setResult] = useState<
-    | {
-        order_id: string;
-        total: number;
-        shipping_total: number;
-        subtotal: number;
-        production_days: number;
-        delivery_days: number;
-      }
-    | null
-  >(null);
 
   const listAddressesFn = useServerFn(listAddresses);
   const quoteShippingFn = useServerFn(quoteShipping);
@@ -165,10 +154,9 @@ function CheckoutPage() {
       });
     },
     onSuccess: (data) => {
-      setResult(data);
-      setStep("done");
       clear();
       queryClient.invalidateQueries({ queryKey: ["my-orders"] });
+      navigate({ to: "/pagamento/$orderId", params: { orderId: data.order_id } });
     },
     onError: (e: any) =>
       toast.error("Não foi possível concluir o pedido", { description: e.message }),
@@ -205,10 +193,6 @@ function CheckoutPage() {
         </div>
       </div>
     );
-  }
-
-  if (step === "done" && result) {
-    return <SuccessScreen result={result} onNavigate={() => navigate({ to: "/minha-conta" })} />;
   }
 
   if (items.length === 0) {
@@ -731,7 +715,7 @@ function ReviewStep({
           className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-accent text-sm font-bold text-accent-foreground disabled:opacity-60"
         >
           {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
-          Confirmar pedido
+          Ir para o pagamento
         </button>
       </div>
     </Card>
@@ -812,34 +796,3 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 /* ── Confirmação ─────────────────────────────────────────────────────────── */
-
-function SuccessScreen({
-  result,
-  onNavigate,
-}: {
-  result: {
-    order_id: string;
-    total: number;
-    production_days: number;
-    delivery_days: number;
-  };
-  onNavigate: () => void;
-}) {
-  return (
-    <div className="container mx-auto max-w-xl px-4 py-20 text-center md:px-6">
-      <CheckCircle2 className="mx-auto h-14 w-14 text-accent" />
-      <h1 className="mt-4 font-display text-3xl text-primary">Pedido registrado!</h1>
-      <p className="mt-3 text-sm text-muted-foreground">
-        Pedido <strong>#{result.order_id.slice(0, 8)}</strong> no valor de{" "}
-        <strong>{formatBRL(result.total)}</strong>. Produção em até{" "}
-        {result.production_days || 1} dia(s) úteis e transporte de {result.delivery_days} dia(s).
-      </p>
-      <button
-        onClick={onNavigate}
-        className="mt-6 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground"
-      >
-        Ver meus pedidos
-      </button>
-    </div>
-  );
-}
