@@ -443,10 +443,11 @@ export function ProductForm({ productId }: ProductFormProps) {
       const toDelete = (existingVariants ?? []).map((v) => v.id).filter((id) => !keptIds.includes(id));
       if (toDelete.length) await supabase.from("product_variants").delete().in("id", toDelete);
 
+      const costUpdates: Array<{ variant_id: string; cost_price: number | null }> = [];
       for (const [idx, v] of variants.entries()) {
         const vPayload = {
           product_id: pid!, name: v.name || null, sku: v.sku || null, barcode: v.barcode || null,
-          price: Number(v.price), compare_at_price: v.compare_at_price, cost_price: v.cost_price,
+          price: Number(v.price), compare_at_price: v.compare_at_price,
           stock_quantity: v.stock_quantity, low_stock_threshold: v.low_stock_threshold,
           dimensions_text: v.dimensions_text || null, weight_grams: v.weight_grams,
           image_url: v.image_url, is_default: v.is_default, is_active: v.is_active, sort_order: idx,
@@ -460,12 +461,18 @@ export function ProductForm({ productId }: ProductFormProps) {
           if (error) throw error;
           variantId = data.id;
         }
+        if (variantId) costUpdates.push({ variant_id: variantId, cost_price: v.cost_price });
         await supabase.from("variant_option_values").delete().eq("variant_id", variantId!);
         const refs = v.valueRefs.map((r) => valueIdMap.get(r) ?? null).filter(Boolean) as string[];
         if (refs.length)
           await supabase.from("variant_option_values").insert(
             refs.map((option_value_id) => ({ variant_id: variantId!, option_value_id })),
           );
+      }
+
+      /* preço de custo gravado apenas pela server function protegida */
+      if (costUpdates.length) {
+        await persistVariantCosts({ data: { items: costUpdates } });
       }
 
       /* campos de personalização */
