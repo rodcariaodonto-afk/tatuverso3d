@@ -41,7 +41,7 @@ function MyOrderPage() {
   });
 
   const cancelMutation = useMutation({
-    mutationFn: () => cancel({ data: { order_id: id } as any }),
+    mutationFn: () => cancel({ data: { order_id: id } }),
     onSuccess: () => {
       toast.success("Pedido cancelado.");
       qc.invalidateQueries({ queryKey: ["my-order", id] });
