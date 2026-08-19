@@ -50,6 +50,7 @@ import { Route as AdminProdutoresRouteImport } from './routes/admin.produtores'
 import { Route as AdminPedidosRouteImport } from './routes/admin.pedidos'
 import { Route as AdminLeadsRouteImport } from './routes/admin.leads'
 import { Route as AdminIntegracoesRouteImport } from './routes/admin.integracoes'
+import { Route as AdminEstoqueRouteImport } from './routes/admin.estoque'
 import { Route as AdminEntregaRouteImport } from './routes/admin.entrega'
 import { Route as AdminCuponsRouteImport } from './routes/admin.cupons'
 import { Route as AdminConteudoRouteImport } from './routes/admin.conteudo'
@@ -268,6 +269,11 @@ const AdminIntegracoesRoute = AdminIntegracoesRouteImport.update({
   path: '/integracoes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminEstoqueRoute = AdminEstoqueRouteImport.update({
+  id: '/estoque',
+  path: '/estoque',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminEntregaRoute = AdminEntregaRouteImport.update({
   id: '/entrega',
   path: '/entrega',
@@ -364,6 +370,7 @@ export interface FileRoutesByFullPath {
   '/admin/conteudo': typeof AdminConteudoRoute
   '/admin/cupons': typeof AdminCuponsRoute
   '/admin/entrega': typeof AdminEntregaRoute
+  '/admin/estoque': typeof AdminEstoqueRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/pedidos': typeof AdminPedidosRouteWithChildren
@@ -419,6 +426,7 @@ export interface FileRoutesByTo {
   '/admin/conteudo': typeof AdminConteudoRoute
   '/admin/cupons': typeof AdminCuponsRoute
   '/admin/entrega': typeof AdminEntregaRoute
+  '/admin/estoque': typeof AdminEstoqueRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/pedidos': typeof AdminPedidosRouteWithChildren
@@ -475,6 +483,7 @@ export interface FileRoutesById {
   '/admin/conteudo': typeof AdminConteudoRoute
   '/admin/cupons': typeof AdminCuponsRoute
   '/admin/entrega': typeof AdminEntregaRoute
+  '/admin/estoque': typeof AdminEstoqueRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/pedidos': typeof AdminPedidosRouteWithChildren
@@ -532,6 +541,7 @@ export interface FileRouteTypes {
     | '/admin/conteudo'
     | '/admin/cupons'
     | '/admin/entrega'
+    | '/admin/estoque'
     | '/admin/integracoes'
     | '/admin/leads'
     | '/admin/pedidos'
@@ -587,6 +597,7 @@ export interface FileRouteTypes {
     | '/admin/conteudo'
     | '/admin/cupons'
     | '/admin/entrega'
+    | '/admin/estoque'
     | '/admin/integracoes'
     | '/admin/leads'
     | '/admin/pedidos'
@@ -642,6 +653,7 @@ export interface FileRouteTypes {
     | '/admin/conteudo'
     | '/admin/cupons'
     | '/admin/entrega'
+    | '/admin/estoque'
     | '/admin/integracoes'
     | '/admin/leads'
     | '/admin/pedidos'
@@ -990,6 +1002,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIntegracoesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/estoque': {
+      id: '/admin/estoque'
+      path: '/estoque'
+      fullPath: '/admin/estoque'
+      preLoaderRoute: typeof AdminEstoqueRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/entrega': {
       id: '/admin/entrega'
       path: '/entrega'
@@ -1111,6 +1130,7 @@ interface AdminRouteChildren {
   AdminConteudoRoute: typeof AdminConteudoRoute
   AdminCuponsRoute: typeof AdminCuponsRoute
   AdminEntregaRoute: typeof AdminEntregaRoute
+  AdminEstoqueRoute: typeof AdminEstoqueRoute
   AdminIntegracoesRoute: typeof AdminIntegracoesRoute
   AdminLeadsRoute: typeof AdminLeadsRoute
   AdminPedidosRoute: typeof AdminPedidosRouteWithChildren
@@ -1127,6 +1147,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminConteudoRoute: AdminConteudoRoute,
   AdminCuponsRoute: AdminCuponsRoute,
   AdminEntregaRoute: AdminEntregaRoute,
+  AdminEstoqueRoute: AdminEstoqueRoute,
   AdminIntegracoesRoute: AdminIntegracoesRoute,
   AdminLeadsRoute: AdminLeadsRoute,
   AdminPedidosRoute: AdminPedidosRouteWithChildren,
