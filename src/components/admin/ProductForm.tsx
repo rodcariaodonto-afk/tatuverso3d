@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Trash2, Plus, Upload, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getVariantCosts, saveVariantCosts } from "@/lib/admin-costs.functions";
+import { adminAdjustStock } from "@/lib/inventory-admin.functions";
 import { PRODUCT_TYPE_LABEL, OPTION_TYPE_LABEL } from "@/hooks/useProducts";
 
 /* ── tipos ─────────────────────────────────────────────────────────────── */
@@ -216,6 +217,7 @@ export function ProductForm({ productId }: ProductFormProps) {
   /* preço de custo: somente admin, via server function protegida */
   const fetchVariantCosts = useServerFn(getVariantCosts);
   const persistVariantCosts = useServerFn(saveVariantCosts);
+  const adjustStockFn = useServerFn(adminAdjustStock);
   const { data: variantCosts } = useQuery({
     queryKey: ["admin-variant-costs", productId],
     enabled: isEdit,
