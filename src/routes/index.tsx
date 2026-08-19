@@ -112,11 +112,11 @@ function HomePage() {
             <div className="absolute -inset-6 rounded-[2.5rem] bg-white/10 blur-2xl" aria-hidden />
             <div className="relative grid grid-cols-2 gap-3">
               {[
-                "Sensoriais",
-                "Articulados",
-                "Decoração",
-                "Personalizados",
-              ].map((label, i) => (
+                { label: "Sensoriais", note: "Textura e movimento", Icon: Hand },
+                { label: "Articulados", note: "Dobram e giram", Icon: Boxes },
+                { label: "Decoração", note: "Sua casa com cara sua", Icon: Layers },
+                { label: "Personalizados", note: "Nome, cor e escala", Icon: Palette },
+              ].map(({ label, note, Icon }, i) => (
                 <div
                   key={label}
                   className={`rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur ${
@@ -124,10 +124,10 @@ function HomePage() {
                   }`}
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[oklch(0.82_0.14_75)] text-[oklch(0.2_0.06_275)]">
-                    <Layers className="h-5 w-5" />
+                    <Icon className="h-5 w-5" />
                   </div>
                   <p className="mt-3 font-display text-lg">{label}</p>
-                  <p className="mt-1 text-xs text-white/70">camada por camada</p>
+                  <p className="mt-1 text-xs text-white/70">{note}</p>
                 </div>
               ))}
             </div>
