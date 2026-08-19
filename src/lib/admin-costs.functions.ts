@@ -1,31 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-
-const productSchema = z.object({ product_id: z.string().uuid() });
-
-const saveSchema = z.object({
-  items: z
-    .array(
-      z.object({
-        variant_id: z.string().uuid(),
-        cost_price: z.number().nonnegative().max(9999999).nullable(),
-      }),
-    )
-    .max(500),
-});
-
-async function assertAdmin(context: { supabase: any; userId: string }) {
-  const { data: isAdmin, error } = await context.supabase.rpc("is_admin", {
-    _user_id: context.userId,
-  });
-  if (error || !isAdmin) throw new Error("Acesso restrito a administradores.");
-}
+import { assertAdmin, costProductSchema, costSaveSchema } from "./admin-costs.shared";
 
 /** Preço de custo das variações — visível somente para administradores. */
 export const getVariantCosts = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => productSchema.parse(input))
+  .inputValidator((input: unknown) => costProductSchema.parse(input))
   .handler(async ({ data, context }): Promise<Record<string, number | null>> => {
     await assertAdmin(context as any);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -42,7 +22,7 @@ export const getVariantCosts = createServerFn({ method: "POST" })
 /** Grava o preço de custo das variações — somente administradores. */
 export const saveVariantCosts = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => saveSchema.parse(input))
+  .inputValidator((input: unknown) => costSaveSchema.parse(input))
   .handler(async ({ data, context }): Promise<{ updated: number }> => {
     await assertAdmin(context as any);
     if (!data.items.length) return { updated: 0 };
