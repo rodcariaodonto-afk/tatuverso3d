@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/cupons")({
-  head: () => ({ meta: [{ title: "Cupons — Admin Café EX" }] }),
+  head: () => ({ meta: [{ title: "Cupons — Admin TatuVerso3D" }] }),
   component: CuponsPage,
 });
 
@@ -75,7 +75,7 @@ function CuponsPage() {
           <div>
             <p className="eyebrow">Marketing</p>
             <h1 className="mt-2 font-display text-4xl text-primary">Cupons</h1>
-            <div className="gold-divider mt-3" />
+            <div className="brand-divider mt-3" />
           </div>
           <button onClick={() => setOpen(true)} className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90">
             + Novo cupom
@@ -114,7 +114,7 @@ function CuponsPage() {
                     <td className="px-4 py-3 text-muted-foreground">{c.used_count ?? 0}{c.max_uses ? ` / ${c.max_uses}` : ""}</td>
                     <td className="px-4 py-3 text-xs text-muted-foreground">{c.expires_at ? new Date(c.expires_at).toLocaleDateString("pt-BR") : "—"}</td>
                     <td className="px-4 py-3">
-                      <button onClick={() => toggle(c.id, c.is_active)} className={`rounded-full px-2 py-0.5 text-xs ${c.is_active ? "bg-[var(--farm)]/20 text-[var(--farm)]" : "bg-muted text-muted-foreground"}`}>
+                      <button onClick={() => toggle(c.id, c.is_active)} className={`rounded-full px-2 py-0.5 text-xs ${c.is_active ? "bg-[var(--brand-primary)]/20 text-[var(--brand-primary)]" : "bg-muted text-muted-foreground"}`}>
                         {c.is_active ? "ativo" : "inativo"}
                       </button>
                     </td>

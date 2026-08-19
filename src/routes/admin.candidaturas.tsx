@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/candidaturas")({
-  head: () => ({ meta: [{ title: "Candidaturas — Admin Café EX" }] }),
+  head: () => ({ meta: [{ title: "Candidaturas — Admin TatuVerso3D" }] }),
   component: CandidaturasPage,
 });
 
@@ -102,7 +102,7 @@ function CandidaturasPage() {
           <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">
             Candidaturas de produtores
           </h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
           <p className="mt-3 text-sm text-muted-foreground">
             {counts?.pending ?? 0} pendentes · {counts?.reviewing ?? 0} em análise
           </p>

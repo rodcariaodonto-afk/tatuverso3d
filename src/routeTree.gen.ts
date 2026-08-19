@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VenderNaPlataformaRouteImport } from './routes/vender-na-plataforma'
+import { Route as TrocasRouteImport } from './routes/trocas'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -18,8 +19,12 @@ import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as ProdutorRouteImport } from './routes/produtor'
 import { Route as PrivateLabelRouteImport } from './routes/private-label'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as PersonalizadosRouteImport } from './routes/personalizados'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as EnviosRouteImport } from './routes/envios'
+import { Route as CuidadosRouteImport } from './routes/cuidados'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as ClubeRouteImport } from './routes/clube'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -56,6 +61,11 @@ import { Route as AdminProdutosIdEditarRouteImport } from './routes/admin.produt
 const VenderNaPlataformaRoute = VenderNaPlataformaRouteImport.update({
   id: '/vender-na-plataforma',
   path: '/vender-na-plataforma',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrocasRoute = TrocasRouteImport.update({
+  id: '/trocas',
+  path: '/trocas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermosRoute = TermosRouteImport.update({
@@ -98,6 +108,11 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
   path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PersonalizadosRoute = PersonalizadosRouteImport.update({
+  id: '/personalizados',
+  path: '/personalizados',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MinhaContaRoute = MinhaContaRouteImport.update({
   id: '/minha-conta',
   path: '/minha-conta',
@@ -106,6 +121,21 @@ const MinhaContaRoute = MinhaContaRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnviosRoute = EnviosRouteImport.update({
+  id: '/envios',
+  path: '/envios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CuidadosRoute = CuidadosRouteImport.update({
+  id: '/cuidados',
+  path: '/cuidados',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContatoRoute = ContatoRouteImport.update({
@@ -279,8 +309,12 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/clube': typeof ClubeRoute
   '/contato': typeof ContatoRoute
+  '/cuidados': typeof CuidadosRoute
+  '/envios': typeof EnviosRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/minha-conta': typeof MinhaContaRouteWithChildren
+  '/personalizados': typeof PersonalizadosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/private-label': typeof PrivateLabelRoute
   '/produtor': typeof ProdutorRouteWithChildren
@@ -289,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/trocas': typeof TrocasRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
   '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/candidaturas': typeof AdminCandidaturasRoute
@@ -324,8 +359,12 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/clube': typeof ClubeRoute
   '/contato': typeof ContatoRoute
+  '/cuidados': typeof CuidadosRoute
+  '/envios': typeof EnviosRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/minha-conta': typeof MinhaContaRouteWithChildren
+  '/personalizados': typeof PersonalizadosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/private-label': typeof PrivateLabelRoute
   '/produtor': typeof ProdutorRouteWithChildren
@@ -334,6 +373,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/trocas': typeof TrocasRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
   '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/candidaturas': typeof AdminCandidaturasRoute
@@ -370,8 +410,12 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/clube': typeof ClubeRoute
   '/contato': typeof ContatoRoute
+  '/cuidados': typeof CuidadosRoute
+  '/envios': typeof EnviosRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/minha-conta': typeof MinhaContaRouteWithChildren
+  '/personalizados': typeof PersonalizadosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/private-label': typeof PrivateLabelRoute
   '/produtor': typeof ProdutorRouteWithChildren
@@ -380,6 +424,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/trocas': typeof TrocasRoute
   '/vender-na-plataforma': typeof VenderNaPlataformaRoute
   '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/candidaturas': typeof AdminCandidaturasRoute
@@ -417,8 +462,12 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/clube'
     | '/contato'
+    | '/cuidados'
+    | '/envios'
+    | '/faq'
     | '/login'
     | '/minha-conta'
+    | '/personalizados'
     | '/privacidade'
     | '/private-label'
     | '/produtor'
@@ -427,6 +476,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sobre'
     | '/termos'
+    | '/trocas'
     | '/vender-na-plataforma'
     | '/admin/assinaturas'
     | '/admin/candidaturas'
@@ -462,8 +512,12 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/clube'
     | '/contato'
+    | '/cuidados'
+    | '/envios'
+    | '/faq'
     | '/login'
     | '/minha-conta'
+    | '/personalizados'
     | '/privacidade'
     | '/private-label'
     | '/produtor'
@@ -472,6 +526,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sobre'
     | '/termos'
+    | '/trocas'
     | '/vender-na-plataforma'
     | '/admin/assinaturas'
     | '/admin/candidaturas'
@@ -507,8 +562,12 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/clube'
     | '/contato'
+    | '/cuidados'
+    | '/envios'
+    | '/faq'
     | '/login'
     | '/minha-conta'
+    | '/personalizados'
     | '/privacidade'
     | '/private-label'
     | '/produtor'
@@ -517,6 +576,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sobre'
     | '/termos'
+    | '/trocas'
     | '/vender-na-plataforma'
     | '/admin/assinaturas'
     | '/admin/candidaturas'
@@ -553,8 +613,12 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ClubeRoute: typeof ClubeRoute
   ContatoRoute: typeof ContatoRoute
+  CuidadosRoute: typeof CuidadosRoute
+  EnviosRoute: typeof EnviosRoute
+  FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
   MinhaContaRoute: typeof MinhaContaRouteWithChildren
+  PersonalizadosRoute: typeof PersonalizadosRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   PrivateLabelRoute: typeof PrivateLabelRoute
   ProdutorRoute: typeof ProdutorRouteWithChildren
@@ -563,6 +627,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
+  TrocasRoute: typeof TrocasRoute
   VenderNaPlataformaRoute: typeof VenderNaPlataformaRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CafeSlugRoute: typeof CafeSlugRoute
@@ -578,6 +643,13 @@ declare module '@tanstack/react-router' {
       path: '/vender-na-plataforma'
       fullPath: '/vender-na-plataforma'
       preLoaderRoute: typeof VenderNaPlataformaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trocas': {
+      id: '/trocas'
+      path: '/trocas'
+      fullPath: '/trocas'
+      preLoaderRoute: typeof TrocasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/termos': {
@@ -636,6 +708,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/personalizados': {
+      id: '/personalizados'
+      path: '/personalizados'
+      fullPath: '/personalizados'
+      preLoaderRoute: typeof PersonalizadosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/minha-conta': {
       id: '/minha-conta'
       path: '/minha-conta'
@@ -648,6 +727,27 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/envios': {
+      id: '/envios'
+      path: '/envios'
+      fullPath: '/envios'
+      preLoaderRoute: typeof EnviosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cuidados': {
+      id: '/cuidados'
+      path: '/cuidados'
+      fullPath: '/cuidados'
+      preLoaderRoute: typeof CuidadosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contato': {
@@ -961,8 +1061,12 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ClubeRoute: ClubeRoute,
   ContatoRoute: ContatoRoute,
+  CuidadosRoute: CuidadosRoute,
+  EnviosRoute: EnviosRoute,
+  FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
   MinhaContaRoute: MinhaContaRouteWithChildren,
+  PersonalizadosRoute: PersonalizadosRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   PrivateLabelRoute: PrivateLabelRoute,
   ProdutorRoute: ProdutorRouteWithChildren,
@@ -971,6 +1075,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
+  TrocasRoute: TrocasRoute,
   VenderNaPlataformaRoute: VenderNaPlataformaRoute,
   BlogSlugRoute: BlogSlugRoute,
   CafeSlugRoute: CafeSlugRoute,

@@ -8,7 +8,7 @@ import { formatBRL } from "@/lib/cart-store";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/produtos")({
-  head: () => ({ meta: [{ title: "Admin · Cafés — Café EX" }] }),
+  head: () => ({ meta: [{ title: "Admin · Cafés — TatuVerso3D" }] }),
   component: AdminProductsLayout,
 });
 
@@ -131,7 +131,7 @@ function AdminProductsPage() {
           <div>
             <p className="eyebrow">Administração</p>
             <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Cafés</h1>
-            <div className="gold-divider mt-3" />
+            <div className="brand-divider mt-3" />
           </div>
           {tab === "products" && (
             <button
@@ -301,7 +301,7 @@ function ProductsList({ onEdit }: { onEdit: (p: Product) => void }) {
                       {p.producers?.name ?? "—"}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="rounded-full bg-[var(--sand)] px-2 py-0.5 text-xs">
+                      <span className="rounded-full bg-[var(--surface-soft)] px-2 py-0.5 text-xs">
                         {p.product_variants.length} SKU
                         {p.product_variants.length !== 1 ? "s" : ""}
                       </span>
@@ -329,7 +329,7 @@ function ProductsList({ onEdit }: { onEdit: (p: Product) => void }) {
                             ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
                             : p.status === "archived"
                               ? "bg-destructive/10 text-destructive"
-                              : "bg-[var(--sand)] text-muted-foreground"
+                              : "bg-[var(--surface-soft)] text-muted-foreground"
                         }`}
                       >
                         {STATUSES.find((s) => s.value === p.status)?.label ?? p.status}
@@ -738,7 +738,7 @@ function ProductForm({
                     type="checkbox"
                     checked={form.is_featured}
                     onChange={(e) => setField("is_featured", e.target.checked)}
-                    className="h-4 w-4 accent-[var(--gold)]"
+                    className="h-4 w-4 accent-[var(--brand-accent)]"
                   />
                   Destaque na home
                 </label>
@@ -747,7 +747,7 @@ function ProductForm({
                     type="checkbox"
                     checked={form.is_subscription_available}
                     onChange={(e) => setField("is_subscription_available", e.target.checked)}
-                    className="h-4 w-4 accent-[var(--gold)]"
+                    className="h-4 w-4 accent-[var(--brand-accent)]"
                   />
                   Disponível para assinatura
                 </label>
@@ -780,7 +780,7 @@ function ProductForm({
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
                   onChange={handleImageChange}
-                  className="block w-full text-sm text-muted-foreground file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-[var(--sand)] file:px-4 file:py-2 file:text-xs file:font-semibold file:text-primary hover:file:bg-accent/20"
+                  className="block w-full text-sm text-muted-foreground file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-[var(--surface-soft)] file:px-4 file:py-2 file:text-xs file:font-semibold file:text-primary hover:file:bg-accent/20"
                 />
                 <p className="mt-2 text-xs text-muted-foreground">
                   PNG, JPG ou WEBP · Recomendado: 800 × 1000 px.
@@ -906,7 +906,7 @@ function ProductForm({
                           name="default_variant"
                           checked={v.is_default}
                           onChange={() => setDefaultVariant(v._key)}
-                          className="h-4 w-4 accent-[var(--gold)]"
+                          className="h-4 w-4 accent-[var(--brand-accent)]"
                         />
                       </td>
                       <td className="px-3 py-2">
@@ -1250,7 +1250,7 @@ function ReviewsPanel() {
                         key={i}
                         className={`h-3.5 w-3.5 ${
                           i < r.rating
-                            ? "fill-[var(--gold)] text-[var(--gold)]"
+                            ? "fill-[var(--brand-accent)] text-[var(--brand-accent)]"
                             : "text-muted-foreground/30"
                         }`}
                       />

@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/produtores")({
-  head: () => ({ meta: [{ title: "Produtores — Admin Café EX" }] }),
+  head: () => ({ meta: [{ title: "Produtores — Admin TatuVerso3D" }] }),
   component: ProdutoresAdminPage,
 });
 
@@ -129,7 +129,7 @@ function ProdutoresAdminPage() {
           <div>
             <p className="eyebrow">Curadoria</p>
             <h1 className="mt-2 font-display text-4xl text-primary">Produtores</h1>
-            <div className="gold-divider mt-3" />
+            <div className="brand-divider mt-3" />
           </div>
           <button
             onClick={() => setShowForm((s) => !s)}

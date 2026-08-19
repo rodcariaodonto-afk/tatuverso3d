@@ -6,8 +6,8 @@ import { Mail, MessageCircle, Instagram } from "lucide-react";
 export const Route = createFileRoute("/contato")({
   head: () => ({
     meta: [
-      { title: "Contato — Café EX" },
-      { name: "description", content: "Fale com a Café EX. Estamos aqui para ajudar." },
+      { title: "Contato — TatuVerso3D" },
+      { name: "description", content: "Fale com a TatuVerso3D. Estamos aqui para ajudar." },
     ],
   }),
   component: ContactPage,
@@ -25,7 +25,7 @@ function ContactPage() {
     <div className="container mx-auto max-w-3xl px-4 py-16 md:px-6">
       <p className="eyebrow">Contato</p>
       <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Vamos conversar</h1>
-      <div className="gold-divider mt-3" />
+      <div className="brand-divider mt-3" />
 
       <div className="mt-10 grid gap-6 md:grid-cols-3">
         {[
@@ -34,7 +34,7 @@ function ContactPage() {
           { icon: Instagram, label: "Instagram", value: "@cafezeira" },
         ].map((c) => (
           <div key={c.label} className="rounded-lg border border-border bg-card p-5">
-            <c.icon className="h-5 w-5 text-[var(--gold)]" />
+            <c.icon className="h-5 w-5 text-[var(--brand-accent)]" />
             <p className="mt-3 text-xs uppercase tracking-wider text-muted-foreground">{c.label}</p>
             <p className="mt-1 font-display text-base text-primary">{c.value}</p>
           </div>
@@ -42,7 +42,7 @@ function ContactPage() {
       </div>
 
       {sent ? (
-        <div className="mt-10 rounded-xl border border-border bg-[var(--sand)] p-8 text-center">
+        <div className="mt-10 rounded-xl border border-border bg-[var(--surface-soft)] p-8 text-center">
           <p className="font-display text-2xl text-primary">Obrigado pelo contato ☕️</p>
           <p className="mt-2 text-sm text-muted-foreground">Em breve nosso time responde no seu email.</p>
         </div>

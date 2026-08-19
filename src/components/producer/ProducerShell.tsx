@@ -54,7 +54,7 @@ export function ProducerShell({ children }: { children: React.ReactNode }) {
   if (!user) {
     return (
       <div className="container mx-auto max-w-md py-20 text-center">
-        <h1 className="font-display text-3xl text-primary">Entre na Café EX</h1>
+        <h1 className="font-display text-3xl text-primary">Entre na TatuVerso3D</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Você precisa estar autenticado para acessar o painel do produtor.
         </p>
@@ -90,7 +90,7 @@ export function ProducerShell({ children }: { children: React.ReactNode }) {
   const SidebarBody = (
     <div className="flex h-full flex-col">
       <Link to="/produtor" className="flex items-center gap-2 border-b border-border px-5 py-4">
-        <Sprout className="h-5 w-5 text-[var(--gold)]" />
+        <Sprout className="h-5 w-5 text-[var(--brand-accent)]" />
         <span className="font-display text-lg font-bold tracking-tight text-primary">
           Painel do Produtor
         </span>
@@ -128,7 +128,7 @@ export function ProducerShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] w-full bg-[var(--sand)]/30">
+    <div className="flex min-h-[calc(100vh-4rem)] w-full bg-[var(--surface-soft)]/30">
       <aside className="hidden w-64 shrink-0 border-r border-border bg-card lg:block">
         {SidebarBody}
       </aside>

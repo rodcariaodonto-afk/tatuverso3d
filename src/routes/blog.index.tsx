@@ -5,8 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
-      { title: "Blog — Café EX" },
-      { name: "description", content: "Histórias, guias e curiosidades sobre cafés especiais." },
+      { title: "Blog — TatuVerso3D" },
+      { name: "description", content: "Histórias, bastidores e guias sobre impressão 3D." },
     ],
   }),
   component: BlogPage,
@@ -31,7 +31,7 @@ function BlogPage() {
       <header>
         <p className="eyebrow">Blog</p>
         <h1 className="mt-2 font-display text-4xl md:text-5xl">Histórias e guias</h1>
-        <div className="gold-divider mt-3" />
+        <div className="brand-divider mt-3" />
       </header>
       <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {(posts ?? []).map((p) => (
@@ -45,7 +45,7 @@ function BlogPage() {
               {p.cover_url && <img src={p.cover_url} alt={p.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />}
             </div>
             <div className="flex flex-1 flex-col p-5">
-              {p.category && <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold)]">{p.category}</p>}
+              {p.category && <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--brand-accent)]">{p.category}</p>}
               <h2 className="mt-1 font-display text-xl text-primary">{p.title}</h2>
               <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{p.excerpt}</p>
               <p className="mt-auto pt-4 text-xs text-muted-foreground">

@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/leads")({
-  head: () => ({ meta: [{ title: "Leads B2B — Admin Café EX" }] }),
+  head: () => ({ meta: [{ title: "Leads B2B — Admin TatuVerso3D" }] }),
   component: LeadsPage,
 });
 
@@ -48,7 +48,7 @@ function LeadsPage() {
         <header>
           <p className="eyebrow">Comercial B2B</p>
           <h1 className="mt-2 font-display text-4xl text-primary">Leads · Private Label</h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
         </header>
 
         <select value={filter} onChange={(e) => setFilter(e.target.value)} className="mt-6 rounded-md border border-border bg-card px-3 py-2 text-sm">

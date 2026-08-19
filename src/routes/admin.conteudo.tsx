@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const Route = createFileRoute("/admin/conteudo")({
-  head: () => ({ meta: [{ title: "Conteúdo do site — Admin Café EX" }] }),
+  head: () => ({ meta: [{ title: "Conteúdo do site — Admin TatuVerso3D" }] }),
   component: ContentAdminPage,
 });
 
@@ -19,7 +19,7 @@ type Section = {
 
 const SECTIONS: Section[] = [
   {
-    title: "Home · Assinatura Café EX",
+    title: "Home · Assinatura TatuVerso3D",
     description: "Três imagens exibidas ao lado do bloco da assinatura na home.",
     slots: [
       { key: "home_assinatura_1", label: "Imagem 1" },
@@ -58,7 +58,7 @@ function ContentAdminPage() {
       <div className="mx-auto max-w-5xl">
         <p className="eyebrow">Administração</p>
         <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Conteúdo do site</h1>
-        <div className="gold-divider mt-3" />
+        <div className="brand-divider mt-3" />
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
           Gerencie as imagens das principais seções da home. Faça upload de uma nova imagem ou cole uma URL externa, depois salve.
         </p>

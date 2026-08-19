@@ -17,7 +17,7 @@ const searchSchema = z.object({
 });
 
 export const Route = createFileRoute("/checkout")({
-  head: () => ({ meta: [{ title: "Checkout — Café EX" }] }),
+  head: () => ({ meta: [{ title: "Checkout — TatuVerso3D" }] }),
   validateSearch: zodValidator(searchSchema),
   component: CheckoutPage,
 });
@@ -185,7 +185,7 @@ function CheckoutPage() {
     <div className="container mx-auto px-4 py-12 md:px-6">
       <div className="mx-auto max-w-2xl">
         <h1 className="font-display text-4xl text-primary md:text-5xl">Checkout</h1>
-        <div className="gold-divider mt-3" />
+        <div className="brand-divider mt-3" />
 
         <StepIndicator step={step} />
 
@@ -246,7 +246,7 @@ function StepIndicator({ step }: { step: Step }) {
           <div
             className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition ${
               i < idx
-                ? "bg-[var(--farm)] text-white"
+                ? "bg-[var(--brand-primary)] text-white"
                 : i === idx
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground"
@@ -263,7 +263,7 @@ function StepIndicator({ step }: { step: Step }) {
           </span>
           {i < STEPS.length - 1 && (
             <div
-              className={`ml-1.5 h-0.5 flex-1 ${i < idx ? "bg-[var(--farm)]" : "bg-border"}`}
+              className={`ml-1.5 h-0.5 flex-1 ${i < idx ? "bg-[var(--brand-primary)]" : "bg-border"}`}
             />
           )}
         </div>
@@ -570,7 +570,7 @@ function ShippingStep({
                 name="shipping"
                 checked={selected?.id === opt.id}
                 onChange={() => onSelect(opt)}
-                className="h-4 w-4 accent-[var(--gold)]"
+                className="h-4 w-4 accent-[var(--brand-accent)]"
               />
               <div className="flex-1">
                 <p className="font-semibold text-primary">
@@ -738,7 +738,7 @@ function SuccessScreen({ orderId, onClear }: { orderId: string; onClear: () => v
 
   return (
     <div className="container mx-auto max-w-xl px-4 py-20 text-center md:px-6">
-      <CheckCircle2 className="mx-auto h-14 w-14 text-[var(--farm)]" />
+      <CheckCircle2 className="mx-auto h-14 w-14 text-[var(--brand-primary)]" />
       <h1 className="mt-4 font-display text-4xl text-primary">Pedido confirmado!</h1>
       <p className="mt-3 text-sm text-muted-foreground">
         Seu pedido <span className="font-mono text-primary">#{orderId.slice(0, 8)}</span> foi recebido e está sendo processado.
@@ -774,7 +774,7 @@ function FailureScreen({ orderId }: { orderId: string }) {
 function PendingScreen({ orderId }: { orderId: string }) {
   return (
     <div className="container mx-auto max-w-xl px-4 py-20 text-center md:px-6">
-      <Loader2 className="mx-auto h-12 w-12 animate-spin text-[var(--gold)]" />
+      <Loader2 className="mx-auto h-12 w-12 animate-spin text-[var(--brand-accent)]" />
       <h1 className="mt-4 font-display text-4xl text-primary">Pagamento pendente</h1>
       <p className="mt-3 text-sm text-muted-foreground">
         Seu pedido <span className="font-mono text-primary">#{orderId.slice(0, 8)}</span> está
@@ -808,7 +808,7 @@ function PixScreen({ result, onClear }: { result: PixResult; onClear: () => void
 
   return (
     <div className="container mx-auto max-w-md px-4 py-20 text-center md:px-6">
-      <QrCode className="mx-auto h-10 w-10 text-[var(--gold)]" />
+      <QrCode className="mx-auto h-10 w-10 text-[var(--brand-accent)]" />
       <h1 className="mt-4 font-display text-3xl text-primary">Pague via PIX</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         Pedido <span className="font-mono text-primary">#{result.order_id.slice(0, 8)}</span>

@@ -31,15 +31,20 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/catalogo")({
   head: () => ({
     meta: [
-      { title: "Catálogo de cafés especiais — Café EX" },
+      { title: "Loja — TatuVerso3D" },
       {
         name: "description",
         content:
-          "Explore microlotes premiados de produtores latino-americanos. Filtre por torra, processo, perfil e origem.",
+          "Produtos sensoriais, decoração, utilidades, presentes, colecionáveis e articulados feitos em impressão 3D.",
       },
-      { property: "og:title", content: "Catálogo Café EX" },
-      { property: "og:description", content: "Cafés especiais com origem, curadoria e torra fresca." },
+      { property: "og:title", content: "Loja — TatuVerso3D" },
+      {
+        property: "og:description",
+        content: "Produtos criativos em impressão 3D, prontos para enviar ou personalizar.",
+      },
+      { property: "og:url", content: "/catalogo" },
     ],
+    links: [{ rel: "canonical", href: "/catalogo" }],
   }),
   validateSearch: zodValidator(searchSchema),
   component: CatalogPage,
@@ -55,7 +60,7 @@ const ROAST_LEVELS = [
 
 const GRIND_OPTIONS = [
   { value: "whole_bean", label: "Grão inteiro" },
-  { value: "espresso", label: "Espresso" },
+  { value: "espresso", label: "Pequeno" },
   { value: "moka", label: "Moka" },
   { value: "filter", label: "Filtrado" },
   { value: "french_press", label: "French Press" },
@@ -67,7 +72,6 @@ const SORTS = [
   { value: "featured", label: "Destaques" },
   { value: "price_asc", label: "Menor preço" },
   { value: "price_desc", label: "Maior preço" },
-  { value: "score_desc", label: "Maior pontuação" },
   { value: "newest", label: "Mais recentes" },
 ] as const;
 
@@ -153,7 +157,7 @@ function CatalogPage() {
           <input
             value={search.q}
             onChange={(e) => update({ q: e.target.value })}
-            placeholder="Café, fazenda, região..."
+            placeholder="Buscar produtos..."
             className="w-full rounded-md border border-border bg-card py-2 pl-9 pr-3 text-sm focus:border-accent focus:outline-none"
           />
         </div>
@@ -169,7 +173,7 @@ function CatalogPage() {
                   type="checkbox"
                   checked={search.cat.includes(c.id)}
                   onChange={() => toggleArray("cat", c.id)}
-                  className="h-4 w-4 rounded border-border accent-[var(--gold)]"
+                  className="h-4 w-4 rounded border-border accent-[var(--brand-accent)]"
                 />
                 {c.name}
               </label>
@@ -177,97 +181,6 @@ function CatalogPage() {
           </div>
         </div>
       )}
-
-      <div>
-        <p className="eyebrow">Torra</p>
-        <div className="mt-3 space-y-2">
-          {ROAST_LEVELS.map((r) => (
-            <label key={r.value} className="flex items-center gap-2 text-sm text-foreground/80">
-              <input
-                type="checkbox"
-                checked={search.roast.includes(r.value)}
-                onChange={() => toggleArray("roast", r.value)}
-                className="h-4 w-4 rounded border-border accent-[var(--gold)]"
-              />
-              {r.label}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {origins.length > 0 && (
-        <div>
-          <p className="eyebrow">Origem</p>
-          <div className="mt-3 space-y-2 max-h-48 overflow-auto pr-1">
-            {origins.map((o) => (
-              <label key={o} className="flex items-center gap-2 text-sm text-foreground/80">
-                <input
-                  type="checkbox"
-                  checked={search.origin.includes(o)}
-                  onChange={() => toggleArray("origin", o)}
-                  className="h-4 w-4 rounded border-border accent-[var(--gold)]"
-                />
-                {o}
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div>
-        <p className="eyebrow">Moagem</p>
-        <div className="mt-3 space-y-2">
-          {GRIND_OPTIONS.map((g) => (
-            <label key={g.value} className="flex items-center gap-2 text-sm text-foreground/80">
-              <input
-                type="checkbox"
-                checked={search.grind.includes(g.value)}
-                onChange={() => toggleArray("grind", g.value)}
-                className="h-4 w-4 rounded border-border accent-[var(--gold)]"
-              />
-              {g.label}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <p className="eyebrow">Preço máximo</p>
-        <div className="mt-3 space-y-2">
-          {[60, 90, 120, 200].map((v) => (
-            <label key={v} className="flex items-center gap-2 text-sm text-foreground/80">
-              <input
-                type="radio"
-                name="maxPrice"
-                checked={search.pmax === v}
-                onChange={() => update({ pmax: v })}
-                className="h-4 w-4 accent-[var(--gold)]"
-              />
-              Até R$ {v}
-            </label>
-          ))}
-          {search.pmax && (
-            <button
-              onClick={() => update({ pmax: null })}
-              className="text-xs text-muted-foreground underline-offset-4 hover:underline"
-            >
-              Limpar preço
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div>
-        <label className="flex items-center gap-2 text-sm text-foreground/80">
-          <input
-            type="checkbox"
-            checked={search.sub}
-            onChange={(e) => update({ sub: e.target.checked })}
-            className="h-4 w-4 rounded border-border accent-[var(--gold)]"
-          />
-          Disponível para assinatura
-        </label>
-      </div>
 
       {activeCount > 0 && (
         <button
@@ -283,12 +196,12 @@ function CatalogPage() {
   return (
     <div className="container mx-auto px-4 py-12 md:px-6">
       <header className="mb-10">
-        <p className="eyebrow">Catálogo</p>
-        <h1 className="mt-2 font-display text-4xl md:text-5xl">Cafés especiais</h1>
-        <div className="gold-divider mt-3" />
+        <p className="eyebrow">Loja</p>
+        <h1 className="mt-2 font-display text-4xl md:text-5xl">Produtos em impressão 3D</h1>
+        <div className="brand-divider mt-3" />
         <p className="mt-4 max-w-2xl text-sm text-muted-foreground">
-          Microlotes selecionados de fazendas e torrefações da América Latina.
-          Use os filtros para encontrar o perfil sensorial perfeito para você.
+          Sensoriais, decoração, utilidades, presentes, colecionáveis, articulados e organizadores.
+          Use os filtros para encontrar a peça certa.
         </p>
       </header>
 
@@ -306,7 +219,7 @@ function CatalogPage() {
                 Filtros {activeCount > 0 && `(${activeCount})`}
               </button>
               <p className="text-sm text-muted-foreground">
-                {isLoading ? "Carregando..." : `${filtered.length} cafés`}
+                {isLoading ? "Carregando..." : `${filtered.length} produtos`}
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -339,7 +252,7 @@ function CatalogPage() {
             </div>
           ) : filtered.length === 0 ? (
             <div className="mt-16 rounded-lg border border-dashed border-border py-16 text-center">
-              <p className="font-display text-xl text-primary">Nenhum café encontrado</p>
+              <p className="font-display text-xl text-primary">Nenhum produto encontrado</p>
               <p className="mt-1 text-sm text-muted-foreground">
                 Tente ajustar os filtros.
               </p>

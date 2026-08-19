@@ -3,7 +3,7 @@ import { Trash2, Minus, Plus, ArrowRight, ShoppingBag } from "lucide-react";
 import { formatBRL, GRIND_LABEL, useCart } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/carrinho")({
-  head: () => ({ meta: [{ title: "Carrinho — Café EX" }] }),
+  head: () => ({ meta: [{ title: "Carrinho — TatuVerso3D" }] }),
   component: CartPage,
 });
 
@@ -39,7 +39,7 @@ function CartPage() {
   return (
     <div className="container mx-auto px-4 py-12 md:px-6">
       <h1 className="font-display text-4xl text-primary md:text-5xl">Carrinho</h1>
-      <div className="gold-divider mt-3" />
+      <div className="brand-divider mt-3" />
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_380px]">
         <ul className="divide-y divide-border rounded-lg border border-border bg-card">
@@ -88,7 +88,7 @@ function CartPage() {
           ))}
         </ul>
 
-        <aside className="h-fit rounded-xl border border-border bg-[var(--sand)] p-6">
+        <aside className="h-fit rounded-xl border border-border bg-[var(--surface-soft)] p-6">
           <h2 className="font-display text-xl text-primary">Resumo</h2>
           <dl className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between">
@@ -100,7 +100,7 @@ function CartPage() {
               <dd>{shipping === 0 ? "Grátis" : formatBRL(shipping)}</dd>
             </div>
             {shipping === 0 && subtotal > 0 && (
-              <p className="text-xs text-[var(--farm)]">🎉 Você ganhou frete grátis!</p>
+              <p className="text-xs text-[var(--brand-primary)]">🎉 Você ganhou frete grátis!</p>
             )}
           </dl>
           <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">

@@ -9,7 +9,7 @@ import type { Json } from "@/integrations/supabase/types";
 import { formatBRL } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/minha-conta")({
-  head: () => ({ meta: [{ title: "Minha conta — Café EX" }] }),
+  head: () => ({ meta: [{ title: "Minha conta — TatuVerso3D" }] }),
   component: AccountLayout,
 });
 
@@ -114,7 +114,7 @@ function AccountPage() {
         <header>
           <p className="eyebrow">Segurança da conta</p>
           <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Defina sua nova senha</h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
           <p className="mt-4 text-sm text-muted-foreground">
             Você entrou com uma senha temporária. Troque por uma senha própria para continuar.
           </p>
@@ -148,9 +148,9 @@ function AccountPage() {
         <div>
           <p className="eyebrow">Sua conta</p>
           <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">
-            Olá, {profile?.full_name?.split(" ")[0] ?? "café lover"}
+            Olá, {profile?.full_name?.split(" ")[0] ?? "maker"}
           </h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
         </div>
         <button
           onClick={async () => {
@@ -173,13 +173,13 @@ function AccountPage() {
       {roles?.includes("producer" as any) && (
         <Link
           to="/produtor"
-          className="mt-6 flex items-center justify-between rounded-xl border border-accent/40 bg-[var(--sand)] p-5"
+          className="mt-6 flex items-center justify-between rounded-xl border border-accent/40 bg-[var(--surface-soft)] p-5"
         >
           <div className="flex items-center gap-3">
-            <Crown className="h-5 w-5 text-[var(--gold)]" />
+            <Crown className="h-5 w-5 text-[var(--brand-accent)]" />
             <div>
-              <p className="font-display text-lg text-primary">Painel do Produtor</p>
-              <p className="text-xs text-muted-foreground">Gerencie seus cafés e pedidos.</p>
+              <p className="font-display text-lg text-primary">Painel do Parceiro</p>
+              <p className="text-xs text-muted-foreground">Gerencie seus produtos e pedidos.</p>
             </div>
           </div>
           <span className="text-sm font-semibold text-primary">Abrir →</span>
@@ -192,7 +192,7 @@ function AccountPage() {
           className="mt-3 flex items-center justify-between rounded-xl border border-primary/30 bg-primary p-5 text-primary-foreground"
         >
           <div className="flex items-center gap-3">
-            <Crown className="h-5 w-5 text-[var(--gold)]" />
+            <Crown className="h-5 w-5 text-[var(--brand-accent)]" />
             <div>
               <p className="font-display text-lg">Painel Admin</p>
               <p className="text-xs text-primary-foreground/70">Gestão da plataforma.</p>
@@ -248,7 +248,7 @@ function AccountPage() {
                       {o.order_items?.map((i: any) => `${i.quantity}× ${i.product_name}`).join(", ")}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="rounded-full bg-[var(--sand)] px-2 py-0.5 text-xs font-semibold text-primary">
+                      <span className="rounded-full bg-[var(--surface-soft)] px-2 py-0.5 text-xs font-semibold text-primary">
                         {o.status}
                       </span>
                     </td>
@@ -330,7 +330,7 @@ function Card({
 }) {
   const Inner = (
     <div className="rounded-lg border border-border bg-card p-5 transition hover:border-accent/60">
-      <Icon className="h-5 w-5 text-[var(--gold)]" />
+      <Icon className="h-5 w-5 text-[var(--brand-accent)]" />
       <p className="mt-3 font-display text-lg text-primary">{title}</p>
       <p className="text-xs text-muted-foreground">{desc}</p>
     </div>

@@ -55,7 +55,7 @@ function ProducerPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative isolate overflow-hidden bg-[var(--espresso)] text-[oklch(0.95_0.02_80)]">
+      <section className="relative isolate overflow-hidden bg-[var(--brand-dark)] text-[oklch(0.95_0.02_80)]">
         {producer.cover_url && (
           <div
             className="absolute inset-0 -z-10 opacity-40"
@@ -66,12 +66,12 @@ function ProducerPage() {
             }}
           />
         )}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[var(--espresso)] to-[var(--espresso)]/50" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[var(--brand-dark)] to-[var(--brand-dark)]/50" />
         <div className="container mx-auto px-4 py-20 md:px-6 md:py-28">
           <Link to="/produtores" className="inline-flex items-center gap-1 text-xs uppercase tracking-wider text-white/70 hover:text-white">
             <ArrowLeft className="h-3 w-3" /> Produtores
           </Link>
-          <p className="mt-6 text-xs uppercase tracking-[0.25em] text-[var(--gold)]">
+          <p className="mt-6 text-xs uppercase tracking-[0.25em] text-[var(--brand-accent)]">
             {producer.region ?? producer.state} · {producer.country}
           </p>
           <h1 className="mt-2 font-display text-4xl md:text-6xl">{producer.name}</h1>
@@ -137,7 +137,7 @@ function ProducerPage() {
               </ul>
             </div>
           )}
-          <div className="rounded-lg border border-border bg-[var(--sand)] p-5">
+          <div className="rounded-lg border border-border bg-[var(--surface-soft)] p-5">
             <p className="eyebrow">Onde encontrar</p>
             <p className="mt-2 text-sm text-foreground/80">
               Cafés deste produtor estão disponíveis no nosso catálogo, com torra fresca e envio para todo o
@@ -149,7 +149,7 @@ function ProducerPage() {
 
       {/* Products */}
       {products && products.length > 0 && (
-        <section className="border-t border-border bg-[var(--sand)] py-16">
+        <section className="border-t border-border bg-[var(--surface-soft)] py-16">
           <div className="container mx-auto px-4 md:px-6">
             <p className="eyebrow">Cafés deste produtor</p>
             <h2 className="mt-2 font-display text-3xl text-primary md:text-4xl">No catálogo</h2>

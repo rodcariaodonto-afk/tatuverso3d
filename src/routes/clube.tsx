@@ -116,10 +116,10 @@ function ClubePage() {
       )}
 
       {/* Hero */}
-      <section className="bg-[var(--espresso)] py-20 text-[oklch(0.95_0.02_80)]">
+      <section className="bg-[var(--brand-dark)] py-20 text-[oklch(0.95_0.02_80)]">
         <div className="container mx-auto max-w-3xl px-4 text-center md:px-6">
-          <Crown className="mx-auto h-10 w-10 text-[var(--gold)]" />
-          <p className="eyebrow mt-4 !text-[var(--gold)]">Clube {tenantConfig.name}</p>
+          <Crown className="mx-auto h-10 w-10 text-[var(--brand-accent)]" />
+          <p className="eyebrow mt-4 !text-[var(--brand-accent)]">Clube {tenantConfig.name}</p>
           <h1 className="mt-3 font-display text-4xl md:text-6xl">
             Microlotes premiados, todo mês.
           </h1>
@@ -131,7 +131,7 @@ function ClubePage() {
       </section>
 
       {/* Benefícios */}
-      <section className="bg-[var(--sand)] py-16">
+      <section className="bg-[var(--surface-soft)] py-16">
         <div className="container mx-auto grid gap-8 px-4 md:grid-cols-3 md:px-6">
           {[
             { icon: Star, title: "Curadoria sensorial", desc: "Selecionados por baristas e Q-graders com pontuação SCA acima de 84." },
@@ -139,7 +139,7 @@ function ClubePage() {
             { icon: Clock, title: "Sem fidelidade", desc: "Pause, troque de plano ou cancele quando quiser, sem multa nem burocracia." },
           ].map((b) => (
             <div key={b.title} className="flex gap-4">
-              <b.icon className="mt-0.5 h-5 w-5 shrink-0 text-[var(--gold)]" />
+              <b.icon className="mt-0.5 h-5 w-5 shrink-0 text-[var(--brand-accent)]" />
               <div>
                 <p className="font-display text-lg text-primary">{b.title}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{b.desc}</p>
@@ -156,7 +156,7 @@ function ClubePage() {
           <h2 className="mt-2 font-display text-3xl text-primary md:text-4xl">
             Escolha o seu ritmo
           </h2>
-          <div className="gold-divider mx-auto mt-3" />
+          <div className="brand-divider mx-auto mt-3" />
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -165,12 +165,12 @@ function ClubePage() {
               key={plan.id}
               className={`relative flex flex-col rounded-xl border bg-card p-8 transition ${
                 plan.is_featured
-                  ? "border-[var(--gold)] shadow-[0_30px_60px_-30px_oklch(0.74_0.13_80/0.4)]"
+                  ? "border-[var(--brand-accent)] shadow-[0_30px_60px_-30px_oklch(0.74_0.13_80/0.4)]"
                   : "border-border"
               }`}
             >
               {plan.is_featured && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--gold)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--espresso)]">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--brand-accent)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--brand-dark)]">
                   <Crown className="mr-1 inline h-3 w-3" /> Mais escolhido
                 </div>
               )}
@@ -196,7 +196,7 @@ function ClubePage() {
                 <ul className="mt-6 flex-1 space-y-2 text-sm">
                   {plan.features.map((f: string) => (
                     <li key={f} className="flex items-start gap-2 text-foreground/80">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--gold)]" />
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-accent)]" />
                       {f}
                     </li>
                   ))}
@@ -208,7 +208,7 @@ function ClubePage() {
                 disabled={subscribingId === plan.id}
                 className={`mt-8 w-full rounded-full py-3 text-sm font-semibold uppercase tracking-wider transition disabled:opacity-60 ${
                   plan.is_featured
-                    ? "bg-[var(--gold)] text-[var(--espresso)] hover:brightness-110"
+                    ? "bg-[var(--brand-accent)] text-[var(--brand-dark)] hover:brightness-110"
                     : "bg-primary text-primary-foreground hover:bg-primary/90"
                 }`}
               >
@@ -223,7 +223,7 @@ function ClubePage() {
       </section>
 
       {/* FAQ */}
-      <section className="bg-[var(--sand)] py-16">
+      <section className="bg-[var(--surface-soft)] py-16">
         <div className="container mx-auto max-w-2xl px-4 md:px-6">
           <h2 className="font-display text-2xl text-primary">Dúvidas frequentes</h2>
           <div className="mt-6 space-y-5">

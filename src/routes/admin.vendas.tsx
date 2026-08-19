@@ -18,7 +18,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { formatBRL } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/admin/vendas")({
-  head: () => ({ meta: [{ title: "Vendas — Admin Café EX" }] }),
+  head: () => ({ meta: [{ title: "Vendas — Admin TatuVerso3D" }] }),
   component: VendasPage,
 });
 
@@ -32,7 +32,7 @@ function VendasPage() {
         <header>
           <p className="eyebrow">Administração</p>
           <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Vendas</h1>
-          <div className="gold-divider mt-3" />
+          <div className="brand-divider mt-3" />
         </header>
 
         <div className="mt-8 inline-flex rounded-full border border-border bg-card p-1">
@@ -108,7 +108,7 @@ function ResumoTab({ onAnalyze }: { onAnalyze: () => void }) {
         </div>
         <button
           onClick={onAnalyze}
-          className="text-sm font-semibold text-[var(--gold)] hover:underline"
+          className="text-sm font-semibold text-[var(--brand-accent)] hover:underline"
         >
           Veja as análises de vendas →
         </button>
@@ -147,7 +147,7 @@ function ResumoTab({ onAnalyze }: { onAnalyze: () => void }) {
                       {new Date(o.created_at).toLocaleString("pt-BR")}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="rounded-full bg-[var(--sand)] px-2 py-0.5 text-xs">{o.status}</span>
+                      <span className="rounded-full bg-[var(--surface-soft)] px-2 py-0.5 text-xs">{o.status}</span>
                     </td>
                     <td className="px-4 py-3 text-right font-medium text-primary">
                       {formatBRL(Number(o.total))}
@@ -312,7 +312,7 @@ function Card({ title, value, children, className }: { title: string; value?: st
   return (
     <div className={`rounded-lg border border-border bg-card p-6 ${className ?? ""}`}>
       <div className="mb-4">
-        <div className="mb-2 h-1 w-8 rounded bg-[var(--gold)]" />
+        <div className="mb-2 h-1 w-8 rounded bg-[var(--brand-accent)]" />
         <p className="text-sm text-muted-foreground">{title}</p>
         {value ? <p className="font-display text-2xl text-primary">{value}</p> : null}
       </div>

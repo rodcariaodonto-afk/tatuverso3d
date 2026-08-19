@@ -10,7 +10,7 @@ import { formatBRL } from "@/lib/cart-store";
 export const Route = createFileRoute("/vender-na-plataforma")({
   head: () => ({
     meta: [
-      { title: "Vender na Café EX — Para produtores" },
+      { title: "Vender na TatuVerso3D — Para produtores" },
       { name: "description", content: "Conecte sua fazenda ou torrefação a uma comunidade apaixonada por café especial." },
     ],
   }),
@@ -112,17 +112,17 @@ function SellPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-[var(--espresso)] py-20 text-[oklch(0.95_0.02_80)]">
+      <section className="bg-[var(--brand-dark)] py-20 text-[oklch(0.95_0.02_80)]">
         <div className="container mx-auto max-w-3xl px-4 text-center md:px-6">
-          <p className="eyebrow !text-[var(--gold)]">Para produtores</p>
-          <h1 className="mt-3 font-display text-4xl md:text-6xl">Venda seus cafés na Café EX.</h1>
+          <p className="eyebrow !text-[var(--brand-accent)]">Para produtores</p>
+          <h1 className="mt-3 font-display text-4xl md:text-6xl">Venda seus cafés na TatuVerso3D.</h1>
           <p className="mx-auto mt-5 max-w-2xl text-base text-white/80">
             Conectamos sua fazenda ou torrefação a uma comunidade apaixonada por café especial.
             Painel próprio, curadoria, ferramentas de venda e assinatura mensal acessível.
           </p>
           <a
             href="#candidatura"
-            className="mt-8 inline-flex rounded-full bg-[var(--gold)] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[var(--espresso)]"
+            className="mt-8 inline-flex rounded-full bg-[var(--brand-accent)] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[var(--brand-dark)]"
           >
             Enviar candidatura
           </a>
@@ -138,7 +138,7 @@ function SellPage() {
             { icon: TrendingUp, title: "Crescimento juntos", desc: "Marketing, conteúdo e clube de assinatura para alcançar mais clientes." },
           ].map((b) => (
             <div key={b.title} className="rounded-xl border border-border bg-card p-6">
-              <b.icon className="h-6 w-6 text-[var(--gold)]" />
+              <b.icon className="h-6 w-6 text-[var(--brand-accent)]" />
               <p className="mt-4 font-display text-xl text-primary">{b.title}</p>
               <p className="mt-2 text-sm text-muted-foreground">{b.desc}</p>
             </div>
@@ -148,23 +148,23 @@ function SellPage() {
 
       {/* Plans */}
       {(plans ?? []).length > 0 && (
-        <section className="bg-[var(--sand)] py-20">
+        <section className="bg-[var(--surface-soft)] py-20">
           <div className="container mx-auto px-4 md:px-6">
             <div className="text-center">
               <p className="eyebrow">Planos</p>
               <h2 className="mt-2 font-display text-3xl text-primary md:text-4xl">Escolha como vender</h2>
-              <div className="gold-divider mx-auto mt-3" />
+              <div className="brand-divider mx-auto mt-3" />
             </div>
             <div className="mt-10 grid gap-6 md:grid-cols-3">
               {(plans ?? []).map((plan: any) => (
                 <div
                   key={plan.id}
                   className={`relative rounded-xl border bg-card p-8 ${
-                    plan.is_featured ? "border-[var(--gold)] shadow-xl" : "border-border"
+                    plan.is_featured ? "border-[var(--brand-accent)] shadow-xl" : "border-border"
                   }`}
                 >
                   {plan.is_featured && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--gold)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--espresso)]">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--brand-accent)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--brand-dark)]">
                       Recomendado
                     </div>
                   )}
@@ -183,7 +183,7 @@ function SellPage() {
                     <ul className="mt-6 space-y-2 text-sm">
                       {plan.features.map((f: string) => (
                         <li key={f} className="flex items-start gap-2 text-foreground/80">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--gold)]" />
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-accent)]" />
                           {f}
                         </li>
                       ))}
@@ -201,7 +201,7 @@ function SellPage() {
         <div className="text-center">
           <p className="eyebrow">Candidatura</p>
           <h2 className="mt-2 font-display text-3xl text-primary md:text-4xl">Faça parte da plataforma</h2>
-          <div className="gold-divider mx-auto mt-3" />
+          <div className="brand-divider mx-auto mt-3" />
           <p className="mt-4 text-sm text-muted-foreground">
             Preencha o formulário abaixo. Nossa equipe entrará em contato em até 3 dias úteis.
           </p>
