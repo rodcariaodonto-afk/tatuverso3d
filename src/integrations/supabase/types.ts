@@ -869,41 +869,107 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_events: {
+        Row: {
+          created_at: string
+          event_id: string
+          event_type: string | null
+          id: string
+          payload: Json
+          process_error: string | null
+          processed_at: string | null
+          provider: string
+          provider_payment_id: string | null
+          signature_valid: boolean
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          event_type?: string | null
+          id?: string
+          payload?: Json
+          process_error?: string | null
+          processed_at?: string | null
+          provider?: string
+          provider_payment_id?: string | null
+          signature_valid?: boolean
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          event_type?: string | null
+          id?: string
+          payload?: Json
+          process_error?: string | null
+          processed_at?: string | null
+          provider?: string
+          provider_payment_id?: string | null
+          signature_valid?: boolean
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number
           created_at: string
+          expires_at: string | null
+          failure_reason: string | null
           id: string
+          idempotency_key: string | null
+          installments: number | null
           method: string | null
           order_id: string
+          payer_document: string | null
           provider: string
           provider_payment_id: string | null
+          provider_status: string | null
+          qr_code: string | null
+          qr_code_base64: string | null
           raw_payload: Json | null
           status: Database["public"]["Enums"]["payment_status"]
+          ticket_url: string | null
           updated_at: string
         }
         Insert: {
           amount: number
           created_at?: string
+          expires_at?: string | null
+          failure_reason?: string | null
           id?: string
+          idempotency_key?: string | null
+          installments?: number | null
           method?: string | null
           order_id: string
+          payer_document?: string | null
           provider: string
           provider_payment_id?: string | null
+          provider_status?: string | null
+          qr_code?: string | null
+          qr_code_base64?: string | null
           raw_payload?: Json | null
           status?: Database["public"]["Enums"]["payment_status"]
+          ticket_url?: string | null
           updated_at?: string
         }
         Update: {
           amount?: number
           created_at?: string
+          expires_at?: string | null
+          failure_reason?: string | null
           id?: string
+          idempotency_key?: string | null
+          installments?: number | null
           method?: string | null
           order_id?: string
+          payer_document?: string | null
           provider?: string
           provider_payment_id?: string | null
+          provider_status?: string | null
+          qr_code?: string | null
+          qr_code_base64?: string | null
           raw_payload?: Json | null
           status?: Database["public"]["Enums"]["payment_status"]
+          ticket_url?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -1577,6 +1643,7 @@ export type Database = {
           published_at: string | null
           recommended_brew: Database["public"]["Enums"]["brew_method"][] | null
           requires_separate_package: boolean
+          reserved_quantity: number
           roast_date: string | null
           roast_level: Database["public"]["Enums"]["roast_level"] | null
           safety_notes: string | null
@@ -1639,6 +1706,7 @@ export type Database = {
           published_at?: string | null
           recommended_brew?: Database["public"]["Enums"]["brew_method"][] | null
           requires_separate_package?: boolean
+          reserved_quantity?: number
           roast_date?: string | null
           roast_level?: Database["public"]["Enums"]["roast_level"] | null
           safety_notes?: string | null
@@ -1701,6 +1769,7 @@ export type Database = {
           published_at?: string | null
           recommended_brew?: Database["public"]["Enums"]["brew_method"][] | null
           requires_separate_package?: boolean
+          reserved_quantity?: number
           roast_date?: string | null
           roast_level?: Database["public"]["Enums"]["roast_level"] | null
           safety_notes?: string | null
@@ -2169,6 +2238,77 @@ export type Database = {
         }
         Relationships: []
       }
+      stock_reservations: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          order_id: string
+          order_item_id: string | null
+          product_id: string
+          quantity: number
+          released_reason: string | null
+          status: string
+          updated_at: string
+          variant_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          order_id: string
+          order_item_id?: string | null
+          product_id: string
+          quantity: number
+          released_reason?: string | null
+          status?: string
+          updated_at?: string
+          variant_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          order_id?: string
+          order_item_id?: string | null
+          product_id?: string
+          quantity?: number
+          released_reason?: string | null
+          status?: string
+          updated_at?: string
+          variant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_reservations_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_reservations_order_item_id_fkey"
+            columns: ["order_item_id"]
+            isOneToOne: false
+            referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_reservations_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_reservations_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscription_plans: {
         Row: {
           created_at: string
@@ -2358,7 +2498,9 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      commit_stock: { Args: { _order_id: string }; Returns: undefined }
       current_cart_session: { Args: never; Returns: string }
+      expire_stock_reservations: { Args: never; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -2373,6 +2515,14 @@ export type Database = {
           product_id: string
           sold: number
         }[]
+      }
+      release_stock: {
+        Args: { _order_id: string; _reason?: string }
+        Returns: undefined
+      }
+      reserve_stock: {
+        Args: { _minutes?: number; _order_id: string }
+        Returns: undefined
       }
     }
     Enums: {
