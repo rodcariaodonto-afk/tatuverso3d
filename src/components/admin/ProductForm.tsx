@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Trash2, Plus, Upload, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getVariantCosts, saveVariantCosts } from "@/lib/admin-costs.functions";
 import { PRODUCT_TYPE_LABEL, OPTION_TYPE_LABEL } from "@/hooks/useProducts";
 
 /* ── tipos ─────────────────────────────────────────────────────────────── */
@@ -198,7 +200,7 @@ export function ProductForm({ productId }: ProductFormProps) {
           product_categories ( category_id ),
           product_options ( id, name, option_type, is_required, sort_order,
             product_option_values ( id, label, value, color_hex, price_adjustment, sort_order ) ),
-          product_variants ( id, name, sku, barcode, price, compare_at_price, cost_price,
+          product_variants ( id, name, sku, barcode, price, compare_at_price,
             stock_quantity, low_stock_threshold, dimensions_text, weight_grams, image_url,
             is_default, is_active, sort_order,
             variant_option_values ( option_value_id ) ),
