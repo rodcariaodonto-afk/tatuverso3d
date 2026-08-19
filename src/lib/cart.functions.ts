@@ -72,11 +72,22 @@ export const validateCart = createServerFn({ method: "POST" })
 
     // Usuário autenticado (opcional): necessário apenas para validar arquivos enviados.
     let userId: string | null = null;
+    let userClient: ReturnType<typeof createClient> | null = null;
     const authHeader = getRequestHeader("authorization") ?? getRequestHeader("Authorization");
     const token = authHeader?.replace(/^Bearer\s+/i, "").trim();
     if (token) {
       const { data: userData } = await supabase.auth.getUser(token);
       userId = userData.user?.id ?? null;
+      if (userId) {
+        userClient = createClient(
+          process.env["SUPABASE_URL"]!,
+          process.env["SUPABASE_PUBLISHABLE_KEY"]!,
+          {
+            auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+            global: { headers: { Authorization: `Bearer ${token}` } },
+          },
+        );
+      }
     }
 
     const productIds = [...new Set(data.items.map((i) => i.product_id))];
@@ -182,16 +193,17 @@ export const validateCart = createServerFn({ method: "POST" })
           }
           case "file":
           case "image": {
-            if (!userId) throw new Error(`${f.label}: entre na sua conta para enviar arquivos`);
+            if (!userId || !userClient)
+              throw new Error(`${f.label}: entre na sua conta para enviar arquivos`);
             const path = value.replace(/^\/+/, "").replace(`${CUSTOM_BUCKET}/`, "");
             if (!path.startsWith(`${userId}/`) || path.includes("..")) {
               throw new Error(`${f.label}: arquivo inválido`);
             }
             const folder = path.slice(0, path.lastIndexOf("/"));
             const file = path.slice(path.lastIndexOf("/") + 1);
-            const { data: listed, error: listErr } = await supabase.auth
-              ? await supabase.storage.from(CUSTOM_BUCKET).list(folder, { search: file, limit: 100 })
-              : { data: null, error: null as any };
+            const { data: listed, error: listErr } = await userClient.storage
+              .from(CUSTOM_BUCKET)
+              .list(folder, { search: file, limit: 100 });
             if (listErr || !listed?.some((o: any) => o.name === file)) {
               throw new Error(`${f.label}: arquivo não encontrado para o seu usuário`);
             }
