@@ -40,6 +40,17 @@ export type ValidatedCartItem = {
 };
 
 const CUSTOM_BUCKET = "customization-uploads";
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+const ALLOWED_UPLOAD_MIME = [
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/svg+xml",
+  "application/pdf",
+  "model/stl",
+  "application/sla",
+  "application/octet-stream",
+];
 
 function optionValues(raw: unknown): string[] {
   if (!Array.isArray(raw)) return [];
