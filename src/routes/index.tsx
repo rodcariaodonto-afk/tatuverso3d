@@ -165,14 +165,18 @@ function HomePage() {
               key={c.name}
               to="/catalogo"
               search={{ q: c.q } as never}
-              className="group rounded-2xl border border-border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+              className="group flex h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/15 text-accent">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent/15 text-accent">
                 <c.icon className="h-6 w-6" />
               </div>
-              <h3 className="mt-4 font-display text-xl text-foreground">{c.name}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{c.desc}</p>
-              <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+              <h3 className="mt-4 line-clamp-2 min-h-[1.6em] font-display text-xl leading-tight text-foreground">
+                {c.name}
+              </h3>
+              <p className="mt-1 line-clamp-2 min-h-[2.5em] text-sm leading-tight text-muted-foreground">
+                {c.desc}
+              </p>
+              <span className="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-semibold text-primary">
                 Ver produtos <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </span>
             </Link>
@@ -204,7 +208,7 @@ function HomePage() {
           {isLoading ? (
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="aspect-[4/5] animate-pulse rounded-2xl bg-muted" />
+                <div key={i} className="aspect-square animate-pulse rounded-2xl bg-muted" />
               ))}
             </div>
           ) : (featured ?? []).length === 0 ? (

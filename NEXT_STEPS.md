@@ -1,31 +1,37 @@
 # TatuVerso3D — Próximos passos
 
-## Onda 1 — Identidade visual (concluída)
-Marca, paleta Cosmic Blue, tipografia Fredoka/Nunito Sans, navegação, home, páginas institucionais.
+## Concluído
 
-## Onda 2 — Produtos 3D, variações, personalização e estoque (concluída)
-- Schema 3D: `product_options`, `product_option_values`, `product_variants`, `variant_option_values`, `product_customization_fields`, `inventory_movements`.
-- `products` expandida (tipo, material, dimensões, prazo, sob encomenda, personalizável, sensorial, SEO, controle de estoque).
-- Bucket privado `customization-uploads` com RLS por usuário.
-- Loja com filtros de tipo, material, cor, personalizável, estoque e sob encomenda; ordenação por mais vendidos.
-- Página `/produto/$slug` com galeria, seletores de variação, campos de personalização e ficha técnica.
-- Carrinho e checkout com variações e personalizações; validação de preço/estoque no servidor.
-- Admin: listagem com filtros (tipo, material, estoque baixo, personalizáveis) e formulário em abas
-  (Básico, Preço, Categorias, Imagens, Variações, Personalização, Estoque, SEO) com geração de combinações
-  e registro de movimentações de estoque.
+- **Onda 1** — Identidade visual Cosmic Blue, navegação, home, páginas institucionais.
+- **Onda 2** — Produtos 3D, variações, personalização, estoque e painel administrativo.
+- **Hotfix pós-Onda 2** — Proteção de `cost_price`, validação de personalização no servidor,
+  buckets em migração idempotente e unicidade cruzada de SKU.
+- **Onda 3A** — Cards padronizados, checkout profissional em etapas, modelagem de entrega
+  (dimensões, pacotes, cotações, rastreio) e arquitetura de provedores de frete
+  (Manual, Retirada, Melhor Envio preparado para sandbox) com painel `/admin/entrega`.
 
-## Hotfix de segurança pós-Onda 2 (concluído)
-- `cost_price` inacessível pela Data API (grants por coluna) e exposto apenas via server function admin.
-- `validateCart` valida integralmente as personalizações e recalcula todos os preços no servidor.
-- Buckets, políticas de storage e unicidade cruzada de SKU garantidas por migração.
-- Detalhes em `TATUVERSO3D_PROJECT.md`.
+## Próxima etapa
 
-## Onda 3 — Limpeza do esquema legado e operação
-Próxima etapa:
-1. Remover com segurança colunas e tabelas legadas de café (`roast_level`, `score`, `acidity`, `body`,
-   `sweetness`, `intensity`, `grind_option`, `farms`, `producers`, `sensory_notes`, `subscriptions`,
-   `producer_plans`, `producer_applications`, `b2b_leads`, `private_label_projects`) após migração de dados.
-2. Reservas de estoque no checkout e baixa automática na confirmação do pagamento.
-3. Painel de pedidos com produção (fila de impressão, status por item) e etiquetas de envio.
-4. Relatórios: vendas por tipo/material, giro de estoque, margem por variação (custo x preço).
-5. Revisão final de RLS, linter de segurança e publicação.
+### Onda 3B — Pagamentos Mercado Pago, webhooks e baixa de estoque
+
+1. Checkout Transparente com Pix (QR + copia e cola) e cartão (tokenização no navegador,
+   nenhum dado sensível trafega pelo backend da loja).
+2. Server functions de criação de pagamento e consulta de status; nenhuma credencial no cliente.
+3. Webhook em `/api/public/webhooks/mercadopago` com verificação de assinatura, idempotência
+   e reconciliação de `payments` e `orders`.
+4. Baixa e reserva de estoque vinculadas ao pagamento aprovado, com registro em
+   `inventory_movements` e liberação automática de reservas expiradas.
+5. Fila de produção por item (`production_status`) e transições auditadas.
+6. Testes ponta a ponta em ambiente de teste — nenhuma cobrança real.
+
+Pré-requisito: credenciais de teste do Mercado Pago (`MERCADOPAGO_ACCESS_TOKEN` e chave pública).
+
+### Onda 3C — Operação, área do cliente e envio
+
+- Painel de pedidos com etiquetas, rastreio e histórico de status.
+- Área do cliente com acompanhamento de produção e entrega.
+- Integração real do Melhor Envio (token sandbox) e emissão de etiqueta.
+
+### Onda 4 — Limpeza segura do esquema legado CAFEX
+
+Somente após 3B e 3C estáveis, com backup e migração reversível.
