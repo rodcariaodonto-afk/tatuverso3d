@@ -5,6 +5,8 @@ import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { CheckCircle2, Loader2, Copy, QrCode, ChevronRight, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { validateCart } from "@/lib/cart.functions";
 import { formatBRL, useCart, type CartItem } from "@/lib/cart-store";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
@@ -74,6 +76,7 @@ function CheckoutPage() {
   const [selectedShipping, setSelectedShipping] = useState<ShippingOption | null>(null);
   const [pixResult, setPixResult] = useState<PixResult | null>(null);
   const [paying, setPaying] = useState(false);
+  const validateCartFn = useServerFn(validateCart);
 
   // Auto-advance de identity se já logado
   useEffect(() => {
@@ -135,6 +138,24 @@ function CheckoutPage() {
     if (!identity || !address || !selectedShipping) return;
     setPaying(true);
     try {
+      // Revalida preços e estoque no servidor antes de criar o pagamento.
+      const validated = await validateCartFn({
+        data: {
+          items: items.map((i) => ({
+            product_id: i.product_id,
+            variant_id: i.variant_id,
+            quantity: i.quantity,
+            customization_field_ids: i.customizations.map((c) => c.field_id),
+          })),
+        },
+      });
+      if (Math.abs(validated.subtotal - subtotal) > 0.01) {
+        toast.error("Os preços foram atualizados", {
+          description: "Revise o carrinho antes de finalizar.",
+        });
+        setPaying(false);
+        return;
+      }
       const { data, error } = await supabase.functions.invoke("create-payment-preference", {
         body: {
           tenant_id: "default",
@@ -146,13 +167,13 @@ function CheckoutPage() {
           items: items.map((i) => ({
             variant_id: i.variant_id,
             product_id: i.product_id,
-            producer_id: i.producer_id ?? null,
             product_name: i.name,
             unit_price: i.unit_price,
             quantity: i.quantity,
-            grind_option: i.grind_option,
-            weight_grams: i.weight_grams ?? 250,
             variant_label: i.variant_label,
+            customization_data: Object.fromEntries(
+              i.customizations.map((c) => [c.label, c.value]),
+            ),
           })),
           subtotal,
           shipping_total: selectedShipping.price,
@@ -406,7 +427,7 @@ function IdentityStep({ onConfirm }: { onConfirm: (id: Identity) => void }) {
 
 // ── Step 2: Endereço ───────────────────────────────────────────────────────────
 
-type CartItemMin = { variant_id: string; weight_grams: number | null; unit_price: number; quantity: number };
+type CartItemMin = { variant_id: string | null; unit_price: number; quantity: number };
 
 function AddressStep({
   cartItems,
@@ -466,7 +487,6 @@ function AddressStep({
           cep_destino: addr.cep,
           items: cartItems.map((i) => ({
             variant_id: i.variant_id,
-            weight_grams: i.weight_grams ?? 250,
             unit_price: i.unit_price,
             quantity: i.quantity,
           })),

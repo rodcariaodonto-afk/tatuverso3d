@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { Link } from "@tanstack/react-router";
 import { X, Trash2, ShoppingBag } from "lucide-react";
-import { useCart, formatBRL, GRIND_LABEL } from "@/lib/cart-store";
+import { useCart, formatBRL } from "@/lib/cart-store";
 
 type DrawerState = {
   open: boolean;
@@ -53,34 +53,41 @@ export function CartDrawer() {
           <>
             <div className="flex-1 divide-y divide-border overflow-auto px-5">
               {items.map((it) => (
-                <div key={it.variant_id} className="flex gap-3 py-4">
+                <div key={it.key} className="flex gap-3 py-4">
                   <div className="h-16 w-16 shrink-0 overflow-hidden rounded bg-muted">
                     {it.cover_url && <img src={it.cover_url} alt={it.name} className="h-full w-full object-cover" />}
                   </div>
                   <div className="flex-1">
                     <Link
-                      to="/cafe/$slug"
+                      to="/produto/$slug"
                       params={{ slug: it.slug }}
                       onClick={() => setOpen(false)}
                       className="text-sm font-medium text-primary hover:underline"
                     >
                       {it.name}
                     </Link>
-                    <p className="text-xs text-muted-foreground">
-                      {it.weight_grams ? `${it.weight_grams}g · ` : ""}
-                      {GRIND_LABEL[it.grind_option]}
-                    </p>
+                    {it.variant_label && (
+                      <p className="text-xs text-muted-foreground">{it.variant_label}</p>
+                    )}
+                    {it.customizations.map((c) => (
+                      <p key={c.field_id} className="text-[11px] text-muted-foreground">
+                        {c.label}: {c.value.includes("/") ? c.value.split("/").pop() : c.value}
+                      </p>
+                    ))}
+                    {it.made_to_order && (
+                      <p className="text-[11px] font-semibold text-[var(--brand-accent)]">Sob encomenda</p>
+                    )}
                     <div className="mt-2 flex items-center justify-between">
                       <div className="flex items-center rounded-full border border-border">
-                        <button onClick={() => setQty(it.variant_id, it.quantity - 1)} className="px-2 text-sm">−</button>
+                        <button onClick={() => setQty(it.key, it.quantity - 1)} className="px-2 text-sm">−</button>
                         <span className="w-6 text-center text-xs font-semibold">{it.quantity}</span>
-                        <button onClick={() => setQty(it.variant_id, it.quantity + 1)} className="px-2 text-sm">+</button>
+                        <button onClick={() => setQty(it.key, it.quantity + 1)} className="px-2 text-sm">+</button>
                       </div>
                       <p className="text-sm font-semibold text-primary">{formatBRL(it.unit_price * it.quantity)}</p>
                     </div>
                   </div>
                   <button
-                    onClick={() => remove(it.variant_id)}
+                    onClick={() => remove(it.key)}
                     aria-label="Remover"
                     className="self-start text-muted-foreground hover:text-destructive"
                   >

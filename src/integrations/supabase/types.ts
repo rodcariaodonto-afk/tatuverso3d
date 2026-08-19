@@ -334,31 +334,54 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          icon: string | null
           id: string
           image_url: string | null
+          is_active: boolean
+          is_featured: boolean
           name: string
+          parent_id: string | null
           slug: string
           sort_order: number | null
+          updated_at: string
         }
         Insert: {
           created_at?: string
           description?: string | null
+          icon?: string | null
           id?: string
           image_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean
           name: string
+          parent_id?: string | null
           slug: string
           sort_order?: number | null
+          updated_at?: string
         }
         Update: {
           created_at?: string
           description?: string | null
+          icon?: string | null
           id?: string
           image_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean
           name?: string
+          parent_id?: string | null
           slug?: string
           sort_order?: number | null
+          updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       corporate_quote_requests: {
         Row: {
@@ -539,10 +562,15 @@ export type Database = {
           id: string
           movement_type: string
           notes: string | null
+          order_id: string | null
+          previous_quantity: number | null
+          product_id: string | null
           quantity: number
+          reason: string | null
           reference_id: string | null
           reference_type: string | null
-          variant_id: string
+          resulting_quantity: number | null
+          variant_id: string | null
         }
         Insert: {
           created_at?: string
@@ -550,10 +578,15 @@ export type Database = {
           id?: string
           movement_type: string
           notes?: string | null
+          order_id?: string | null
+          previous_quantity?: number | null
+          product_id?: string | null
           quantity: number
+          reason?: string | null
           reference_id?: string | null
           reference_type?: string | null
-          variant_id: string
+          resulting_quantity?: number | null
+          variant_id?: string | null
         }
         Update: {
           created_at?: string
@@ -561,12 +594,31 @@ export type Database = {
           id?: string
           movement_type?: string
           notes?: string | null
+          order_id?: string | null
+          previous_quantity?: number | null
+          product_id?: string | null
           quantity?: number
+          reason?: string | null
           reference_id?: string | null
           reference_type?: string | null
-          variant_id?: string
+          resulting_quantity?: number | null
+          variant_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "inventory_movements_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "inventory_movements_variant_id_fkey"
             columns: ["variant_id"]
@@ -579,45 +631,60 @@ export type Database = {
       order_items: {
         Row: {
           created_at: string
+          customization_data: Json
           grind_option: Database["public"]["Enums"]["grind_option"] | null
           id: string
           item_status: Database["public"]["Enums"]["order_status"] | null
           order_id: string
-          producer_id: string
+          producer_id: string | null
           product_id: string
           product_name: string
+          production_notes: string | null
+          production_status: string
           quantity: number
+          sku_snapshot: string | null
           total_price: number
           unit_price: number
           variant_id: string | null
+          variant_name_snapshot: string | null
         }
         Insert: {
           created_at?: string
+          customization_data?: Json
           grind_option?: Database["public"]["Enums"]["grind_option"] | null
           id?: string
           item_status?: Database["public"]["Enums"]["order_status"] | null
           order_id: string
-          producer_id: string
+          producer_id?: string | null
           product_id: string
           product_name: string
+          production_notes?: string | null
+          production_status?: string
           quantity: number
+          sku_snapshot?: string | null
           total_price: number
           unit_price: number
           variant_id?: string | null
+          variant_name_snapshot?: string | null
         }
         Update: {
           created_at?: string
+          customization_data?: Json
           grind_option?: Database["public"]["Enums"]["grind_option"] | null
           id?: string
           item_status?: Database["public"]["Enums"]["order_status"] | null
           order_id?: string
-          producer_id?: string
+          producer_id?: string | null
           product_id?: string
           product_name?: string
+          production_notes?: string | null
+          production_status?: string
           quantity?: number
+          sku_snapshot?: string | null
           total_price?: number
           unit_price?: number
           variant_id?: string | null
+          variant_name_snapshot?: string | null
         }
         Relationships: [
           {
@@ -1135,6 +1202,68 @@ export type Database = {
           },
         ]
       }
+      product_customization_fields: {
+        Row: {
+          created_at: string
+          field_type: Database["public"]["Enums"]["customization_field_type"]
+          help_text: string | null
+          id: string
+          is_active: boolean
+          is_required: boolean
+          label: string
+          max_length: number | null
+          min_length: number | null
+          options: Json
+          placeholder: string | null
+          price_adjustment: number
+          product_id: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          field_type?: Database["public"]["Enums"]["customization_field_type"]
+          help_text?: string | null
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          label: string
+          max_length?: number | null
+          min_length?: number | null
+          options?: Json
+          placeholder?: string | null
+          price_adjustment?: number
+          product_id: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          field_type?: Database["public"]["Enums"]["customization_field_type"]
+          help_text?: string | null
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          label?: string
+          max_length?: number | null
+          min_length?: number | null
+          options?: Json
+          placeholder?: string | null
+          price_adjustment?: number
+          product_id?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_customization_fields_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_images: {
         Row: {
           alt: string | null
@@ -1143,6 +1272,7 @@ export type Database = {
           product_id: string
           sort_order: number | null
           url: string
+          variant_id: string | null
         }
         Insert: {
           alt?: string | null
@@ -1151,6 +1281,7 @@ export type Database = {
           product_id: string
           sort_order?: number | null
           url: string
+          variant_id?: string | null
         }
         Update: {
           alt?: string | null
@@ -1159,10 +1290,103 @@ export type Database = {
           product_id?: string
           sort_order?: number | null
           url?: string
+          variant_id?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_images_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_option_values: {
+        Row: {
+          color_hex: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          label: string
+          option_id: string
+          price_adjustment: number
+          sort_order: number
+          value: string
+        }
+        Insert: {
+          color_hex?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          label: string
+          option_id: string
+          price_adjustment?: number
+          sort_order?: number
+          value: string
+        }
+        Update: {
+          color_hex?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          label?: string
+          option_id?: string
+          price_adjustment?: number
+          sort_order?: number
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_option_values_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "product_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_options: {
+        Row: {
+          created_at: string
+          id: string
+          is_required: boolean
+          name: string
+          option_type: Database["public"]["Enums"]["product_option_type"]
+          product_id: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_required?: boolean
+          name: string
+          option_type?: Database["public"]["Enums"]["product_option_type"]
+          product_id: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_required?: boolean
+          name?: string
+          option_type?: Database["public"]["Enums"]["product_option_type"]
+          product_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_options_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
@@ -1202,43 +1426,70 @@ export type Database = {
       }
       product_variants: {
         Row: {
+          barcode: string | null
           compare_at_price: number | null
+          cost_price: number | null
           created_at: string
-          grind_option: Database["public"]["Enums"]["grind_option"]
+          dimensions_text: string | null
+          grind_option: Database["public"]["Enums"]["grind_option"] | null
           id: string
+          image_url: string | null
+          is_active: boolean
           is_default: boolean | null
+          low_stock_threshold: number
+          name: string | null
           price: number
           product_id: string
+          reserved_quantity: number
           sku: string | null
+          sort_order: number
           stock_quantity: number
           updated_at: string
-          weight_grams: number
+          weight_grams: number | null
         }
         Insert: {
+          barcode?: string | null
           compare_at_price?: number | null
+          cost_price?: number | null
           created_at?: string
-          grind_option?: Database["public"]["Enums"]["grind_option"]
+          dimensions_text?: string | null
+          grind_option?: Database["public"]["Enums"]["grind_option"] | null
           id?: string
+          image_url?: string | null
+          is_active?: boolean
           is_default?: boolean | null
+          low_stock_threshold?: number
+          name?: string | null
           price: number
           product_id: string
+          reserved_quantity?: number
           sku?: string | null
+          sort_order?: number
           stock_quantity?: number
           updated_at?: string
-          weight_grams: number
+          weight_grams?: number | null
         }
         Update: {
+          barcode?: string | null
           compare_at_price?: number | null
+          cost_price?: number | null
           created_at?: string
-          grind_option?: Database["public"]["Enums"]["grind_option"]
+          dimensions_text?: string | null
+          grind_option?: Database["public"]["Enums"]["grind_option"] | null
           id?: string
+          image_url?: string | null
+          is_active?: boolean
           is_default?: boolean | null
+          low_stock_threshold?: number
+          name?: string | null
           price?: number
           product_id?: string
+          reserved_quantity?: number
           sku?: string | null
+          sort_order?: number
           stock_quantity?: number
           updated_at?: string
-          weight_grams?: number
+          weight_grams?: number | null
         }
         Relationships: [
           {
@@ -1253,111 +1504,165 @@ export type Database = {
       products: {
         Row: {
           acidity: number | null
+          age_recommendation: string | null
+          allow_backorder: boolean
           altitude_meters: number | null
           badges: string[] | null
           body: number | null
+          care_instructions: string | null
+          color_notes: string | null
           compare_at_price: number | null
           cover_url: string | null
           created_at: string
           description: string | null
+          dimensions_text: string | null
           farm_id: string | null
           grind_options: Database["public"]["Enums"]["grind_option"][] | null
           id: string
+          included_items: string | null
           intensity: number | null
           is_featured: boolean | null
+          is_personalizable: boolean
+          is_sensory: boolean
           is_subscription_available: boolean | null
+          low_stock_threshold: number
+          made_to_order: boolean
+          material_description: string | null
           name: string
           origin_country: string | null
           origin_region: string | null
           price: number
           process: string | null
-          producer_id: string
+          producer_id: string | null
+          product_type: Database["public"]["Enums"]["product_type_3d"]
+          production_time_days: number | null
           published_at: string | null
           recommended_brew: Database["public"]["Enums"]["brew_method"][] | null
           roast_date: string | null
           roast_level: Database["public"]["Enums"]["roast_level"] | null
+          safety_notes: string | null
           score: number | null
+          seo_description: string | null
+          seo_title: string | null
           short_description: string | null
           sku: string | null
           slug: string
+          sort_order: number
           status: Database["public"]["Enums"]["product_status"]
           stock_quantity: number
           sweetness: number | null
           tasting_notes_text: string | null
+          track_inventory: boolean
           updated_at: string
           variety: string | null
           weight_grams: number | null
         }
         Insert: {
           acidity?: number | null
+          age_recommendation?: string | null
+          allow_backorder?: boolean
           altitude_meters?: number | null
           badges?: string[] | null
           body?: number | null
+          care_instructions?: string | null
+          color_notes?: string | null
           compare_at_price?: number | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
+          dimensions_text?: string | null
           farm_id?: string | null
           grind_options?: Database["public"]["Enums"]["grind_option"][] | null
           id?: string
+          included_items?: string | null
           intensity?: number | null
           is_featured?: boolean | null
+          is_personalizable?: boolean
+          is_sensory?: boolean
           is_subscription_available?: boolean | null
+          low_stock_threshold?: number
+          made_to_order?: boolean
+          material_description?: string | null
           name: string
           origin_country?: string | null
           origin_region?: string | null
           price: number
           process?: string | null
-          producer_id: string
+          producer_id?: string | null
+          product_type?: Database["public"]["Enums"]["product_type_3d"]
+          production_time_days?: number | null
           published_at?: string | null
           recommended_brew?: Database["public"]["Enums"]["brew_method"][] | null
           roast_date?: string | null
           roast_level?: Database["public"]["Enums"]["roast_level"] | null
+          safety_notes?: string | null
           score?: number | null
+          seo_description?: string | null
+          seo_title?: string | null
           short_description?: string | null
           sku?: string | null
           slug: string
+          sort_order?: number
           status?: Database["public"]["Enums"]["product_status"]
           stock_quantity?: number
           sweetness?: number | null
           tasting_notes_text?: string | null
+          track_inventory?: boolean
           updated_at?: string
           variety?: string | null
           weight_grams?: number | null
         }
         Update: {
           acidity?: number | null
+          age_recommendation?: string | null
+          allow_backorder?: boolean
           altitude_meters?: number | null
           badges?: string[] | null
           body?: number | null
+          care_instructions?: string | null
+          color_notes?: string | null
           compare_at_price?: number | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
+          dimensions_text?: string | null
           farm_id?: string | null
           grind_options?: Database["public"]["Enums"]["grind_option"][] | null
           id?: string
+          included_items?: string | null
           intensity?: number | null
           is_featured?: boolean | null
+          is_personalizable?: boolean
+          is_sensory?: boolean
           is_subscription_available?: boolean | null
+          low_stock_threshold?: number
+          made_to_order?: boolean
+          material_description?: string | null
           name?: string
           origin_country?: string | null
           origin_region?: string | null
           price?: number
           process?: string | null
-          producer_id?: string
+          producer_id?: string | null
+          product_type?: Database["public"]["Enums"]["product_type_3d"]
+          production_time_days?: number | null
           published_at?: string | null
           recommended_brew?: Database["public"]["Enums"]["brew_method"][] | null
           roast_date?: string | null
           roast_level?: Database["public"]["Enums"]["roast_level"] | null
+          safety_notes?: string | null
           score?: number | null
+          seo_description?: string | null
+          seo_title?: string | null
           short_description?: string | null
           sku?: string | null
           slug?: string
+          sort_order?: number
           status?: Database["public"]["Enums"]["product_status"]
           stock_quantity?: number
           sweetness?: number | null
           tasting_notes_text?: string | null
+          track_inventory?: boolean
           updated_at?: string
           variety?: string | null
           weight_grams?: number | null
@@ -1742,6 +2047,36 @@ export type Database = {
         }
         Relationships: []
       }
+      variant_option_values: {
+        Row: {
+          option_value_id: string
+          variant_id: string
+        }
+        Insert: {
+          option_value_id: string
+          variant_id: string
+        }
+        Update: {
+          option_value_id?: string
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "variant_option_values_option_value_id_fkey"
+            columns: ["option_value_id"]
+            isOneToOne: false
+            referencedRelation: "product_option_values"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "variant_option_values_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -1756,6 +2091,13 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      product_sales_counts: {
+        Args: never
+        Returns: {
+          product_id: string
+          sold: number
+        }[]
+      }
     }
     Enums: {
       app_role: "customer" | "producer" | "admin" | "support"
@@ -1781,6 +2123,15 @@ export type Database = {
         | "accepted"
         | "rejected"
         | "expired"
+      customization_field_type:
+        | "short_text"
+        | "long_text"
+        | "select"
+        | "color"
+        | "number"
+        | "file"
+        | "image"
+        | "checkbox"
       grind_option:
         | "whole_bean"
         | "espresso"
@@ -1806,12 +2157,23 @@ export type Database = {
         | "delivered"
         | "cancelled"
       producer_status: "pending_review" | "active" | "suspended" | "rejected"
+      product_option_type: "color" | "size" | "material" | "finish" | "other"
       product_status:
         | "draft"
         | "pending_review"
         | "active"
         | "rejected"
         | "archived"
+      product_type_3d:
+        | "sensory"
+        | "decoration"
+        | "utility"
+        | "gift"
+        | "collectible"
+        | "articulated"
+        | "organizer"
+        | "personalized"
+        | "other"
       roast_level: "light" | "medium_light" | "medium" | "medium_dark" | "dark"
       subscription_status: "active" | "paused" | "cancelled" | "pending"
     }
@@ -1967,6 +2329,16 @@ export const Constants = {
         "rejected",
         "expired",
       ],
+      customization_field_type: [
+        "short_text",
+        "long_text",
+        "select",
+        "color",
+        "number",
+        "file",
+        "image",
+        "checkbox",
+      ],
       grind_option: [
         "whole_bean",
         "espresso",
@@ -1995,12 +2367,24 @@ export const Constants = {
         "cancelled",
       ],
       producer_status: ["pending_review", "active", "suspended", "rejected"],
+      product_option_type: ["color", "size", "material", "finish", "other"],
       product_status: [
         "draft",
         "pending_review",
         "active",
         "rejected",
         "archived",
+      ],
+      product_type_3d: [
+        "sensory",
+        "decoration",
+        "utility",
+        "gift",
+        "collectible",
+        "articulated",
+        "organizer",
+        "personalized",
+        "other",
       ],
       roast_level: ["light", "medium_light", "medium", "medium_dark", "dark"],
       subscription_status: ["active", "paused", "cancelled", "pending"],

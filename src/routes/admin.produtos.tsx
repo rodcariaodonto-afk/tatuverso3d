@@ -1,128 +1,44 @@
-import { createFileRoute, useRouterState } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Plus, Search, Star, Trash2, Pencil, Archive, X, Loader2, Image as ImageIcon } from "lucide-react";
+import {
+  Plus, Search, Star, Trash2, Pencil, Archive, X, Loader2,
+  Image as ImageIcon, AlertTriangle, Layers,
+} from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/lib/cart-store";
 import { AdminShell } from "@/components/admin/AdminShell";
+import {
+  PRODUCT_TYPE_LABEL,
+  mapCatalogProduct,
+  productMaterials,
+  type CatalogProduct,
+} from "@/hooks/useProducts";
 
 export const Route = createFileRoute("/admin/produtos")({
-  head: () => ({ meta: [{ title: "Admin · Cafés — TatuVerso3D" }] }),
+  head: () => ({ meta: [{ title: "Admin · Produtos — TatuVerso3D" }] }),
   component: AdminProductsLayout,
 });
 
 function AdminProductsLayout() {
   const path = useRouterState({ select: (state) => state.location.pathname });
-  return path === "/admin/produtos" ? <AdminProductsPage /> : null;
+  if (path !== "/admin/produtos") return <Outlet />;
+  return <AdminProductsPage />;
 }
-
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-type Variant = {
-  id?: string;
-  weight_grams: number;
-  grind_option: string;
-  price: number;
-  compare_at_price: number | null;
-  sku: string | null;
-  stock_quantity: number;
-  is_default: boolean;
-};
-
-type VariantRow = Variant & { _key: string };
-
-type Product = {
-  id: string;
-  name: string;
-  slug: string;
-  short_description: string | null;
-  description: string | null;
-  cover_url: string | null;
-  roast_level: string | null;
-  origin_region: string | null;
-  origin_country: string | null;
-  score: number | null;
-  badges: string[] | null;
-  is_featured: boolean | null;
-  is_subscription_available: boolean | null;
-  status: string;
-  producer_id: string;
-  created_at: string;
-  producers: { id: string; name: string } | null;
-  product_variants: Variant[];
-};
-
-// ── Constants ─────────────────────────────────────────────────────────────────
-
-const ROAST_LEVELS = [
-  { value: "light", label: "Clara" },
-  { value: "medium_light", label: "Média-clara" },
-  { value: "medium", label: "Média" },
-  { value: "medium_dark", label: "Média-escura" },
-  { value: "dark", label: "Escura" },
-];
-
-const GRIND_OPTIONS = [
-  { value: "whole_bean", label: "Grão inteiro" },
-  { value: "espresso", label: "Espresso" },
-  { value: "moka", label: "Moka" },
-  { value: "filter", label: "Filtrado" },
-  { value: "french_press", label: "French Press" },
-  { value: "aeropress", label: "Aeropress" },
-  { value: "cold_brew", label: "Cold Brew" },
-];
-
-const STATUSES = [
-  { value: "draft", label: "Rascunho" },
-  { value: "pending_review", label: "Aguardando revisão" },
-  { value: "active", label: "Publicado" },
-  { value: "rejected", label: "Rejeitado" },
-  { value: "archived", label: "Arquivado" },
-];
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
-
-function minPrice(variants: Variant[]): number {
-  const prices = variants.map((v) => Number(v.price)).filter((n) => n > 0);
-  return prices.length ? Math.min(...prices) : 0;
-}
-
-function totalStock(variants: Variant[]): number {
-  return variants.reduce((s, v) => s + (v.stock_quantity ?? 0), 0);
-}
-
-function emptyVariant(): VariantRow {
-  return {
-    _key: crypto.randomUUID(),
-    weight_grams: 250,
-    grind_option: "whole_bean",
-    price: 0,
-    compare_at_price: null,
-    sku: null,
-    stock_quantity: 0,
-    is_default: false,
-  };
-}
-
-// ── Page ──────────────────────────────────────────────────────────────────────
 
 type Tab = "products" | "categories" | "reviews";
 
+const STATUS_LABEL: Record<string, string> = {
+  draft: "Rascunho",
+  active: "Ativo",
+  archived: "Arquivado",
+  pending_review: "Em revisão",
+  rejected: "Rejeitado",
+};
+
 function AdminProductsPage() {
   const [tab, setTab] = useState<Tab>("products");
-  const [editing, setEditing] = useState<Product | null | "new">(null);
 
   return (
     <AdminShell>
@@ -130,23 +46,23 @@ function AdminProductsPage() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Administração</p>
-            <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Cafés</h1>
+            <h1 className="mt-2 font-display text-4xl text-primary md:text-5xl">Produtos</h1>
             <div className="brand-divider mt-3" />
           </div>
           {tab === "products" && (
-            <button
-              onClick={() => setEditing("new")}
+            <Link
+              to="/admin/produtos/novo"
               className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
             >
-              <Plus className="h-4 w-4" /> Novo café
-            </button>
+              <Plus className="h-4 w-4" /> Novo produto
+            </Link>
           )}
         </div>
 
         <div className="mt-6 flex gap-1 border-b border-border">
           {(
             [
-              ["products", "Cafés"],
+              ["products", "Produtos"],
               ["categories", "Categorias"],
               ["reviews", "Avaliações"],
             ] as const
@@ -166,790 +82,273 @@ function AdminProductsPage() {
         </div>
 
         <div className="mt-6">
-          {tab === "products" && <ProductsList onEdit={(p) => setEditing(p)} />}
+          {tab === "products" && <ProductsList />}
           {tab === "categories" && <CategoriesPanel />}
           {tab === "reviews" && <ReviewsPanel />}
         </div>
       </div>
-
-      {editing !== null && (
-        <ProductForm
-          product={editing === "new" ? null : editing}
-          onClose={() => setEditing(null)}
-        />
-      )}
     </AdminShell>
   );
 }
 
 // ── ProductsList ──────────────────────────────────────────────────────────────
 
-function ProductsList({ onEdit }: { onEdit: (p: Product) => void }) {
-  const [q, setQ] = useState("");
+const ADMIN_PRODUCT_SELECT = `
+  id, name, slug, short_description, cover_url, price, compare_at_price, status,
+  product_type, material_description, is_featured, is_personalizable, is_sensory,
+  made_to_order, production_time_days, stock_quantity, low_stock_threshold,
+  track_inventory, allow_backorder, dimensions_text, created_at,
+  product_images ( id, url, alt, sort_order ),
+  product_categories ( category_id ),
+  product_variants ( id, name, sku, price, compare_at_price, stock_quantity,
+                     low_stock_threshold, is_default, is_active, sort_order, image_url ),
+  product_options ( id, name, option_type, is_required, sort_order,
+                    product_option_values ( id, label, value, color_hex, price_adjustment, sort_order ) ),
+  product_customization_fields ( id, label, field_type, is_required, price_adjustment, is_active )
+`;
+
+function ProductsList() {
   const qc = useQueryClient();
+  const [q, setQ] = useState("");
+  const [status, setStatus] = useState<string>("all");
+  const [type, setType] = useState<string>("all");
+  const [material, setMaterial] = useState<string>("all");
+  const [onlyLowStock, setOnlyLowStock] = useState(false);
+  const [onlyCustom, setOnlyCustom] = useState(false);
 
   const { data: products, isLoading } = useQuery({
-    queryKey: ["admin-products", q],
-    queryFn: async () => {
-      let query = supabase
+    queryKey: ["admin-products-3d"],
+    queryFn: async (): Promise<CatalogProduct[]> => {
+      const { data, error } = await supabase
         .from("products")
-        .select(
-          `id, name, slug, short_description, description, cover_url,
-           roast_level, origin_region, origin_country, score, badges,
-           is_featured, is_subscription_available, status, producer_id, created_at,
-           producers(id, name),
-           product_variants(id, price, compare_at_price, weight_grams, grind_option, stock_quantity, is_default, sku)`,
-        )
-        .order("created_at", { ascending: false })
-        .limit(200);
-      if (q.trim()) query = query.ilike("name", `%${q.trim()}%`);
-      const { data, error } = await query;
+        .select(ADMIN_PRODUCT_SELECT)
+        .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []) as unknown as Product[];
+      return (data ?? []).map(mapCatalogProduct);
     },
   });
 
-  const duplicate = async (p: Product) => {
-    const { product_variants, id: _id, created_at, ...rest } = p as any;
-    const { data: created, error } = await supabase
-      .from("products")
-      .insert({
-        ...rest,
-        name: `${p.name} (cópia)`,
-        slug: `${p.slug}-copia-${Date.now().toString(36)}`,
-        status: "draft",
-        published_at: null,
-      })
-      .select("id")
-      .single();
-    if (error || !created) return toast.error(error?.message ?? "Erro ao duplicar");
-    if (product_variants?.length) {
-      await supabase.from("product_variants").insert(
-        product_variants.map((v: any) => {
-          const { id: _vid, created_at: _ca, updated_at: _ua, ...vrest } = v;
-          return { ...vrest, product_id: created.id };
-        }),
+  const materials = useMemo(() => {
+    const set = new Set<string>();
+    (products ?? []).forEach((p) => productMaterials(p).forEach((m) => set.add(m)));
+    return Array.from(set).sort();
+  }, [products]);
+
+  const isLowStock = (p: CatalogProduct) =>
+    p.track_inventory && !p.made_to_order && p.total_stock <= (p.low_stock_threshold ?? 5);
+
+  const filtered = useMemo(() => {
+    let list = (products ?? []).slice();
+    if (q.trim()) {
+      const term = q.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(term) ||
+          p.slug.toLowerCase().includes(term) ||
+          p.variants.some((v) => v.sku?.toLowerCase().includes(term)),
       );
     }
-    toast.success("Café duplicado como rascunho");
-    qc.invalidateQueries({ queryKey: ["admin-products"] });
+    if (status !== "all") list = list.filter((p) => p.status === status);
+    if (type !== "all") list = list.filter((p) => p.product_type === type);
+    if (material !== "all")
+      list = list.filter((p) => productMaterials(p).some((m) => m === material));
+    if (onlyLowStock) list = list.filter(isLowStock);
+    if (onlyCustom) list = list.filter((p) => p.is_personalizable);
+    return list;
+  }, [products, q, status, type, material, onlyLowStock, onlyCustom]);
+
+  const refresh = () => qc.invalidateQueries({ queryKey: ["admin-products-3d"] });
+
+  const toggleFeatured = async (p: CatalogProduct) => {
+    const { error } = await supabase
+      .from("products").update({ is_featured: !p.is_featured }).eq("id", p.id);
+    if (error) return toast.error("Erro", { description: error.message });
+    toast.success(p.is_featured ? "Removido dos destaques" : "Adicionado aos destaques");
+    refresh();
   };
 
-  const archive = async (id: string, name: string) => {
-    if (!confirm(`Arquivar "${name}"? Ele deixará de aparecer no catálogo.`)) return;
-    const { error } = await supabase.from("products").update({ status: "archived" }).eq("id", id);
-    if (error) return toast.error(error.message);
-    toast.success("Arquivado");
-    qc.invalidateQueries({ queryKey: ["admin-products"] });
-    qc.invalidateQueries({ queryKey: ["catalog-products"] });
+  const changeStatus = async (p: CatalogProduct, next: string) => {
+    const { error } = await supabase
+      .from("products")
+      .update({ status: next as any, published_at: next === "active" ? new Date().toISOString() : null })
+      .eq("id", p.id);
+    if (error) return toast.error("Erro", { description: error.message });
+    toast.success(`Status: ${STATUS_LABEL[next] ?? next}`);
+    refresh();
   };
+
+  const remove = async (p: CatalogProduct) => {
+    if (!confirm(`Excluir "${p.name}"? Esta ação não pode ser desfeita.`)) return;
+    const { error } = await supabase.from("products").delete().eq("id", p.id);
+    if (error) return toast.error("Erro ao excluir", { description: error.message });
+    toast.success("Produto excluído");
+    refresh();
+  };
+
+  const lowStockCount = (products ?? []).filter(isLowStock).length;
 
   return (
-    <>
-      <div className="flex max-w-md items-center gap-2 rounded-full border border-border bg-card px-4 py-2">
-        <Search className="h-4 w-4 text-muted-foreground" />
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Buscar por nome..."
-          className="w-full bg-transparent text-sm focus:outline-none"
-        />
-      </div>
+    <div>
+      {lowStockCount > 0 && (
+        <button
+          onClick={() => setOnlyLowStock(true)}
+          className="mb-4 flex w-full items-center gap-2 rounded-md border border-accent/40 bg-accent/10 px-4 py-3 text-left text-sm"
+        >
+          <AlertTriangle className="h-4 w-4 text-accent" />
+          {lowStockCount} produto(s) com estoque baixo — clique para filtrar
+        </button>
+      )}
 
-      <div className="mt-6 overflow-hidden rounded-lg border border-border bg-card">
-        {isLoading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted text-xs uppercase tracking-wider text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-3 text-left">Café</th>
-                  <th className="px-4 py-3 text-left">Produtor</th>
-                  <th className="px-4 py-3 text-left">SKUs</th>
-                  <th className="px-4 py-3 text-left">Estoque</th>
-                  <th className="px-4 py-3 text-right">Preço mín.</th>
-                  <th className="px-4 py-3 text-left">Status</th>
-                  <th className="px-4 py-3 text-right" />
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {(products ?? []).map((p) => (
-                  <tr key={p.id} className="hover:bg-muted/30">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        {p.cover_url ? (
-                          <img
-                            src={p.cover_url}
-                            alt={p.name}
-                            className="h-10 w-10 flex-shrink-0 rounded object-cover"
-                          />
-                        ) : (
-                          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded bg-muted">
-                            <ImageIcon className="h-4 w-4 text-muted-foreground" />
-                          </div>
-                        )}
-                        <div>
-                          <p className="font-medium text-primary">{p.name}</p>
-                          <p className="text-xs text-muted-foreground">{p.slug}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {p.producers?.name ?? "—"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="rounded-full bg-[var(--surface-soft)] px-2 py-0.5 text-xs">
-                        {p.product_variants.length} SKU
-                        {p.product_variants.length !== 1 ? "s" : ""}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`text-xs font-medium ${
-                          totalStock(p.product_variants) === 0
-                            ? "text-destructive"
-                            : "text-foreground/70"
-                        }`}
-                      >
-                        {totalStock(p.product_variants)} un.
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right font-medium text-primary">
-                      {minPrice(p.product_variants) > 0
-                        ? formatBRL(minPrice(p.product_variants))
-                        : "—"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-xs ${
-                          p.status === "active"
-                            ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                            : p.status === "archived"
-                              ? "bg-destructive/10 text-destructive"
-                              : "bg-[var(--surface-soft)] text-muted-foreground"
-                        }`}
-                      >
-                        {STATUSES.find((s) => s.value === p.status)?.label ?? p.status}
-                      </span>
-                    </td>
-                    <td className="space-x-3 whitespace-nowrap px-4 py-3 text-right">
-                      <button
-                        onClick={() => onEdit(p)}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
-                      >
-                        <Pencil className="h-3 w-3" /> Editar
-                      </button>
-                      <button
-                        onClick={() => duplicate(p)}
-                        className="text-xs font-semibold text-foreground/60 hover:underline"
-                      >
-                        Duplicar
-                      </button>
-                      {p.status !== "archived" && (
-                        <button
-                          onClick={() => archive(p.id, p.name)}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-destructive"
-                        >
-                          <Archive className="h-3 w-3" /> Arquivar
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-                {(products ?? []).length === 0 && (
-                  <tr>
-                    <td
-                      colSpan={7}
-                      className="p-8 text-center text-sm text-muted-foreground"
-                    >
-                      Nenhum café encontrado.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="relative min-w-[220px] flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Buscar por nome ou SKU..."
+            className="w-full rounded-md border border-border bg-card py-2 pl-9 pr-3 text-sm focus:border-accent focus:outline-none"
+          />
+        </div>
+        <select value={status} onChange={(e) => setStatus(e.target.value)}
+          className="rounded-md border border-border bg-card px-3 py-2 text-sm">
+          <option value="all">Todos os status</option>
+          {Object.entries(STATUS_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+        </select>
+        <select value={type} onChange={(e) => setType(e.target.value)}
+          className="rounded-md border border-border bg-card px-3 py-2 text-sm">
+          <option value="all">Todos os tipos</option>
+          {Object.entries(PRODUCT_TYPE_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+        </select>
+        {materials.length > 0 && (
+          <select value={material} onChange={(e) => setMaterial(e.target.value)}
+            className="rounded-md border border-border bg-card px-3 py-2 text-sm">
+            <option value="all">Todos os materiais</option>
+            {materials.map((m) => <option key={m} value={m}>{m}</option>)}
+          </select>
         )}
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={onlyLowStock} onChange={(e) => setOnlyLowStock(e.target.checked)}
+            className="h-4 w-4 rounded border-border accent-[var(--brand-accent)]" />
+          Estoque baixo
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={onlyCustom} onChange={(e) => setOnlyCustom(e.target.checked)}
+            className="h-4 w-4 rounded border-border accent-[var(--brand-accent)]" />
+          Personalizáveis
+        </label>
       </div>
-    </>
-  );
-}
 
-// ── ProductForm ────────────────────────────────────────────────────────────────
-
-type FormState = {
-  name: string;
-  slug: string;
-  producer_id: string;
-  short_description: string;
-  description: string;
-  roast_level: string;
-  origin_region: string;
-  origin_country: string;
-  score: string;
-  badges_raw: string;
-  is_featured: boolean;
-  is_subscription_available: boolean;
-  status: string;
-};
-
-function initForm(product: Product | null): FormState {
-  return {
-    name: product?.name ?? "",
-    slug: product?.slug ?? "",
-    producer_id: product?.producer_id ?? "",
-    short_description: product?.short_description ?? "",
-    description: product?.description ?? "",
-    roast_level: product?.roast_level ?? "",
-    origin_region: product?.origin_region ?? "",
-    origin_country: product?.origin_country ?? "Brasil",
-    score: product?.score != null ? String(product.score) : "",
-    badges_raw: (product?.badges ?? []).join(", "),
-    is_featured: product?.is_featured ?? false,
-    is_subscription_available: product?.is_subscription_available ?? false,
-    status: product?.status ?? "draft",
-  };
-}
-
-function initVariants(product: Product | null): VariantRow[] {
-  if (!product || product.product_variants.length === 0) {
-    return [{ ...emptyVariant(), is_default: true }];
-  }
-  return product.product_variants.map((v) => ({
-    ...v,
-    price: Number(v.price),
-    compare_at_price: v.compare_at_price != null ? Number(v.compare_at_price) : null,
-    _key: v.id ?? crypto.randomUUID(),
-  }));
-}
-
-function ProductForm({
-  product,
-  onClose,
-}: {
-  product: Product | null;
-  onClose: () => void;
-}) {
-  const qc = useQueryClient();
-  const [form, setForm] = useState<FormState>(() => initForm(product));
-  const [variants, setVariants] = useState<VariantRow[]>(() => initVariants(product));
-  const [deletedVariantIds, setDeletedVariantIds] = useState<string[]>([]);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    product?.cover_url ?? null,
-  );
-  const [saving, setSaving] = useState(false);
-
-  const { data: producers } = useQuery({
-    queryKey: ["admin-producers"],
-    queryFn: async () => {
-      const { data } = await supabase.from("producers").select("id, name").order("name");
-      return data ?? [];
-    },
-    staleTime: 60_000,
-  });
-
-  const setField = <K extends keyof FormState>(key: K, value: FormState[K]) =>
-    setForm((f) => ({ ...f, [key]: value }));
-
-  const handleNameChange = useCallback(
-    (name: string) => {
-      setForm((f) => ({ ...f, name, slug: product ? f.slug : slugify(name) }));
-    },
-    [product],
-  );
-
-  const addVariant = () => {
-    const hasDefault = variants.some((v) => v.is_default);
-    setVariants((vs) => [...vs, { ...emptyVariant(), is_default: !hasDefault }]);
-  };
-
-  const updateVariant = (key: string, patch: Partial<VariantRow>) =>
-    setVariants((vs) => vs.map((v) => (v._key === key ? { ...v, ...patch } : v)));
-
-  const removeVariant = (key: string) => {
-    const v = variants.find((v) => v._key === key);
-    if (v?.id) setDeletedVariantIds((ids) => [...ids, v.id!]);
-    setVariants((vs) => {
-      const remaining = vs.filter((v) => v._key !== key);
-      if (remaining.length > 0 && !remaining.some((v) => v.is_default)) {
-        remaining[0].is_default = true;
-      }
-      return remaining;
-    });
-  };
-
-  const setDefaultVariant = (key: string) =>
-    setVariants((vs) => vs.map((v) => ({ ...v, is_default: v._key === key })));
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
-  };
-
-  const handleSave = async () => {
-    if (!form.name.trim()) return toast.error("Nome é obrigatório");
-    if (!form.slug.trim()) return toast.error("Slug é obrigatório");
-    if (!form.producer_id) return toast.error("Selecione um produtor");
-    if (variants.length === 0) return toast.error("Adicione ao menos uma variante");
-    if (!variants.some((v) => Number(v.price) > 0))
-      return toast.error("Ao menos uma variante precisa ter preço > 0");
-
-    setSaving(true);
-    const productId = product?.id ?? crypto.randomUUID();
-
-    // 1. Upload image
-    let coverUrl = product?.cover_url ?? null;
-    if (imageFile) {
-      const ext = (imageFile.name.split(".").pop() ?? "jpg").toLowerCase();
-      const { error: uploadErr } = await supabase.storage
-        .from("product-images")
-        .upload(`${productId}/cover.${ext}`, imageFile, { upsert: true });
-      if (uploadErr) {
-        toast.error(`Erro no upload: ${uploadErr.message}`);
-        setSaving(false);
-        return;
-      }
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("product-images").getPublicUrl(`${productId}/cover.${ext}`);
-      coverUrl = publicUrl;
-    }
-
-    // 2. Upsert product
-    const badges = form.badges_raw
-      .split(",")
-      .map((b) => b.trim())
-      .filter(Boolean);
-    const minPrice = Math.min(...variants.map((v) => Number(v.price) || 0).filter((n) => n > 0));
-    const { error: productErr } = await supabase.from("products").upsert({
-      price: minPrice,
-      id: productId,
-      name: form.name.trim(),
-      slug: form.slug.trim(),
-      producer_id: form.producer_id,
-      short_description: form.short_description.trim() || null,
-      description: form.description.trim() || null,
-      roast_level: (form.roast_level as any) || null,
-      origin_region: form.origin_region.trim() || null,
-      origin_country: form.origin_country.trim() || "Brasil",
-      score: form.score ? Number(form.score) : null,
-      badges: badges.length ? badges : null,
-      is_featured: form.is_featured,
-      is_subscription_available: form.is_subscription_available,
-      status: form.status as any,
-      cover_url: coverUrl,
-      published_at: form.status === "active" ? new Date().toISOString() : null,
-    });
-    if (productErr) {
-      toast.error(productErr.message);
-      setSaving(false);
-      return;
-    }
-
-    // 3. Delete removed variants (best-effort)
-    for (const id of deletedVariantIds) {
-      const { error } = await supabase.from("product_variants").delete().eq("id", id);
-      if (error)
-        toast.warning(
-          `Variante ${id.slice(0, 8)}… não removida — tem pedidos vinculados.`,
-        );
-    }
-
-    // 4. Upsert remaining variants
-    for (const v of variants) {
-      const { error } = await supabase.from("product_variants").upsert({
-        ...(v.id ? { id: v.id } : {}),
-        product_id: productId,
-        weight_grams: Number(v.weight_grams),
-        grind_option: v.grind_option as any,
-        price: Number(v.price),
-        compare_at_price:
-          v.compare_at_price != null && Number(v.compare_at_price) > 0
-            ? Number(v.compare_at_price)
-            : null,
-        sku: v.sku?.trim() || null,
-        stock_quantity: Number(v.stock_quantity),
-        is_default: v.is_default,
-      });
-      if (error) toast.error(`Erro ao salvar variante: ${error.message}`);
-    }
-
-    qc.invalidateQueries({ queryKey: ["admin-products"] });
-    qc.invalidateQueries({ queryKey: ["catalog-products"] });
-    toast.success(product ? "Produto atualizado" : "Produto criado");
-    setSaving(false);
-    onClose();
-  };
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4"
-      onClick={onClose}
-    >
-      <div
-        className="relative my-8 w-full max-w-3xl rounded-xl border border-border bg-background shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <h2 className="font-display text-xl text-primary">
-            {product ? "Editar café" : "Novo café"}
-          </h2>
-          <button onClick={onClose} className="rounded p-1 text-muted-foreground hover:bg-muted">
-            <X className="h-5 w-5" />
-          </button>
+      {isLoading ? (
+        <div className="mt-10 flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="h-4 w-4 animate-spin" /> Carregando produtos...
         </div>
-
-        <div className="space-y-8 px-6 py-6">
-          {/* Informações básicas */}
-          <section>
-            <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Informações básicas
-            </p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-foreground/70">Nome *</label>
-                <input
-                  value={form.name}
-                  onChange={(e) => handleNameChange(e.target.value)}
-                  placeholder="Ex: Serra da Mantiqueira Natural"
-                  className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-foreground/70">
-                  Slug * (URL)
-                </label>
-                <input
-                  value={form.slug}
-                  onChange={(e) => setField("slug", e.target.value)}
-                  placeholder="sera-mantiqueira-natural"
-                  className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 font-mono text-sm focus:border-accent focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-foreground/70">Produtor *</label>
-                <select
-                  value={form.producer_id}
-                  onChange={(e) => setField("producer_id", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
-                >
-                  <option value="">Selecione...</option>
-                  {(producers ?? []).map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-foreground/70">
-                  Descrição curta
-                </label>
-                <textarea
-                  value={form.short_description}
-                  onChange={(e) => setField("short_description", e.target.value)}
-                  rows={2}
-                  className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-foreground/70">Torra</label>
-                <select
-                  value={form.roast_level}
-                  onChange={(e) => setField("roast_level", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
-                >
-                  <option value="">Selecione...</option>
-                  {ROAST_LEVELS.map((r) => (
-                    <option key={r.value} value={r.value}>
-                      {r.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-foreground/70">
-                  Região de origem
-                </label>
-                <input
-                  value={form.origin_region}
-                  onChange={(e) => setField("origin_region", e.target.value)}
-                  placeholder="Ex: Cerrado Mineiro"
-                  className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-foreground/70">País</label>
-                <input
-                  value={form.origin_country}
-                  onChange={(e) => setField("origin_country", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-foreground/70">
-                  Pontuação SCA (0–100)
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  max={100}
-                  step={0.5}
-                  value={form.score}
-                  onChange={(e) => setField("score", e.target.value)}
-                  placeholder="87"
-                  className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
-                />
-              </div>
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-foreground/70">
-                  Badges (separados por vírgula)
-                </label>
-                <input
-                  value={form.badges_raw}
-                  onChange={(e) => setField("badges_raw", e.target.value)}
-                  placeholder="Premiado, Orgânico, Biodinâmico"
-                  className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-foreground/70">Status</label>
-                <select
-                  value={form.status}
-                  onChange={(e) => setField("status", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
-                >
-                  {STATUSES.map((s) => (
-                    <option key={s.value} value={s.value}>
-                      {s.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex flex-col justify-end gap-3 pb-1">
-                <label className="flex items-center gap-2 text-sm text-foreground/80">
-                  <input
-                    type="checkbox"
-                    checked={form.is_featured}
-                    onChange={(e) => setField("is_featured", e.target.checked)}
-                    className="h-4 w-4 accent-[var(--brand-accent)]"
-                  />
-                  Destaque na home
-                </label>
-                <label className="flex items-center gap-2 text-sm text-foreground/80">
-                  <input
-                    type="checkbox"
-                    checked={form.is_subscription_available}
-                    onChange={(e) => setField("is_subscription_available", e.target.checked)}
-                    className="h-4 w-4 accent-[var(--brand-accent)]"
-                  />
-                  Disponível para assinatura
-                </label>
-              </div>
-            </div>
-          </section>
-
-          {/* Imagem de capa */}
-          <section>
-            <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Imagem de capa
-            </p>
-            <div className="flex items-start gap-4">
-              <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-lg border border-dashed border-border bg-muted">
-                {imagePreview ? (
-                  <img
-                    src={imagePreview}
-                    alt="preview"
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full w-full flex-col items-center justify-center gap-1 text-muted-foreground">
-                    <ImageIcon className="h-8 w-8" />
-                    <span className="text-[10px]">sem imagem</span>
-                  </div>
-                )}
-              </div>
-              <div className="flex-1">
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={handleImageChange}
-                  className="block w-full text-sm text-muted-foreground file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-[var(--surface-soft)] file:px-4 file:py-2 file:text-xs file:font-semibold file:text-primary hover:file:bg-accent/20"
-                />
-                <p className="mt-2 text-xs text-muted-foreground">
-                  PNG, JPG ou WEBP · Recomendado: 800 × 1000 px.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Variantes / SKUs */}
-          <section>
-            <div className="mb-4 flex items-center justify-between">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Variantes (SKUs)
-              </p>
-              <button
-                type="button"
-                onClick={addVariant}
-                className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-medium hover:border-accent"
-              >
-                <Plus className="h-3 w-3" /> Adicionar variante
-              </button>
-            </div>
-            <div className="overflow-x-auto rounded-lg border border-border">
-              <table className="w-full text-xs">
-                <thead className="bg-muted text-[10px] uppercase tracking-wider text-muted-foreground">
-                  <tr>
-                    <th className="px-3 py-2 text-left">Peso (g)</th>
-                    <th className="px-3 py-2 text-left">Moagem</th>
-                    <th className="px-3 py-2 text-left">Preço (R$) *</th>
-                    <th className="px-3 py-2 text-left">De (R$)</th>
-                    <th className="px-3 py-2 text-left">SKU</th>
-                    <th className="px-3 py-2 text-left">Estoque</th>
-                    <th className="px-3 py-2 text-center">Padrão</th>
-                    <th className="px-3 py-2" />
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {variants.map((v) => (
-                    <tr key={v._key}>
-                      <td className="px-3 py-2">
-                        <input
-                          type="number"
-                          min={50}
-                          step={50}
-                          value={v.weight_grams}
-                          onChange={(e) =>
-                            updateVariant(v._key, { weight_grams: Number(e.target.value) })
-                          }
-                          className="w-20 rounded border border-border bg-card px-2 py-1 text-xs focus:border-accent focus:outline-none"
-                        />
-                      </td>
-                      <td className="px-3 py-2">
-                        <select
-                          value={v.grind_option}
-                          onChange={(e) =>
-                            updateVariant(v._key, { grind_option: e.target.value })
-                          }
-                          className="w-36 rounded border border-border bg-card px-2 py-1 text-xs focus:border-accent focus:outline-none"
-                        >
-                          {GRIND_OPTIONS.map((g) => (
-                            <option key={g.value} value={g.value}>
-                              {g.label}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-3 py-2">
-                        <input
-                          type="number"
-                          min={0}
-                          step={0.01}
-                          value={v.price || ""}
-                          onChange={(e) =>
-                            updateVariant(v._key, { price: Number(e.target.value) })
-                          }
-                          placeholder="0,00"
-                          className="w-24 rounded border border-border bg-card px-2 py-1 text-xs focus:border-accent focus:outline-none"
-                        />
-                      </td>
-                      <td className="px-3 py-2">
-                        <input
-                          type="number"
-                          min={0}
-                          step={0.01}
-                          value={v.compare_at_price ?? ""}
-                          onChange={(e) =>
-                            updateVariant(v._key, {
-                              compare_at_price: e.target.value
-                                ? Number(e.target.value)
-                                : null,
-                            })
-                          }
-                          placeholder="—"
-                          className="w-24 rounded border border-border bg-card px-2 py-1 text-xs focus:border-accent focus:outline-none"
-                        />
-                      </td>
-                      <td className="px-3 py-2">
-                        <input
-                          value={v.sku ?? ""}
-                          onChange={(e) =>
-                            updateVariant(v._key, { sku: e.target.value || null })
-                          }
-                          placeholder="CAF-001-GI"
-                          className="w-28 rounded border border-border bg-card px-2 py-1 font-mono text-xs focus:border-accent focus:outline-none"
-                        />
-                      </td>
-                      <td className="px-3 py-2">
-                        <input
-                          type="number"
-                          min={0}
-                          value={v.stock_quantity}
-                          onChange={(e) =>
-                            updateVariant(v._key, {
-                              stock_quantity: Number(e.target.value),
-                            })
-                          }
-                          className="w-16 rounded border border-border bg-card px-2 py-1 text-xs focus:border-accent focus:outline-none"
-                        />
-                      </td>
-                      <td className="px-3 py-2 text-center">
-                        <input
-                          type="radio"
-                          name="default_variant"
-                          checked={v.is_default}
-                          onChange={() => setDefaultVariant(v._key)}
-                          className="h-4 w-4 accent-[var(--brand-accent)]"
-                        />
-                      </td>
-                      <td className="px-3 py-2">
-                        {variants.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeVariant(v._key)}
-                            className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                          >
-                            <X className="h-3.5 w-3.5" />
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="mt-2 text-[11px] text-muted-foreground">
-              Variantes com pedidos vinculados não podem ser removidas — zere o estoque para
-              desativá-las.
-            </p>
-          </section>
+      ) : filtered.length === 0 ? (
+        <div className="mt-10 rounded-lg border border-dashed border-border py-16 text-center">
+          <p className="font-display text-xl text-primary">Nenhum produto encontrado</p>
+          <p className="mt-1 text-sm text-muted-foreground">Ajuste os filtros ou cadastre um novo produto.</p>
         </div>
-
-        <div className="flex justify-end gap-3 border-t border-border px-6 py-4">
-          <button
-            onClick={onClose}
-            disabled={saving}
-            className="rounded-full border border-border bg-card px-5 py-2 text-sm font-medium transition hover:border-accent disabled:opacity-50"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
-          >
-            {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-            {saving ? "Salvando..." : product ? "Salvar alterações" : "Criar café"}
-          </button>
+      ) : (
+        <div className="mt-6 overflow-x-auto rounded-lg border border-border">
+          <table className="w-full min-w-[900px] text-sm">
+            <thead className="bg-muted/50 text-left text-xs uppercase tracking-wider text-muted-foreground">
+              <tr>
+                <th className="px-4 py-3">Produto</th>
+                <th className="px-4 py-3">Tipo</th>
+                <th className="px-4 py-3">Preço</th>
+                <th className="px-4 py-3">Variações</th>
+                <th className="px-4 py-3">Estoque</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3 text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {filtered.map((p) => (
+                <tr key={p.id} className="hover:bg-muted/30">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      {p.cover_url ? (
+                        <img src={p.cover_url} alt={p.name} className="h-11 w-11 rounded-md object-cover" />
+                      ) : (
+                        <div className="flex h-11 w-11 items-center justify-center rounded-md bg-muted">
+                          <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-medium text-foreground">{p.name}</p>
+                        <p className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                          /{p.slug}
+                          {p.is_personalizable && <span className="rounded-full bg-accent/15 px-2 py-0.5 text-accent">Personalizável</span>}
+                          {p.made_to_order && <span className="rounded-full bg-muted px-2 py-0.5">Sob encomenda</span>}
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {PRODUCT_TYPE_LABEL[p.product_type] ?? p.product_type}
+                  </td>
+                  <td className="px-4 py-3">{formatBRL(p.min_price)}</td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    <span className="inline-flex items-center gap-1">
+                      <Layers className="h-3.5 w-3.5" /> {p.variants.length}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    {p.made_to_order || !p.track_inventory ? (
+                      <span className="text-muted-foreground">—</span>
+                    ) : (
+                      <span className={isLowStock(p) ? "font-semibold text-accent" : ""}>
+                        {p.total_stock}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <select
+                      value={p.status}
+                      onChange={(e) => changeStatus(p, e.target.value)}
+                      className="rounded-md border border-border bg-card px-2 py-1 text-xs"
+                    >
+                      {Object.entries(STATUS_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                    </select>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end gap-1">
+                      <button
+                        onClick={() => toggleFeatured(p)}
+                        title="Destaque"
+                        className={`rounded-md p-2 hover:bg-muted ${p.is_featured ? "text-accent" : "text-muted-foreground"}`}
+                      >
+                        <Star className="h-4 w-4" fill={p.is_featured ? "currentColor" : "none"} />
+                      </button>
+                      <Link
+                        to="/admin/produtos/$id/editar"
+                        params={{ id: p.id }}
+                        title="Editar"
+                        className="rounded-md p-2 text-muted-foreground hover:bg-muted"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Link>
+                      <button
+                        onClick={() => changeStatus(p, "archived")}
+                        title="Arquivar"
+                        className="rounded-md p-2 text-muted-foreground hover:bg-muted"
+                      >
+                        <Archive className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => remove(p)}
+                        title="Excluir"
+                        className="rounded-md p-2 text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
+      )}
     </div>
   );
 }

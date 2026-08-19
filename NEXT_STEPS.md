@@ -1,42 +1,25 @@
 # TatuVerso3D — Próximos passos
 
-> Este documento substitui integralmente o planejamento anterior (CAFEX / Café EX).
-> A Onda 1 (identidade visual, navegação, home e páginas institucionais) está concluída.
+## Onda 1 — Identidade visual (concluída)
+Marca, paleta Cosmic Blue, tipografia Fredoka/Nunito Sans, navegação, home, páginas institucionais.
 
-## Estado atual (pós Onda 1)
+## Onda 2 — Produtos 3D, variações, personalização e estoque (concluída)
+- Schema 3D: `product_options`, `product_option_values`, `product_variants`, `variant_option_values`, `product_customization_fields`, `inventory_movements`.
+- `products` expandida (tipo, material, dimensões, prazo, sob encomenda, personalizável, sensorial, SEO, controle de estoque).
+- Bucket privado `customization-uploads` com RLS por usuário.
+- Loja com filtros de tipo, material, cor, personalizável, estoque e sob encomenda; ordenação por mais vendidos.
+- Página `/produto/$slug` com galeria, seletores de variação, campos de personalização e ficha técnica.
+- Carrinho e checkout com variações e personalizações; validação de preço/estoque no servidor.
+- Admin: listagem com filtros (tipo, material, estoque baixo, personalizáveis) e formulário em abas
+  (Básico, Preço, Categorias, Imagens, Variações, Personalização, Estoque, SEO) com geração de combinações
+  e registro de movimentações de estoque.
 
-- Identidade visual TatuVerso3D aplicada: paleta cósmica (azul), laranja filamento e magenta, tipografia Fredoka + Nunito Sans, logo e favicon oficiais.
-- Header, footer, home, loja, página de produto e páginas institucionais (Sobre, FAQ, Envios, Trocas, Cuidados, Personalizados, Termos, Privacidade, Contato) reescritos para a marca.
-- Nenhuma menção pública à marca antiga ou ao universo de café.
-- O **esquema do banco ainda é o legado de café** (`products.score`, `roast_level`, `origin_*`, `product_variants.grind_option`, `producers`, `sensory_notes`, assinaturas). Ele está apenas oculto na interface.
-
-## Onda 2 — Modelagem de produtos 3D, variações, personalizações, estoque e limpeza segura do esquema legado
-
-Objetivos:
-
-1. **Modelagem de produtos 3D**
-   - Categorias reais: sensoriais, decoração, utilidades, presentes, colecionáveis, articulados, organizadores.
-   - Campos próprios: material (PLA, PETG, TPU, resina), tempo de impressão, dimensões, peso real, nível de detalhe, indicação etária.
-
-2. **Variações**
-   - Substituir `grind_option`/`weight_grams` por eixos reais: cor do filamento, tamanho/escala, acabamento e material.
-   - Tabela de variações com SKU, preço, estoque e imagem por combinação.
-
-3. **Personalizações**
-   - Campos de personalização por produto (texto gravado, cor, escala, upload de referência).
-   - Fluxo de orçamento para pedidos sob medida, integrado ao formulário de `/personalizados`.
-
-4. **Estoque**
-   - Controle por variação, com produção sob demanda vs. pronta entrega.
-   - Movimentações de estoque e alerta de mínimo.
-
-5. **Limpeza segura do esquema legado**
-   - Migração em duas fases: primeiro parar de escrever nas colunas de café, depois remover.
-   - Remover/renomear `producers`, `sensory_notes`, assinatura de café e rotas órfãs (`/cafe/$slug` → `/produto/$slug`, `/produtores`, `/clube`, `/assinatura`, `/private-label`, `/quiz` sensorial) com redirects.
-   - Revisar RLS e GRANTs de todas as tabelas novas.
-
-## Onda 3 (prevista)
-
-- Checkout e frete calibrados para produtos físicos impressos.
-- Galeria de fotos reais, avaliações e prova social.
-- Painel administrativo focado em produção (fila de impressão, status por peça).
+## Onda 3 — Limpeza do esquema legado e operação
+Próxima etapa:
+1. Remover com segurança colunas e tabelas legadas de café (`roast_level`, `score`, `acidity`, `body`,
+   `sweetness`, `intensity`, `grind_option`, `farms`, `producers`, `sensory_notes`, `subscriptions`,
+   `producer_plans`, `producer_applications`, `b2b_leads`, `private_label_projects`) após migração de dados.
+2. Reservas de estoque no checkout e baixa automática na confirmação do pagamento.
+3. Painel de pedidos com produção (fila de impressão, status por item) e etiquetas de envio.
+4. Relatórios: vendas por tipo/material, giro de estoque, margem por variação (custo x preço).
+5. Revisão final de RLS, linter de segurança e publicação.

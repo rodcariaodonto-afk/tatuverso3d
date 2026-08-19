@@ -40,8 +40,8 @@ import { Route as ProdutoresSlugRouteImport } from './routes/produtores.$slug'
 import { Route as ProdutorProdutosRouteImport } from './routes/produtor.produtos'
 import { Route as ProdutorPerfilRouteImport } from './routes/produtor.perfil'
 import { Route as ProdutorPedidosRouteImport } from './routes/produtor.pedidos'
+import { Route as ProdutoSlugRouteImport } from './routes/produto.$slug'
 import { Route as MinhaContaPrivacidadeRouteImport } from './routes/minha-conta.privacidade'
-import { Route as CafeSlugRouteImport } from './routes/cafe.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminVendasRouteImport } from './routes/admin.vendas'
 import { Route as AdminProdutosRouteImport } from './routes/admin.produtos'
@@ -213,15 +213,15 @@ const ProdutorPedidosRoute = ProdutorPedidosRouteImport.update({
   path: '/pedidos',
   getParentRoute: () => ProdutorRoute,
 } as any)
+const ProdutoSlugRoute = ProdutoSlugRouteImport.update({
+  id: '/produto/$slug',
+  path: '/produto/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MinhaContaPrivacidadeRoute = MinhaContaPrivacidadeRouteImport.update({
   id: '/privacidade',
   path: '/privacidade',
   getParentRoute: () => MinhaContaRoute,
-} as any)
-const CafeSlugRoute = CafeSlugRouteImport.update({
-  id: '/cafe/$slug',
-  path: '/cafe/$slug',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
@@ -338,8 +338,8 @@ export interface FileRoutesByFullPath {
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/cafe/$slug': typeof CafeSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
+  '/produto/$slug': typeof ProdutoSlugRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
   '/produtor/produtos': typeof ProdutorProdutosRoute
@@ -388,8 +388,8 @@ export interface FileRoutesByTo {
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/cafe/$slug': typeof CafeSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
+  '/produto/$slug': typeof ProdutoSlugRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
   '/produtor/produtos': typeof ProdutorProdutosRoute
@@ -439,8 +439,8 @@ export interface FileRoutesById {
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/cafe/$slug': typeof CafeSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
+  '/produto/$slug': typeof ProdutoSlugRoute
   '/produtor/pedidos': typeof ProdutorPedidosRoute
   '/produtor/perfil': typeof ProdutorPerfilRoute
   '/produtor/produtos': typeof ProdutorProdutosRoute
@@ -491,8 +491,8 @@ export interface FileRouteTypes {
     | '/admin/produtos'
     | '/admin/vendas'
     | '/blog/$slug'
-    | '/cafe/$slug'
     | '/minha-conta/privacidade'
+    | '/produto/$slug'
     | '/produtor/pedidos'
     | '/produtor/perfil'
     | '/produtor/produtos'
@@ -541,8 +541,8 @@ export interface FileRouteTypes {
     | '/admin/produtos'
     | '/admin/vendas'
     | '/blog/$slug'
-    | '/cafe/$slug'
     | '/minha-conta/privacidade'
+    | '/produto/$slug'
     | '/produtor/pedidos'
     | '/produtor/perfil'
     | '/produtor/produtos'
@@ -591,8 +591,8 @@ export interface FileRouteTypes {
     | '/admin/produtos'
     | '/admin/vendas'
     | '/blog/$slug'
-    | '/cafe/$slug'
     | '/minha-conta/privacidade'
+    | '/produto/$slug'
     | '/produtor/pedidos'
     | '/produtor/perfil'
     | '/produtor/produtos'
@@ -630,7 +630,7 @@ export interface RootRouteChildren {
   TrocasRoute: typeof TrocasRoute
   VenderNaPlataformaRoute: typeof VenderNaPlataformaRoute
   BlogSlugRoute: typeof BlogSlugRoute
-  CafeSlugRoute: typeof CafeSlugRoute
+  ProdutoSlugRoute: typeof ProdutoSlugRoute
   ProdutoresSlugRoute: typeof ProdutoresSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ProdutoresIndexRoute: typeof ProdutoresIndexRoute
@@ -855,19 +855,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProdutorPedidosRouteImport
       parentRoute: typeof ProdutorRoute
     }
+    '/produto/$slug': {
+      id: '/produto/$slug'
+      path: '/produto/$slug'
+      fullPath: '/produto/$slug'
+      preLoaderRoute: typeof ProdutoSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/minha-conta/privacidade': {
       id: '/minha-conta/privacidade'
       path: '/privacidade'
       fullPath: '/minha-conta/privacidade'
       preLoaderRoute: typeof MinhaContaPrivacidadeRouteImport
       parentRoute: typeof MinhaContaRoute
-    }
-    '/cafe/$slug': {
-      id: '/cafe/$slug'
-      path: '/cafe/$slug'
-      fullPath: '/cafe/$slug'
-      preLoaderRoute: typeof CafeSlugRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/blog/$slug': {
       id: '/blog/$slug'
@@ -1078,7 +1078,7 @@ const rootRouteChildren: RootRouteChildren = {
   TrocasRoute: TrocasRoute,
   VenderNaPlataformaRoute: VenderNaPlataformaRoute,
   BlogSlugRoute: BlogSlugRoute,
-  CafeSlugRoute: CafeSlugRoute,
+  ProdutoSlugRoute: ProdutoSlugRoute,
   ProdutoresSlugRoute: ProdutoresSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ProdutoresIndexRoute: ProdutoresIndexRoute,

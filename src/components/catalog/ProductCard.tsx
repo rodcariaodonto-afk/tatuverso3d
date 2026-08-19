@@ -36,7 +36,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
   const onSale = product.compare_at_price && product.compare_at_price > product.price;
   return (
     <Link
-      to="/cafe/$slug"
+      to="/produto/$slug"
       params={{ slug: product.slug }}
       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
     >
@@ -97,7 +97,7 @@ export function CatalogProductCard({ product }: { product: CatalogProduct }) {
 
   return (
     <Link
-      to="/cafe/$slug"
+      to="/produto/$slug"
       params={{ slug: product.slug }}
       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
     >
