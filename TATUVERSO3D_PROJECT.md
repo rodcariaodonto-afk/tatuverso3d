@@ -96,3 +96,24 @@ fixo, busca de CEP, validação de UF/telefone e tela de confirmação.
   `MERCADOPAGO_WEBHOOK_SECRET`); o navegador só recebe a chave pública.
 - `payment_events` e `stock_reservations` com RLS: leitura apenas para admin; escrita só service role.
 - Nenhum valor de pagamento vem do navegador: total, frete e acréscimos são lidos do pedido no banco.
+
+## Onda 3C — Operação de pedidos, rastreio e área do cliente
+
+### Servidor
+- `src/lib/orders.shared.ts` — rótulos pt-BR, máquina de transições permitidas e linha do tempo do cliente.
+- `src/lib/orders.server.ts` — `buildOrderDetail`, com URLs assinadas (10 min) para arquivos de personalização.
+- `src/lib/orders-admin.functions.ts` — lista/detalhe de pedidos, transição de status validada, produção por
+  item, envio, eventos de rastreio e reconsulta de pagamento. Todas exigem `is_admin`.
+- `src/lib/orders.functions.ts` — `listMyOrders` e `getMyOrder`, escopados por `customer_id = auth.uid()`.
+- `src/lib/inventory-admin.functions.ts` — histórico, ajuste manual auditado e alerta de estoque baixo.
+
+### Regras
+- Transições válidas: pending→cancelled; paid→preparing/shipped/cancelled/refunded; preparing→shipped/
+  cancelled/refunded; shipped→delivered/refunded; delivered→refunded. Qualquer outra é recusada no servidor.
+- Cancelamento chama `release_stock`; ajuste manual grava `inventory_movements` com autor, motivo e
+  quantidade anterior/resultante, além de registro em `audit_logs`.
+- `anon` e `authenticated` não possuem INSERT/UPDATE/DELETE em `orders`, `shipments`, `tracking_events`
+  e `inventory_movements`; a escrita ocorre apenas via `service_role` nas server functions.
+
+### Telas
+- `/admin/pedidos`, `/admin/pedidos/$id`, `/admin/estoque`, `/minha-conta`, `/minha-conta/pedido/$id`.
