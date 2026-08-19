@@ -213,6 +213,15 @@ export function ProductForm({ productId }: ProductFormProps) {
     },
   });
 
+  /* preço de custo: somente admin, via server function protegida */
+  const fetchVariantCosts = useServerFn(getVariantCosts);
+  const persistVariantCosts = useServerFn(saveVariantCosts);
+  const { data: variantCosts } = useQuery({
+    queryKey: ["admin-variant-costs", productId],
+    enabled: isEdit,
+    queryFn: () => fetchVariantCosts({ data: { product_id: productId! } }),
+  });
+
   useEffect(() => {
     if (!loaded) return;
     const p: any = loaded;
