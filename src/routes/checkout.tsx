@@ -145,7 +145,10 @@ function CheckoutPage() {
             product_id: i.product_id,
             variant_id: i.variant_id,
             quantity: i.quantity,
-            customization_field_ids: i.customizations.map((c) => c.field_id),
+            customizations: i.customizations.map((c) => ({
+              field_id: c.field_id,
+              value: c.value,
+            })),
           })),
         },
       });
