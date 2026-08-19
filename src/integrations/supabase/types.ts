@@ -766,7 +766,10 @@ export type Database = {
           payment_provider: string | null
           payment_reference: string | null
           payment_status: Database["public"]["Enums"]["payment_status"]
+          production_days: number
           shipping_address: Json | null
+          shipping_quote_id: string | null
+          shipping_snapshot: Json | null
           shipping_total: number
           status: Database["public"]["Enums"]["order_status"]
           subtotal: number
@@ -783,7 +786,10 @@ export type Database = {
           payment_provider?: string | null
           payment_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
+          production_days?: number
           shipping_address?: Json | null
+          shipping_quote_id?: string | null
+          shipping_snapshot?: Json | null
           shipping_total?: number
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
@@ -800,7 +806,10 @@ export type Database = {
           payment_provider?: string | null
           payment_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
+          production_days?: number
           shipping_address?: Json | null
+          shipping_quote_id?: string | null
+          shipping_snapshot?: Json | null
           shipping_total?: number
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
@@ -813,6 +822,13 @@ export type Database = {
             columns: ["coupon_id"]
             isOneToOne: false
             referencedRelation: "coupons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_shipping_quote_id_fkey"
+            columns: ["shipping_quote_id"]
+            isOneToOne: false
+            referencedRelation: "shipping_quotes"
             referencedColumns: ["id"]
           },
         ]
@@ -1431,6 +1447,7 @@ export type Database = {
           cost_price: number | null
           created_at: string
           dimensions_text: string | null
+          free_shipping: boolean
           grind_option: Database["public"]["Enums"]["grind_option"] | null
           id: string
           image_url: string | null
@@ -1440,7 +1457,13 @@ export type Database = {
           name: string | null
           price: number
           product_id: string
+          requires_separate_package: boolean
           reserved_quantity: number
+          shipping_additional_days: number
+          shipping_height_cm: number | null
+          shipping_length_cm: number | null
+          shipping_weight_grams: number | null
+          shipping_width_cm: number | null
           sku: string | null
           sort_order: number
           stock_quantity: number
@@ -1453,6 +1476,7 @@ export type Database = {
           cost_price?: number | null
           created_at?: string
           dimensions_text?: string | null
+          free_shipping?: boolean
           grind_option?: Database["public"]["Enums"]["grind_option"] | null
           id?: string
           image_url?: string | null
@@ -1462,7 +1486,13 @@ export type Database = {
           name?: string | null
           price: number
           product_id: string
+          requires_separate_package?: boolean
           reserved_quantity?: number
+          shipping_additional_days?: number
+          shipping_height_cm?: number | null
+          shipping_length_cm?: number | null
+          shipping_weight_grams?: number | null
+          shipping_width_cm?: number | null
           sku?: string | null
           sort_order?: number
           stock_quantity?: number
@@ -1475,6 +1505,7 @@ export type Database = {
           cost_price?: number | null
           created_at?: string
           dimensions_text?: string | null
+          free_shipping?: boolean
           grind_option?: Database["public"]["Enums"]["grind_option"] | null
           id?: string
           image_url?: string | null
@@ -1484,7 +1515,13 @@ export type Database = {
           name?: string | null
           price?: number
           product_id?: string
+          requires_separate_package?: boolean
           reserved_quantity?: number
+          shipping_additional_days?: number
+          shipping_height_cm?: number | null
+          shipping_length_cm?: number | null
+          shipping_weight_grams?: number | null
+          shipping_width_cm?: number | null
           sku?: string | null
           sort_order?: number
           stock_quantity?: number
@@ -1517,6 +1554,7 @@ export type Database = {
           description: string | null
           dimensions_text: string | null
           farm_id: string | null
+          free_shipping: boolean
           grind_options: Database["public"]["Enums"]["grind_option"][] | null
           id: string
           included_items: string | null
@@ -1538,12 +1576,18 @@ export type Database = {
           production_time_days: number | null
           published_at: string | null
           recommended_brew: Database["public"]["Enums"]["brew_method"][] | null
+          requires_separate_package: boolean
           roast_date: string | null
           roast_level: Database["public"]["Enums"]["roast_level"] | null
           safety_notes: string | null
           score: number | null
           seo_description: string | null
           seo_title: string | null
+          shipping_additional_days: number
+          shipping_height_cm: number | null
+          shipping_length_cm: number | null
+          shipping_weight_grams: number | null
+          shipping_width_cm: number | null
           short_description: string | null
           sku: string | null
           slug: string
@@ -1572,6 +1616,7 @@ export type Database = {
           description?: string | null
           dimensions_text?: string | null
           farm_id?: string | null
+          free_shipping?: boolean
           grind_options?: Database["public"]["Enums"]["grind_option"][] | null
           id?: string
           included_items?: string | null
@@ -1593,12 +1638,18 @@ export type Database = {
           production_time_days?: number | null
           published_at?: string | null
           recommended_brew?: Database["public"]["Enums"]["brew_method"][] | null
+          requires_separate_package?: boolean
           roast_date?: string | null
           roast_level?: Database["public"]["Enums"]["roast_level"] | null
           safety_notes?: string | null
           score?: number | null
           seo_description?: string | null
           seo_title?: string | null
+          shipping_additional_days?: number
+          shipping_height_cm?: number | null
+          shipping_length_cm?: number | null
+          shipping_weight_grams?: number | null
+          shipping_width_cm?: number | null
           short_description?: string | null
           sku?: string | null
           slug: string
@@ -1627,6 +1678,7 @@ export type Database = {
           description?: string | null
           dimensions_text?: string | null
           farm_id?: string | null
+          free_shipping?: boolean
           grind_options?: Database["public"]["Enums"]["grind_option"][] | null
           id?: string
           included_items?: string | null
@@ -1648,12 +1700,18 @@ export type Database = {
           production_time_days?: number | null
           published_at?: string | null
           recommended_brew?: Database["public"]["Enums"]["brew_method"][] | null
+          requires_separate_package?: boolean
           roast_date?: string | null
           roast_level?: Database["public"]["Enums"]["roast_level"] | null
           safety_notes?: string | null
           score?: number | null
           seo_description?: string | null
           seo_title?: string | null
+          shipping_additional_days?: number
+          shipping_height_cm?: number | null
+          shipping_length_cm?: number | null
+          shipping_weight_grams?: number | null
+          shipping_width_cm?: number | null
           short_description?: string | null
           sku?: string | null
           slug?: string
@@ -1913,6 +1971,183 @@ export type Database = {
           },
         ]
       }
+      shipping_methods: {
+        Row: {
+          code: string
+          created_at: string
+          delivery_days: number
+          description: string | null
+          free_above_total: number | null
+          id: string
+          is_active: boolean
+          kind: string
+          max_order_total: number | null
+          min_order_total: number | null
+          name: string
+          price: number
+          provider: string
+          regions: string[]
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          delivery_days?: number
+          description?: string | null
+          free_above_total?: number | null
+          id?: string
+          is_active?: boolean
+          kind?: string
+          max_order_total?: number | null
+          min_order_total?: number | null
+          name: string
+          price?: number
+          provider?: string
+          regions?: string[]
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          delivery_days?: number
+          description?: string | null
+          free_above_total?: number | null
+          id?: string
+          is_active?: boolean
+          kind?: string
+          max_order_total?: number | null
+          min_order_total?: number | null
+          name?: string
+          price?: number
+          provider?: string
+          regions?: string[]
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      shipping_quotes: {
+        Row: {
+          carrier: string | null
+          cart_hash: string
+          customer_id: string | null
+          delivery_days: number
+          expires_at: string
+          external_id: string | null
+          id: string
+          method_code: string
+          package_data: Json
+          postal_code: string
+          price: number
+          production_days: number
+          provider: string
+          quoted_at: string
+          service: string | null
+        }
+        Insert: {
+          carrier?: string | null
+          cart_hash: string
+          customer_id?: string | null
+          delivery_days: number
+          expires_at?: string
+          external_id?: string | null
+          id?: string
+          method_code: string
+          package_data?: Json
+          postal_code: string
+          price: number
+          production_days?: number
+          provider: string
+          quoted_at?: string
+          service?: string | null
+        }
+        Update: {
+          carrier?: string | null
+          cart_hash?: string
+          customer_id?: string | null
+          delivery_days?: number
+          expires_at?: string
+          external_id?: string | null
+          id?: string
+          method_code?: string
+          package_data?: Json
+          postal_code?: string
+          price?: number
+          production_days?: number
+          provider?: string
+          quoted_at?: string
+          service?: string | null
+        }
+        Relationships: []
+      }
+      shipping_settings: {
+        Row: {
+          active_provider: string
+          free_shipping_min_total: number | null
+          handling_days: number
+          id: boolean
+          local_pickup_address: string | null
+          local_pickup_enabled: boolean
+          local_pickup_instructions: string | null
+          local_pickup_label: string | null
+          melhor_envio_enabled: boolean
+          melhor_envio_sandbox: boolean
+          origin_city: string | null
+          origin_complement: string | null
+          origin_neighborhood: string | null
+          origin_number: string | null
+          origin_postal_code: string | null
+          origin_state: string | null
+          origin_street: string | null
+          shipping_markup_percent: number
+          updated_at: string
+        }
+        Insert: {
+          active_provider?: string
+          free_shipping_min_total?: number | null
+          handling_days?: number
+          id?: boolean
+          local_pickup_address?: string | null
+          local_pickup_enabled?: boolean
+          local_pickup_instructions?: string | null
+          local_pickup_label?: string | null
+          melhor_envio_enabled?: boolean
+          melhor_envio_sandbox?: boolean
+          origin_city?: string | null
+          origin_complement?: string | null
+          origin_neighborhood?: string | null
+          origin_number?: string | null
+          origin_postal_code?: string | null
+          origin_state?: string | null
+          origin_street?: string | null
+          shipping_markup_percent?: number
+          updated_at?: string
+        }
+        Update: {
+          active_provider?: string
+          free_shipping_min_total?: number | null
+          handling_days?: number
+          id?: boolean
+          local_pickup_address?: string | null
+          local_pickup_enabled?: boolean
+          local_pickup_instructions?: string | null
+          local_pickup_label?: string | null
+          melhor_envio_enabled?: boolean
+          melhor_envio_sandbox?: boolean
+          origin_city?: string | null
+          origin_complement?: string | null
+          origin_neighborhood?: string | null
+          origin_number?: string | null
+          origin_postal_code?: string | null
+          origin_state?: string | null
+          origin_street?: string | null
+          shipping_markup_percent?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_images: {
         Row: {
           alt: string
@@ -2022,6 +2257,47 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tracking_events: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          location: string | null
+          occurred_at: string
+          raw: Json | null
+          shipment_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          location?: string | null
+          occurred_at?: string
+          raw?: Json | null
+          shipment_id: string
+          status: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          location?: string | null
+          occurred_at?: string
+          raw?: Json | null
+          shipment_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tracking_events_shipment_id_fkey"
+            columns: ["shipment_id"]
+            isOneToOne: false
+            referencedRelation: "shipments"
             referencedColumns: ["id"]
           },
         ]
