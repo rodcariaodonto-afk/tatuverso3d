@@ -1,212 +1,24 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeader } from "@tanstack/react-start/server";
-import {
-  ALLOWED_UPLOAD_MIME,
-  CUSTOM_BUCKET,
-  MAX_UPLOAD_BYTES,
-  cartPayloadSchema,
-  optionLabels,
-  optionValues,
-} from "./cart-validation";
+import { cartPayloadSchema } from "./cart-validation";
 import type { ValidatedCartItem, ValidatedCustomization } from "./cart-validation";
+import { revalidateCart } from "./cart.server";
 
 export type { ValidatedCartItem, ValidatedCustomization };
 
 /**
- * Revalida o carrinho inteiramente no servidor:
- * preços, estoque e personalizações são recarregados do banco.
- * Nada de preço, acréscimo ou total enviado pelo navegador é aceito.
+ * Revalida o carrinho inteiramente no servidor: preços, estoque, prazos e
+ * personalizações são recarregados do banco.
  */
 export const validateCart = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => cartPayloadSchema.parse(data))
-  .handler(async ({ data }): Promise<{ items: ValidatedCartItem[]; subtotal: number }> => {
-    const { createClient } = await import("@supabase/supabase-js");
-    const supabase = createClient(
-      process.env["SUPABASE_URL"]!,
-      process.env["SUPABASE_PUBLISHABLE_KEY"]!,
-      { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
-    );
-
-    // Usuário autenticado (opcional): necessário apenas para validar arquivos enviados.
-    let userId: string | null = null;
-    let userClient: ReturnType<typeof createClient> | null = null;
+  .handler(async ({ data }) => {
     const authHeader = getRequestHeader("authorization") ?? getRequestHeader("Authorization");
-    const token = authHeader?.replace(/^Bearer\s+/i, "").trim();
-    if (token) {
-      const { data: userData } = await supabase.auth.getUser(token);
-      userId = userData.user?.id ?? null;
-      if (userId) {
-        userClient = createClient(
-          process.env["SUPABASE_URL"]!,
-          process.env["SUPABASE_PUBLISHABLE_KEY"]!,
-          {
-            auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
-            global: { headers: { Authorization: `Bearer ${token}` } },
-          },
-        );
-      }
-    }
-
-    const productIds = [...new Set(data.items.map((i) => i.product_id))];
-    const { data: products, error } = await supabase
-      .from("products")
-      .select(
-        `id, name, price, status, made_to_order, production_time_days, sku, stock_quantity,
-         track_inventory, allow_backorder,
-         product_variants ( id, name, sku, price, stock_quantity, is_active ),
-         product_customization_fields (
-           id, label, field_type, is_required, is_active, min_length, max_length,
-           price_adjustment, options
-         )`,
-      )
-      .in("id", productIds)
-      .eq("status", "active");
-    if (error) throw new Error(error.message);
-
-    const byId = new Map((products ?? []).map((p: any) => [p.id, p]));
-    const items: ValidatedCartItem[] = [];
-
-    for (const item of data.items) {
-      const p: any = byId.get(item.product_id);
-      if (!p) throw new Error("Produto indisponível no carrinho");
-
-      let unit = Number(p.price);
-      let variantName: string | null = null;
-      let sku: string | null = p.sku ?? null;
-
-      if (item.variant_id) {
-        const v = (p.product_variants ?? []).find((x: any) => x.id === item.variant_id);
-        if (!v || v.is_active === false) throw new Error(`Variação indisponível: ${p.name}`);
-        unit = Number(v.price);
-        variantName = v.name ?? null;
-        sku = v.sku ?? sku;
-        if (p.track_inventory && !p.allow_backorder && !p.made_to_order && v.stock_quantity < item.quantity) {
-          throw new Error(`Estoque insuficiente: ${p.name}`);
-        }
-      } else if (p.track_inventory && !p.allow_backorder && !p.made_to_order && p.stock_quantity < item.quantity) {
-        throw new Error(`Estoque insuficiente: ${p.name}`);
-      }
-
-      /* ── PERSONALIZAÇÃO: validação integral no servidor ───────────────── */
-      const dbFields: any[] = (p.product_customization_fields ?? []).filter(
-        (f: any) => f.is_active !== false,
-      );
-      const dbById = new Map(dbFields.map((f) => [f.id, f]));
-      const sent = new Map<string, string>();
-
-      for (const c of item.customizations) {
-        const f = dbById.get(c.field_id);
-        if (!f) throw new Error(`Personalização inválida em ${p.name}`);
-        if (sent.has(c.field_id)) throw new Error(`Personalização duplicada em ${p.name}`);
-        sent.set(c.field_id, c.value);
-      }
-
-      const customization_data: ValidatedCustomization[] = [];
-
-      for (const f of dbFields) {
-        const rawValue = sent.get(f.id);
-        const value = (rawValue ?? "").trim();
-        const filled = f.field_type === "checkbox" ? value === "true" : value.length > 0;
-
-        if (!filled) {
-          if (f.is_required) {
-            throw new Error(`Personalização obrigatória não preenchida em ${p.name}: ${f.label}`);
-          }
-          continue;
-        }
-
-        switch (f.field_type) {
-          case "short_text":
-          case "long_text": {
-            const min = f.min_length ?? 0;
-            const max = f.max_length ?? (f.field_type === "short_text" ? 200 : 2000);
-            if (value.length < min) throw new Error(`${f.label}: mínimo de ${min} caracteres`);
-            if (value.length > max) throw new Error(`${f.label}: máximo de ${max} caracteres`);
-            break;
-          }
-          case "number": {
-            const n = Number(value);
-            if (!Number.isFinite(n)) throw new Error(`${f.label}: informe um número válido`);
-            if (f.min_length != null && n < Number(f.min_length))
-              throw new Error(`${f.label}: valor mínimo ${f.min_length}`);
-            if (f.max_length != null && n > Number(f.max_length))
-              throw new Error(`${f.label}: valor máximo ${f.max_length}`);
-            break;
-          }
-          case "select":
-          case "color": {
-            const allowed = [...optionValues(f.options), ...optionLabels(f.options)];
-            if (allowed.length && !allowed.includes(value)) {
-              throw new Error(`${f.label}: opção inválida`);
-            }
-            if (f.field_type === "color" && !allowed.length && !/^#[0-9a-fA-F]{3,8}$/.test(value)) {
-              throw new Error(`${f.label}: cor inválida`);
-            }
-            break;
-          }
-          case "checkbox": {
-            if (value !== "true") throw new Error(`${f.label}: valor inválido`);
-            break;
-          }
-          case "file":
-          case "image": {
-            if (!userId || !userClient)
-              throw new Error(`${f.label}: entre na sua conta para enviar arquivos`);
-            const path = value.replace(/^\/+/, "").replace(`${CUSTOM_BUCKET}/`, "");
-            if (!path.startsWith(`${userId}/`) || path.includes("..")) {
-              throw new Error(`${f.label}: arquivo inválido`);
-            }
-            const folder = path.slice(0, path.lastIndexOf("/"));
-            const file = path.slice(path.lastIndexOf("/") + 1);
-            const { data: listed, error: listErr } = await userClient.storage
-              .from(CUSTOM_BUCKET)
-              .list(folder, { search: file, limit: 100 });
-            const found: any = listed?.find((o: any) => o.name === file);
-            if (listErr || !found) {
-              throw new Error(`${f.label}: arquivo não encontrado para o seu usuário`);
-            }
-            /* limites aplicados no servidor (o bucket é privado e por prefixo do usuário) */
-            const size = Number(found.metadata?.size ?? 0);
-            const mime = String(found.metadata?.mimetype ?? "");
-            if (size > MAX_UPLOAD_BYTES) {
-              throw new Error(`${f.label}: arquivo acima de 10 MB`);
-            }
-            if (mime && !ALLOWED_UPLOAD_MIME.includes(mime)) {
-              throw new Error(`${f.label}: tipo de arquivo não permitido`);
-            }
-            break;
-          }
-          default:
-            throw new Error(`${f.label}: tipo de campo não suportado`);
-        }
-
-        const adjustment = Number(f.price_adjustment ?? 0);
-        unit += adjustment;
-        customization_data.push({
-          field_id: f.id,
-          label: f.label,
-          field_type: f.field_type,
-          value,
-          price_adjustment: adjustment,
-        });
-      }
-
-      const total = Number((unit * item.quantity).toFixed(2));
-      items.push({
-        product_id: p.id,
-        variant_id: item.variant_id,
-        product_name: p.name,
-        variant_name: variantName,
-        sku,
-        unit_price: Number(unit.toFixed(2)),
-        quantity: item.quantity,
-        total_price: total,
-        made_to_order: !!p.made_to_order,
-        production_time_days: p.production_time_days ?? null,
-        customization_data,
-      });
-    }
-
-    const subtotal = Number(items.reduce((s, i) => s + i.total_price, 0).toFixed(2));
-    return { items, subtotal };
+    const token = authHeader?.replace(/^Bearer\s+/i, "").trim() ?? null;
+    const result = await revalidateCart(data, token);
+    return {
+      items: result.items,
+      subtotal: result.subtotal,
+      production_days: result.production_days,
+    };
   });
