@@ -44,11 +44,18 @@ export const getPaymentConfig = createServerFn({ method: "GET" }).handler(async 
 });
 
 function baseUrl() {
+  const configured = import.meta.env.VITE_STORE_URL;
+  if (configured) return configured.replace(/\/$/, "");
   const req = getRequest();
   const url = new URL(req.url);
   const host = req.headers.get("x-forwarded-host") ?? url.host;
   const proto = req.headers.get("x-forwarded-proto") ?? url.protocol.replace(":", "");
-  return `${proto}://${host}`;
+  const fallback = `${proto}://${host}`;
+  // Em desenvolvimento local o MP rejeita localhost como notification_url.
+  if (fallback.includes("localhost")) {
+    return "https://id-preview--825bb7a2-6156-419e-9d1b-368867a4833f.lovable.app";
+  }
+  return fallback;
 }
 
 /** Cria o pagamento. O valor vem sempre do pedido no banco. */
