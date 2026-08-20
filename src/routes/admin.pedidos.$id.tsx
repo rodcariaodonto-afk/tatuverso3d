@@ -133,6 +133,15 @@ function OrderDetailPage() {
           </div>
         </header>
 
+        {order.status === "paid" && items.some((it: any) => it.production_status === "pending") && (
+          <div className="mt-4 rounded-lg border border-accent/30 bg-accent/10 p-4">
+            <p className="text-sm font-semibold text-accent">Pronto para produção</p>
+            <p className="text-xs text-primary">
+              Pagamento confirmado. Use o painel "Itens e produção" abaixo para iniciar a impressão item a item.
+            </p>
+          </div>
+        )}
+
         <div className="mt-6 grid gap-6 lg:grid-cols-[2fr_1fr]">
           <div className="space-y-6">
             <Panel title="Itens e produção">

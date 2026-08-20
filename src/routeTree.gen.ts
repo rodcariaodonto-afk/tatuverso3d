@@ -44,6 +44,7 @@ import { Route as AdminCuponsRouteImport } from './routes/admin.cupons'
 import { Route as AdminConteudoRouteImport } from './routes/admin.conteudo'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
+import { Route as AdminPedidosIndexRouteImport } from './routes/admin.pedidos.index'
 import { Route as MinhaContaPedidoIdRouteImport } from './routes/minha-conta.pedido.$id'
 import { Route as AdminProdutosNovoRouteImport } from './routes/admin.produtos.novo'
 import { Route as AdminPedidosIdRouteImport } from './routes/admin.pedidos.$id'
@@ -226,6 +227,11 @@ const AdminClientesRoute = AdminClientesRouteImport.update({
   path: '/clientes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPedidosIndexRoute = AdminPedidosIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminPedidosRoute,
+} as any)
 const MinhaContaPedidoIdRoute = MinhaContaPedidoIdRouteImport.update({
   id: '/pedido/$id',
   path: '/pedido/$id',
@@ -298,6 +304,7 @@ export interface FileRoutesByFullPath {
   '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
+  '/admin/pedidos/': typeof AdminPedidosIndexRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
   '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
@@ -330,7 +337,6 @@ export interface FileRoutesByTo {
   '/admin/estoque': typeof AdminEstoqueRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
-  '/admin/pedidos': typeof AdminPedidosRouteWithChildren
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -341,6 +347,7 @@ export interface FileRoutesByTo {
   '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
+  '/admin/pedidos': typeof AdminPedidosIndexRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
   '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
@@ -385,6 +392,7 @@ export interface FileRoutesById {
   '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
+  '/admin/pedidos/': typeof AdminPedidosIndexRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
   '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
@@ -430,6 +438,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
     | '/minha-conta/pedido/$id'
+    | '/admin/pedidos/'
     | '/admin/produtos/$id/editar'
     | '/api/public/jobs/expire-reservations'
     | '/api/public/webhooks/mercadopago'
@@ -462,7 +471,6 @@ export interface FileRouteTypes {
     | '/admin/estoque'
     | '/admin/integracoes'
     | '/admin/pagamentos'
-    | '/admin/pedidos'
     | '/admin/produtos'
     | '/admin/vendas'
     | '/blog/$slug'
@@ -473,6 +481,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
     | '/minha-conta/pedido/$id'
+    | '/admin/pedidos'
     | '/admin/produtos/$id/editar'
     | '/api/public/jobs/expire-reservations'
     | '/api/public/webhooks/mercadopago'
@@ -516,6 +525,7 @@ export interface FileRouteTypes {
     | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
     | '/minha-conta/pedido/$id'
+    | '/admin/pedidos/'
     | '/admin/produtos/$id/editar'
     | '/api/public/jobs/expire-reservations'
     | '/api/public/webhooks/mercadopago'
@@ -796,6 +806,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminClientesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/pedidos/': {
+      id: '/admin/pedidos/'
+      path: '/'
+      fullPath: '/admin/pedidos/'
+      preLoaderRoute: typeof AdminPedidosIndexRouteImport
+      parentRoute: typeof AdminPedidosRoute
+    }
     '/minha-conta/pedido/$id': {
       id: '/minha-conta/pedido/$id'
       path: '/pedido/$id'
@@ -843,10 +860,12 @@ declare module '@tanstack/react-router' {
 
 interface AdminPedidosRouteChildren {
   AdminPedidosIdRoute: typeof AdminPedidosIdRoute
+  AdminPedidosIndexRoute: typeof AdminPedidosIndexRoute
 }
 
 const AdminPedidosRouteChildren: AdminPedidosRouteChildren = {
   AdminPedidosIdRoute: AdminPedidosIdRoute,
+  AdminPedidosIndexRoute: AdminPedidosIndexRoute,
 }
 
 const AdminPedidosRouteWithChildren = AdminPedidosRoute._addFileChildren(
