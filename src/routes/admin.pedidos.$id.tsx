@@ -13,6 +13,7 @@ import {
   adminSetItemProduction,
   adminUpdateOrderStatus,
 } from "@/lib/orders-admin.functions";
+import { refundPayment as refundPaymentFn } from "@/lib/payments-admin.functions";
 import {
   ALLOWED_TRANSITIONS,
   ORDER_STATUS_LABEL,
@@ -40,6 +41,7 @@ function OrderDetailPage() {
   const saveShipment = useServerFn(adminSaveShipment);
   const addEvent = useServerFn(adminAddTrackingEvent);
   const resync = useServerFn(adminResyncPayment);
+  const refundPayment = useServerFn(refundPaymentFn);
 
   const detail = useQuery({
     queryKey: ["admin-order", id],
@@ -70,6 +72,21 @@ function OrderDetailPage() {
       refresh();
     },
     onError: (e: any) => toast.error(e?.message ?? "Falha ao reconsultar."),
+  });
+
+  const [refundAmount, setRefundAmount] = useState<Record<string, string>>({});
+  const [refundReason, setRefundReason] = useState<Record<string, string>>({});
+
+  const refundMutation = useMutation({
+    mutationFn: (vars: { payment_id: string; amount: number | null; reason: string }) =>
+      refundPayment({ data: vars }),
+    onSuccess: (r: any) => {
+      toast.success(r.full ? "Estorno total concluído" : "Estorno parcial concluído");
+      setRefundAmount({});
+      setRefundReason({});
+      refresh();
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Falha ao estornar."),
   });
 
   if (detail.isLoading) {
