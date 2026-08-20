@@ -165,11 +165,44 @@ export const adminSetItemProduction = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdmin(context as any);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: item, error: findErr } = await supabaseAdmin
+      .from("order_items")
+      .select("id, production_status, orders!inner(id, status, payment_status)", { count: "exact" })
+      .eq("id", data.item_id)
+      .maybeSingle();
+    if (findErr) throw new Error(findErr.message);
+    if (!item) throw new Error("Item não encontrado.");
+
+    const order = (item as any).orders as { id: string; status: string; payment_status: string };
+
+    if (
+      data.production_status === "in_production" &&
+      (item as any).production_status === "pending" &&
+      order.payment_status !== "paid"
+    ) {
+      throw new Error("Aguarde a confirmação do pagamento para iniciar a produção.");
+    }
+
     const { error } = await supabaseAdmin
       .from("order_items")
       .update({ production_status: data.production_status, production_notes: data.production_notes })
       .eq("id", data.item_id);
     if (error) throw new Error(error.message);
+
+    await supabaseAdmin.from("audit_logs").insert({
+      actor_user_id: context.userId,
+      action: "order_item.production_changed",
+      entity_type: "order_items",
+      entity_id: data.item_id,
+      details: {
+        order_id: order.id,
+        from: (item as any).production_status,
+        to: data.production_status,
+        notes: data.production_notes,
+      },
+    });
+
     return { ok: true };
   });
 
@@ -189,6 +222,42 @@ export const adminProductionQueue = createServerFn({ method: "POST" })
       .limit(200);
     if (error) throw new Error(error.message);
     return data ?? [];
+  });
+
+/** Pedidos pagos que ainda não tiveram nenhum item iniciado na produção. */
+export const adminPendingProductionQueue = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context as any);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: rows, error } = await supabaseAdmin
+      .from("orders")
+      .select(
+        "id, customer_id, status, payment_status, total, created_at, order_items!inner(id, product_name, variant_name_snapshot, quantity, production_status)",
+      )
+      .eq("status", "paid")
+      .eq("payment_status", "paid")
+      .order("created_at", { ascending: true })
+      .limit(200);
+    if (error) throw new Error(error.message);
+
+    const pending = (rows ?? []).filter((o: any) =>
+      (o.order_items ?? []).some((it: any) => it.production_status === "pending"),
+    );
+
+    const customerIds = Array.from(new Set(pending.map((o: any) => o.customer_id).filter(Boolean))) as string[];
+    const { data: profiles } = customerIds.length
+      ? await supabaseAdmin.from("profiles").select("id, full_name, email").in("id", customerIds)
+      : { data: [] as any[] };
+    const byId = new Map((profiles ?? []).map((p: any) => [p.id, p]));
+
+    return pending.map((o: any) => ({
+      ...o,
+      customer: byId.get(o.customer_id) ?? null,
+      pending_items: (o.order_items ?? []).filter((it: any) => it.production_status === "pending"),
+      pending_count: (o.order_items ?? []).filter((it: any) => it.production_status === "pending").length,
+    }));
   });
 
 export const adminSaveShipment = createServerFn({ method: "POST" })
