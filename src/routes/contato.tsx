@@ -29,9 +29,9 @@ function ContactPage() {
 
       <div className="mt-10 grid gap-6 md:grid-cols-3">
         {[
-          { icon: Mail, label: "Email", value: "ola@cafezeira.com.br" },
+          { icon: Mail, label: "Email", value: "contato@tatuverso3d.com.br" },
           { icon: MessageCircle, label: "WhatsApp", value: "+55 11 99999-9999" },
-          { icon: Instagram, label: "Instagram", value: "@cafezeira" },
+          { icon: Instagram, label: "Instagram", value: "@tatuverso3d" },
         ].map((c) => (
           <div key={c.label} className="rounded-lg border border-border bg-card p-5">
             <c.icon className="h-5 w-5 text-[var(--brand-accent)]" />

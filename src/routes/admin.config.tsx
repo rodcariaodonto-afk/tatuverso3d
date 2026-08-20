@@ -15,19 +15,19 @@ type Tab = "store" | "company" | "payments";
 
 const STORE_FIELDS = [
   { key: "store.name", label: "Nome da loja", placeholder: "TatuVerso3D" },
-  { key: "store.tagline", label: "Tagline", placeholder: "Cafés especiais brasileiros" },
+  { key: "store.tagline", label: "Tagline", placeholder: "Um universo de ideias que ganham forma" },
   { key: "store.currency", label: "Moeda", placeholder: "BRL", type: "select", options: ["BRL", "USD", "EUR"] },
   { key: "store.measurement", label: "Sistema de medição", placeholder: "metric", type: "select", options: ["metric", "imperial"] },
   { key: "store.timezone", label: "Fuso horário", placeholder: "America/Sao_Paulo" },
   { key: "shipping.free_threshold", label: "Frete grátis acima de (R$)", placeholder: "150" },
   { key: "shipping.flat_rate", label: "Frete fixo (R$)", placeholder: "19.90" },
-  { key: "social.instagram", label: "Instagram URL", placeholder: "https://instagram.com/cafezeira" },
+  { key: "social.instagram", label: "Instagram URL", placeholder: "https://instagram.com/tatuverso3d" },
 ];
 
 const COMPANY_FIELDS = [
   { key: "company.legal_name", label: "Razão social", placeholder: "TatuVerso3D LTDA" },
   { key: "company.cnpj", label: "CNPJ", placeholder: "00.000.000/0001-00" },
-  { key: "company.email", label: "E-mail de contato", placeholder: "contato@cafezeira.com.br" },
+  { key: "company.email", label: "E-mail de contato", placeholder: "contato@tatuverso3d.com.br" },
   { key: "company.phone", label: "Telefone / WhatsApp", placeholder: "+55 11 99999-9999" },
   { key: "company.street", label: "Endereço", placeholder: "Rua, número, complemento" },
   { key: "company.city", label: "Cidade", placeholder: "São Paulo" },

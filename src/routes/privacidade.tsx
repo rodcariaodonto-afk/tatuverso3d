@@ -13,7 +13,7 @@ export const Route = createFileRoute("/privacidade")({
         </p>
         <p>
           Você pode solicitar a remoção dos seus dados a qualquer momento entrando em contato pelo email{" "}
-          <a href="mailto:privacidade@cafezeira.com.br" className="text-primary underline">privacidade@cafezeira.com.br</a>.
+          <a href="mailto:privacidade@tatuverso3d.com.br" className="text-primary underline">privacidade@tatuverso3d.com.br</a>.
         </p>
         <p>Em conformidade com a LGPD (Lei Geral de Proteção de Dados).</p>
       </div>

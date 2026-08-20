@@ -236,8 +236,8 @@ function PrivacidadePage() {
         </ul>
         <p className="mt-4">
           Dúvidas?{" "}
-          <a href="mailto:privacidade@cafezeira.com" className="font-semibold text-primary hover:underline">
-            privacidade@cafezeira.com
+          <a href="mailto:privacidade@tatuverso3d.com.br" className="font-semibold text-primary hover:underline">
+            privacidade@tatuverso3d.com.br
           </a>
         </p>
       </section>
