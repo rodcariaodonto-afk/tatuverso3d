@@ -187,8 +187,10 @@ export const refundPayment = createServerFn({ method: "POST" })
         .maybeSingle();
       if (order) {
         const current = order.status as OrderStatus;
-        const patch: Record<string, unknown> = { payment_status: "refunded" };
-        if (ALLOWED_TRANSITIONS[current]?.includes("refunded")) patch["status"] = "refunded";
+        const patch: { payment_status: "refunded"; status?: OrderStatus } = {
+          payment_status: "refunded",
+        };
+        if (ALLOWED_TRANSITIONS[current]?.includes("refunded")) patch.status = "refunded";
         await supabaseAdmin.from("orders").update(patch).eq("id", order.id);
         await supabaseAdmin.rpc("release_stock", { _order_id: order.id, _reason: "refunded" });
       }
