@@ -926,6 +926,9 @@ export type Database = {
           qr_code: string | null
           qr_code_base64: string | null
           raw_payload: Json | null
+          refund_reason: string | null
+          refunded_amount: number
+          refunded_at: string | null
           status: Database["public"]["Enums"]["payment_status"]
           ticket_url: string | null
           updated_at: string
@@ -947,6 +950,9 @@ export type Database = {
           qr_code?: string | null
           qr_code_base64?: string | null
           raw_payload?: Json | null
+          refund_reason?: string | null
+          refunded_amount?: number
+          refunded_at?: string | null
           status?: Database["public"]["Enums"]["payment_status"]
           ticket_url?: string | null
           updated_at?: string
@@ -968,6 +974,9 @@ export type Database = {
           qr_code?: string | null
           qr_code_base64?: string | null
           raw_payload?: Json | null
+          refund_reason?: string | null
+          refunded_amount?: number
+          refunded_at?: string | null
           status?: Database["public"]["Enums"]["payment_status"]
           ticket_url?: string | null
           updated_at?: string
