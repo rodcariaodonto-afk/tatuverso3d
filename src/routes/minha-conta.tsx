@@ -158,28 +158,13 @@ function AccountPage() {
         </button>
       </header>
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-4">
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
         <Card icon={UserIcon} title="Perfil" desc={user.email ?? ""} />
         <Card icon={Package} title="Pedidos" desc={`${orders?.length ?? 0} no histórico`} />
-        <Card icon={Heart} title="Clube" desc="Gerencie sua assinatura" link="/clube" />
         <Card icon={Shield} title="Privacidade" desc="Exporte ou exclua seus dados (LGPD)" link="/minha-conta/privacidade" />
       </div>
 
-      {roles?.includes("producer" as any) && (
-        <Link
-          to="/produtor"
-          className="mt-6 flex items-center justify-between rounded-xl border border-accent/40 bg-[var(--surface-soft)] p-5"
-        >
-          <div className="flex items-center gap-3">
-            <Crown className="h-5 w-5 text-[var(--brand-accent)]" />
-            <div>
-              <p className="font-display text-lg text-primary">Painel do Parceiro</p>
-              <p className="text-xs text-muted-foreground">Gerencie seus produtos e pedidos.</p>
-            </div>
-          </div>
-          <span className="text-sm font-semibold text-primary">Abrir →</span>
-        </Link>
-      )}
+
 
       {(roles?.includes("admin" as any) || roles?.includes("support" as any)) && (
         <Link
