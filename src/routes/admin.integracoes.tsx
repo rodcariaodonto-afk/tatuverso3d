@@ -43,7 +43,7 @@ function IntegracoesPage() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin", "integrations"],
-    queryFn: () => fetchIntegrations({ data: {} }),
+    queryFn: () => fetchIntegrations(),
   });
 
   const [form, setForm] = useState<Partial<Record<SettingKey, string>>>({});
@@ -65,7 +65,7 @@ function IntegracoesPage() {
   });
 
   const mpTest = useMutation({
-    mutationFn: () => runMpTest({ data: {} }),
+    mutationFn: () => runMpTest(),
     onSuccess: (r) => setMpResult(r),
     onError: (e: any) => setMpResult({ ok: false, message: e?.message ?? "Erro" }),
   });
