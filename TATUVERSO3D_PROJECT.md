@@ -117,3 +117,34 @@ fixo, busca de CEP, validação de UF/telefone e tela de confirmação.
 
 ### Telas
 - `/admin/pedidos`, `/admin/pedidos/$id`, `/admin/estoque`, `/minha-conta`, `/minha-conta/pedido/$id`.
+
+## Onda 3D — Operação de pagamentos e estorno
+
+### Painel de eventos (`/admin/pagamentos`)
+- Lista `payment_events` (tipo, id do pagamento, assinatura, processamento, erro) com filtros
+  "somente com erro", "não processados" e busca por id do pagamento.
+- Detalhe lateral com payload recebido (somente leitura) e link para o pedido vinculado.
+- **Reprocessar** chama `syncPaymentFromProvider`, que sempre reconsulta a API do Mercado Pago;
+  o corpo salvo nunca é fonte de verdade. Sucesso grava `processed_at`; falha grava `process_error`.
+
+### Estorno real
+- `refundMpPayment` (`src/lib/payments.server.ts`) → `POST /v1/payments/{id}/refunds`, com chave de
+  idempotência `refund:<payment_id>:<valor>` e timeout de 15 s.
+- `refundPayment` (`src/lib/payments-admin.functions.ts`): exige admin, confere valor contra
+  `payments.amount - refunded_amount`, chama o provedor, reconcilia, grava `refunded_amount`,
+  `refund_reason`, `refunded_at` e registra em `audit_logs`.
+- Estorno total marca o pedido como `refunded` (respeitando a máquina de transições) e libera reservas
+  pendentes; estorno parcial mantém o pedido pago e apenas registra o valor devolvido.
+- Falha da API nunca marca o pedido como estornado — o erro aparece na tela.
+
+### Matriz de testes
+| Cenário | Como validar |
+| --- | --- |
+| Pix aprovado | Pedido → Pix → aprovar no sandbox → pedido `paid`, reserva `committed`, movimento de estoque |
+| Cartão aprovado | Titular `APRO` → pedido `paid` |
+| Cartão recusado | Titular `OTHE` → pedido segue `pending`, reserva mantida |
+| Expiração de reserva | `POST /api/public/jobs/expire-reservations` com apikey → reserva liberada, pedido cancelado |
+| Estorno total | `/admin/pedidos/$id` → Estornar → pedido `refunded` e valor em `payments.refunded_amount` |
+
+Observação: os testes automatizados de pagamento dependem de credenciais **TEST-** do Mercado Pago.
+Com as chaves de produção atuais a API responde `401 Unauthorized use of live credentials`.
