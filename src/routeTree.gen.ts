@@ -48,6 +48,7 @@ import { Route as AdminVendasRouteImport } from './routes/admin.vendas'
 import { Route as AdminProdutosRouteImport } from './routes/admin.produtos'
 import { Route as AdminProdutoresRouteImport } from './routes/admin.produtores'
 import { Route as AdminPedidosRouteImport } from './routes/admin.pedidos'
+import { Route as AdminPagamentosRouteImport } from './routes/admin.pagamentos'
 import { Route as AdminLeadsRouteImport } from './routes/admin.leads'
 import { Route as AdminIntegracoesRouteImport } from './routes/admin.integracoes'
 import { Route as AdminEstoqueRouteImport } from './routes/admin.estoque'
@@ -260,6 +261,11 @@ const AdminPedidosRoute = AdminPedidosRouteImport.update({
   path: '/pedidos',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPagamentosRoute = AdminPagamentosRouteImport.update({
+  id: '/pagamentos',
+  path: '/pagamentos',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLeadsRoute = AdminLeadsRouteImport.update({
   id: '/leads',
   path: '/leads',
@@ -379,6 +385,7 @@ export interface FileRoutesByFullPath {
   '/admin/estoque': typeof AdminEstoqueRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/leads': typeof AdminLeadsRoute
+  '/admin/pagamentos': typeof AdminPagamentosRoute
   '/admin/pedidos': typeof AdminPedidosRouteWithChildren
   '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
@@ -436,6 +443,7 @@ export interface FileRoutesByTo {
   '/admin/estoque': typeof AdminEstoqueRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/leads': typeof AdminLeadsRoute
+  '/admin/pagamentos': typeof AdminPagamentosRoute
   '/admin/pedidos': typeof AdminPedidosRouteWithChildren
   '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
@@ -494,6 +502,7 @@ export interface FileRoutesById {
   '/admin/estoque': typeof AdminEstoqueRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/leads': typeof AdminLeadsRoute
+  '/admin/pagamentos': typeof AdminPagamentosRoute
   '/admin/pedidos': typeof AdminPedidosRouteWithChildren
   '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
@@ -553,6 +562,7 @@ export interface FileRouteTypes {
     | '/admin/estoque'
     | '/admin/integracoes'
     | '/admin/leads'
+    | '/admin/pagamentos'
     | '/admin/pedidos'
     | '/admin/produtores'
     | '/admin/produtos'
@@ -610,6 +620,7 @@ export interface FileRouteTypes {
     | '/admin/estoque'
     | '/admin/integracoes'
     | '/admin/leads'
+    | '/admin/pagamentos'
     | '/admin/pedidos'
     | '/admin/produtores'
     | '/admin/produtos'
@@ -667,6 +678,7 @@ export interface FileRouteTypes {
     | '/admin/estoque'
     | '/admin/integracoes'
     | '/admin/leads'
+    | '/admin/pagamentos'
     | '/admin/pedidos'
     | '/admin/produtores'
     | '/admin/produtos'
@@ -1000,6 +1012,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPedidosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/pagamentos': {
+      id: '/admin/pagamentos'
+      path: '/pagamentos'
+      fullPath: '/admin/pagamentos'
+      preLoaderRoute: typeof AdminPagamentosRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/leads': {
       id: '/admin/leads'
       path: '/leads'
@@ -1152,6 +1171,7 @@ interface AdminRouteChildren {
   AdminEstoqueRoute: typeof AdminEstoqueRoute
   AdminIntegracoesRoute: typeof AdminIntegracoesRoute
   AdminLeadsRoute: typeof AdminLeadsRoute
+  AdminPagamentosRoute: typeof AdminPagamentosRoute
   AdminPedidosRoute: typeof AdminPedidosRouteWithChildren
   AdminProdutoresRoute: typeof AdminProdutoresRoute
   AdminProdutosRoute: typeof AdminProdutosRouteWithChildren
@@ -1169,6 +1189,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminEstoqueRoute: AdminEstoqueRoute,
   AdminIntegracoesRoute: AdminIntegracoesRoute,
   AdminLeadsRoute: AdminLeadsRoute,
+  AdminPagamentosRoute: AdminPagamentosRoute,
   AdminPedidosRoute: AdminPedidosRouteWithChildren,
   AdminProdutoresRoute: AdminProdutoresRoute,
   AdminProdutosRoute: AdminProdutosRouteWithChildren,

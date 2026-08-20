@@ -60,7 +60,9 @@ export async function buildOrderDetail(
       .order("created_at", { ascending: true }),
     client
       .from("payments")
-      .select("id, provider, provider_payment_id, status, provider_status, method, amount, created_at, failure_reason")
+      .select(
+        "id, provider, provider_payment_id, status, provider_status, method, amount, created_at, failure_reason, refunded_amount, refund_reason, refunded_at",
+      )
       .eq("order_id", orderId)
       .order("created_at", { ascending: false }),
   ]);

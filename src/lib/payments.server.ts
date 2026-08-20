@@ -132,6 +132,34 @@ export async function getMpPayment(id: string | number): Promise<MpPayment> {
   return (await mpFetch(`/v1/payments/${id}`)) as MpPayment;
 }
 
+export type MpRefund = {
+  id: number;
+  payment_id: number;
+  amount: number;
+  status?: string | null;
+  [k: string]: unknown;
+};
+
+/**
+ * Estorno no provedor. Sem `amount` o Mercado Pago devolve o valor total.
+ * A chave de idempotência evita estorno duplicado em reenvio.
+ */
+export async function refundMpPayment(opts: {
+  paymentId: string | number;
+  amount?: number | null;
+  idempotencyKey: string;
+}): Promise<MpRefund> {
+  const body =
+    opts.amount != null && opts.amount > 0
+      ? JSON.stringify({ amount: Number(opts.amount.toFixed(2)) })
+      : JSON.stringify({});
+  return (await mpFetch(`/v1/payments/${opts.paymentId}/refunds`, {
+    method: "POST",
+    body,
+    idempotencyKey: opts.idempotencyKey,
+  })) as MpRefund;
+}
+
 /**
  * Assinatura do webhook: manifest "id:<data.id>;request-id:<x-request-id>;ts:<ts>;"
  * assinado em HMAC-SHA256 com MERCADOPAGO_WEBHOOK_SECRET.

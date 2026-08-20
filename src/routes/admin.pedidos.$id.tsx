@@ -13,6 +13,7 @@ import {
   adminSetItemProduction,
   adminUpdateOrderStatus,
 } from "@/lib/orders-admin.functions";
+import { refundPayment as refundPaymentFn } from "@/lib/payments-admin.functions";
 import {
   ALLOWED_TRANSITIONS,
   ORDER_STATUS_LABEL,
@@ -40,6 +41,7 @@ function OrderDetailPage() {
   const saveShipment = useServerFn(adminSaveShipment);
   const addEvent = useServerFn(adminAddTrackingEvent);
   const resync = useServerFn(adminResyncPayment);
+  const refundPayment = useServerFn(refundPaymentFn);
 
   const detail = useQuery({
     queryKey: ["admin-order", id],
@@ -70,6 +72,21 @@ function OrderDetailPage() {
       refresh();
     },
     onError: (e: any) => toast.error(e?.message ?? "Falha ao reconsultar."),
+  });
+
+  const [refundAmount, setRefundAmount] = useState<Record<string, string>>({});
+  const [refundReason, setRefundReason] = useState<Record<string, string>>({});
+
+  const refundMutation = useMutation({
+    mutationFn: (vars: { payment_id: string; amount: number | null; reason: string }) =>
+      refundPayment({ data: vars }),
+    onSuccess: (r: any) => {
+      toast.success(r.full ? "Estorno total concluído" : "Estorno parcial concluído");
+      setRefundAmount({});
+      setRefundReason({});
+      refresh();
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Falha ao estornar."),
   });
 
   if (detail.isLoading) {
@@ -244,15 +261,70 @@ function OrderDetailPage() {
               {payments.length === 0 ? (
                 <p className="text-sm text-muted-foreground">Nenhuma tentativa registrada.</p>
               ) : (
-                <ul className="space-y-2">
-                  {payments.map((p: any) => (
-                    <li key={p.id} className="text-xs text-muted-foreground">
-                      <span className="font-semibold text-primary">{p.method ?? p.provider}</span> ·{" "}
-                      {PAYMENT_STATUS_LABEL[p.status] ?? p.status}
-                      {p.provider_status ? ` (${p.provider_status})` : ""} · {formatBRL(Number(p.amount))}
-                      {p.failure_reason ? <p className="text-destructive">{p.failure_reason}</p> : null}
-                    </li>
-                  ))}
+                <ul className="space-y-3">
+                  {payments.map((p: any) => {
+                    const refunded = Number(p.refunded_amount ?? 0);
+                    const remaining = Number((Number(p.amount) - refunded).toFixed(2));
+                    const refundable = (p.status === "paid" || p.status === "authorized") && remaining > 0;
+                    return (
+                      <li key={p.id} className="rounded-md border border-border p-3 text-xs text-muted-foreground">
+                        <span className="font-semibold text-primary">{p.method ?? p.provider}</span> ·{" "}
+                        {PAYMENT_STATUS_LABEL[p.status] ?? p.status}
+                        {p.provider_status ? ` (${p.provider_status})` : ""} · {formatBRL(Number(p.amount))}
+                        {p.failure_reason ? <p className="text-destructive">{p.failure_reason}</p> : null}
+                        {refunded > 0 ? (
+                          <p className="mt-1 text-primary">
+                            Estornado: {formatBRL(refunded)}
+                            {p.refund_reason ? ` · ${p.refund_reason}` : ""}
+                          </p>
+                        ) : null}
+                        {refundable ? (
+                          <div className="mt-2 space-y-2">
+                            <input
+                              value={refundAmount[p.id] ?? ""}
+                              onChange={(e) => setRefundAmount((s) => ({ ...s, [p.id]: e.target.value }))}
+                              placeholder={`Valor (vazio = total ${remaining.toFixed(2)})`}
+                              inputMode="decimal"
+                              className={inputCls}
+                            />
+                            <input
+                              value={refundReason[p.id] ?? ""}
+                              onChange={(e) => setRefundReason((s) => ({ ...s, [p.id]: e.target.value }))}
+                              placeholder="Motivo do estorno (obrigatório)"
+                              className={inputCls}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const reason = (refundReason[p.id] ?? "").trim();
+                                if (reason.length < 3) {
+                                  toast.error("Informe o motivo do estorno.");
+                                  return;
+                                }
+                                const raw = (refundAmount[p.id] ?? "").trim().replace(",", ".");
+                                const amount = raw ? Number(raw) : null;
+                                if (raw && (!Number.isFinite(amount!) || amount! <= 0)) {
+                                  toast.error("Valor de estorno inválido.");
+                                  return;
+                                }
+                                if (
+                                  !confirm(
+                                    `Confirmar estorno de ${formatBRL(amount ?? remaining)} no Mercado Pago?`,
+                                  )
+                                )
+                                  return;
+                                refundMutation.mutate({ payment_id: p.id, amount, reason });
+                              }}
+                              disabled={refundMutation.isPending}
+                              className="rounded-full bg-destructive px-3 py-1.5 text-xs font-semibold text-destructive-foreground disabled:opacity-60"
+                            >
+                              Estornar no provedor
+                            </button>
+                          </div>
+                        ) : null}
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
               <button

@@ -7,22 +7,23 @@
 - **Onda 3A** — Cards padronizados, checkout em etapas, modelagem de entrega e provedores de frete.
 - **Onda 3B** — Pagamentos Mercado Pago (Pix e cartão), webhook assinado, estoque reservado e job de expiração.
 - **Onda 3C** — Operação de pedidos, rastreio, área do cliente e estoque auditado.
+- **Onda 3D** — Painel de eventos de pagamento com reprocessamento e estorno real (total/parcial) no provedor.
 
-### O que a Onda 3C entregou
-- `/admin/pedidos`: filtros por status, pagamento, período e busca; resumo operacional e fila de produção.
-- `/admin/pedidos/$id`: itens com personalização e download assinado, produção por item, envio e rastreio,
-  histórico de status, pagamentos com reconsulta ao provedor e reservas de estoque.
-- `/admin/estoque`: movimentações, alerta de estoque baixo e ajuste manual com motivo obrigatório e auditoria.
-- `/minha-conta` e `/minha-conta/pedido/$id`: pedidos apenas do próprio usuário, linha do tempo,
-  rastreio, retomada de pagamento e cancelamento de pedido pendente.
-- Toda escrita em `orders`, `order_items`, `shipments`, `tracking_events` e `inventory_movements` passa por
-  server functions com verificação `is_admin`; `anon`/`authenticated` não têm mais INSERT/UPDATE/DELETE direto.
+### O que a Onda 3D entregou
+- `/admin/pagamentos`: eventos do provedor com filtros, payload e reprocessamento reconsultando a API.
+- Estorno no detalhe do pedido: valor total ou parcial, motivo obrigatório, idempotência, auditoria e
+  atualização de pedido/estoque somente após confirmação do provedor.
+- `payments` agora guarda `refunded_amount`, `refund_reason` e `refunded_at`.
 
-## Próxima etapa — Onda 3D: testes ponta a ponta e operação de pagamentos
-1. Testes com credenciais de teste do Mercado Pago: Pix aprovado, cartão aprovado, cartão recusado e
-   expiração de reserva.
-2. Visão de `payment_events` no painel com reprocessamento manual de webhook e estorno registrado.
-3. Notificações por e-mail ao cliente nas transições de status (pago, em produção, enviado, entregue).
+## Pendências imediatas
+1. **Credenciais de teste do Mercado Pago (`TEST-...`)**: as chaves atuais são de produção e a API
+   recusa as chamadas com `401 Unauthorized use of live credentials`. Com as chaves de teste,
+   rodamos a matriz automatizada (Pix aprovado, cartão aprovado, cartão recusado, expiração, estorno).
+2. Cadastrar a URL do webhook no painel do Mercado Pago (evento `payment`).
+
+## Próxima etapa — Onda 3E: notificações por e-mail
+E-mails transacionais ao cliente nas transições de status (pago, em produção, enviado, entregue),
+com preferência de opt-out e registro de envio.
 
 ## Onda 4 (planejada)
 Limpeza segura do esquema legado CAFEX (café, assinaturas, produtores) após confirmação de que nenhuma
