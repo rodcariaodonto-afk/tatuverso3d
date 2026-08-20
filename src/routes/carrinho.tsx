@@ -22,16 +22,17 @@ function CartPage() {
         <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground" />
         <h1 className="mt-4 font-display text-3xl text-primary">Seu carrinho está vazio</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Comece pela curadoria do mês ou descubra seu perfil no quiz sensorial.
+          Explore a loja ou peça uma peça 3D personalizada do seu jeito.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link to="/catalogo" className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
-            Ver catálogo
+            Ver loja
           </Link>
-          <Link to="/quiz" className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-primary">
-            Fazer quiz
+          <Link to="/personalizados" className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-primary">
+            Personalizados
           </Link>
         </div>
+
       </div>
     );
   }

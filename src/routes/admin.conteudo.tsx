@@ -29,7 +29,7 @@ const SECTIONS: Section[] = [
   },
   {
     title: "Home · Private Label B2B",
-    description: "Quatro imagens da grade ao lado do bloco Café com sua marca.",
+    description: "Quatro imagens da grade ao lado do bloco de produtos personalizados.",
     slots: [
       { key: "home_private_label_1", label: "Imagem 1 (topo esquerda)" },
       { key: "home_private_label_2", label: "Imagem 2 (topo direita)" },

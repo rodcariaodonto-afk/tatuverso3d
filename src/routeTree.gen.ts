@@ -9,15 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VenderNaPlataformaRouteImport } from './routes/vender-na-plataforma'
 import { Route as TrocasRouteImport } from './routes/trocas'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
-import { Route as QuizRouteImport } from './routes/quiz'
-import { Route as ProdutorRouteImport } from './routes/produtor'
-import { Route as PrivateLabelRouteImport } from './routes/private-label'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as PersonalizadosRouteImport } from './routes/personalizados'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
@@ -26,30 +22,21 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EnviosRouteImport } from './routes/envios'
 import { Route as CuidadosRouteImport } from './routes/cuidados'
 import { Route as ContatoRouteImport } from './routes/contato'
-import { Route as ClubeRouteImport } from './routes/clube'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as CarrinhoRouteImport } from './routes/carrinho'
 import { Route as CadastroRouteImport } from './routes/cadastro'
-import { Route as AssinaturaRouteImport } from './routes/assinatura'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ProdutoresIndexRouteImport } from './routes/produtores.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
-import { Route as ProdutoresSlugRouteImport } from './routes/produtores.$slug'
-import { Route as ProdutorProdutosRouteImport } from './routes/produtor.produtos'
-import { Route as ProdutorPerfilRouteImport } from './routes/produtor.perfil'
-import { Route as ProdutorPedidosRouteImport } from './routes/produtor.pedidos'
 import { Route as ProdutoSlugRouteImport } from './routes/produto.$slug'
 import { Route as PagamentoOrderIdRouteImport } from './routes/pagamento.$orderId'
 import { Route as MinhaContaPrivacidadeRouteImport } from './routes/minha-conta.privacidade'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminVendasRouteImport } from './routes/admin.vendas'
 import { Route as AdminProdutosRouteImport } from './routes/admin.produtos'
-import { Route as AdminProdutoresRouteImport } from './routes/admin.produtores'
 import { Route as AdminPedidosRouteImport } from './routes/admin.pedidos'
 import { Route as AdminPagamentosRouteImport } from './routes/admin.pagamentos'
-import { Route as AdminLeadsRouteImport } from './routes/admin.leads'
 import { Route as AdminIntegracoesRouteImport } from './routes/admin.integracoes'
 import { Route as AdminEstoqueRouteImport } from './routes/admin.estoque'
 import { Route as AdminEntregaRouteImport } from './routes/admin.entrega'
@@ -57,8 +44,6 @@ import { Route as AdminCuponsRouteImport } from './routes/admin.cupons'
 import { Route as AdminConteudoRouteImport } from './routes/admin.conteudo'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
-import { Route as AdminCandidaturasRouteImport } from './routes/admin.candidaturas'
-import { Route as AdminAssinaturasRouteImport } from './routes/admin.assinaturas'
 import { Route as MinhaContaPedidoIdRouteImport } from './routes/minha-conta.pedido.$id'
 import { Route as AdminProdutosNovoRouteImport } from './routes/admin.produtos.novo'
 import { Route as AdminPedidosIdRouteImport } from './routes/admin.pedidos.$id'
@@ -66,11 +51,6 @@ import { Route as ApiPublicWebhooksMercadopagoRouteImport } from './routes/api/p
 import { Route as ApiPublicJobsExpireReservationsRouteImport } from './routes/api/public/jobs/expire-reservations'
 import { Route as AdminProdutosIdEditarRouteImport } from './routes/admin.produtos.$id.editar'
 
-const VenderNaPlataformaRoute = VenderNaPlataformaRouteImport.update({
-  id: '/vender-na-plataforma',
-  path: '/vender-na-plataforma',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const TrocasRoute = TrocasRouteImport.update({
   id: '/trocas',
   path: '/trocas',
@@ -94,21 +74,6 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   id: '/recuperar-senha',
   path: '/recuperar-senha',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuizRoute = QuizRouteImport.update({
-  id: '/quiz',
-  path: '/quiz',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProdutorRoute = ProdutorRouteImport.update({
-  id: '/produtor',
-  path: '/produtor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivateLabelRoute = PrivateLabelRouteImport.update({
-  id: '/private-label',
-  path: '/private-label',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
@@ -151,11 +116,6 @@ const ContatoRoute = ContatoRouteImport.update({
   path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ClubeRoute = ClubeRouteImport.update({
-  id: '/clube',
-  path: '/clube',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
@@ -176,11 +136,6 @@ const CadastroRoute = CadastroRouteImport.update({
   path: '/cadastro',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AssinaturaRoute = AssinaturaRouteImport.update({
-  id: '/assinatura',
-  path: '/assinatura',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -191,35 +146,10 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProdutoresIndexRoute = ProdutoresIndexRouteImport.update({
-  id: '/produtores/',
-  path: '/produtores/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const ProdutoresSlugRoute = ProdutoresSlugRouteImport.update({
-  id: '/produtores/$slug',
-  path: '/produtores/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProdutorProdutosRoute = ProdutorProdutosRouteImport.update({
-  id: '/produtos',
-  path: '/produtos',
-  getParentRoute: () => ProdutorRoute,
-} as any)
-const ProdutorPerfilRoute = ProdutorPerfilRouteImport.update({
-  id: '/perfil',
-  path: '/perfil',
-  getParentRoute: () => ProdutorRoute,
-} as any)
-const ProdutorPedidosRoute = ProdutorPedidosRouteImport.update({
-  id: '/pedidos',
-  path: '/pedidos',
-  getParentRoute: () => ProdutorRoute,
 } as any)
 const ProdutoSlugRoute = ProdutoSlugRouteImport.update({
   id: '/produto/$slug',
@@ -251,11 +181,6 @@ const AdminProdutosRoute = AdminProdutosRouteImport.update({
   path: '/produtos',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminProdutoresRoute = AdminProdutoresRouteImport.update({
-  id: '/produtores',
-  path: '/produtores',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminPedidosRoute = AdminPedidosRouteImport.update({
   id: '/pedidos',
   path: '/pedidos',
@@ -264,11 +189,6 @@ const AdminPedidosRoute = AdminPedidosRouteImport.update({
 const AdminPagamentosRoute = AdminPagamentosRouteImport.update({
   id: '/pagamentos',
   path: '/pagamentos',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminLeadsRoute = AdminLeadsRouteImport.update({
-  id: '/leads',
-  path: '/leads',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminIntegracoesRoute = AdminIntegracoesRouteImport.update({
@@ -304,16 +224,6 @@ const AdminConfigRoute = AdminConfigRouteImport.update({
 const AdminClientesRoute = AdminClientesRouteImport.update({
   id: '/clientes',
   path: '/clientes',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminCandidaturasRoute = AdminCandidaturasRouteImport.update({
-  id: '/candidaturas',
-  path: '/candidaturas',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAssinaturasRoute = AdminAssinaturasRouteImport.update({
-  id: '/assinaturas',
-  path: '/assinaturas',
   getParentRoute: () => AdminRoute,
 } as any)
 const MinhaContaPedidoIdRoute = MinhaContaPedidoIdRouteImport.update({
@@ -352,12 +262,10 @@ const AdminProdutosIdEditarRoute = AdminProdutosIdEditarRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/assinatura': typeof AssinaturaRoute
   '/cadastro': typeof CadastroRoute
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
-  '/clube': typeof ClubeRoute
   '/contato': typeof ContatoRoute
   '/cuidados': typeof CuidadosRoute
   '/envios': typeof EnviosRoute
@@ -366,17 +274,11 @@ export interface FileRoutesByFullPath {
   '/minha-conta': typeof MinhaContaRouteWithChildren
   '/personalizados': typeof PersonalizadosRoute
   '/privacidade': typeof PrivacidadeRoute
-  '/private-label': typeof PrivateLabelRoute
-  '/produtor': typeof ProdutorRouteWithChildren
-  '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/trocas': typeof TrocasRoute
-  '/vender-na-plataforma': typeof VenderNaPlataformaRoute
-  '/admin/assinaturas': typeof AdminAssinaturasRoute
-  '/admin/candidaturas': typeof AdminCandidaturasRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/conteudo': typeof AdminConteudoRoute
@@ -384,22 +286,15 @@ export interface FileRoutesByFullPath {
   '/admin/entrega': typeof AdminEntregaRoute
   '/admin/estoque': typeof AdminEstoqueRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
-  '/admin/leads': typeof AdminLeadsRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
   '/admin/pedidos': typeof AdminPedidosRouteWithChildren
-  '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
   '/pagamento/$orderId': typeof PagamentoOrderIdRoute
   '/produto/$slug': typeof ProdutoSlugRoute
-  '/produtor/pedidos': typeof ProdutorPedidosRoute
-  '/produtor/perfil': typeof ProdutorPerfilRoute
-  '/produtor/produtos': typeof ProdutorProdutosRoute
-  '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog/': typeof BlogIndexRoute
-  '/produtores/': typeof ProdutoresIndexRoute
   '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
@@ -410,12 +305,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/assinatura': typeof AssinaturaRoute
   '/cadastro': typeof CadastroRoute
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
-  '/clube': typeof ClubeRoute
   '/contato': typeof ContatoRoute
   '/cuidados': typeof CuidadosRoute
   '/envios': typeof EnviosRoute
@@ -424,17 +317,11 @@ export interface FileRoutesByTo {
   '/minha-conta': typeof MinhaContaRouteWithChildren
   '/personalizados': typeof PersonalizadosRoute
   '/privacidade': typeof PrivacidadeRoute
-  '/private-label': typeof PrivateLabelRoute
-  '/produtor': typeof ProdutorRouteWithChildren
-  '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/trocas': typeof TrocasRoute
-  '/vender-na-plataforma': typeof VenderNaPlataformaRoute
-  '/admin/assinaturas': typeof AdminAssinaturasRoute
-  '/admin/candidaturas': typeof AdminCandidaturasRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/conteudo': typeof AdminConteudoRoute
@@ -442,22 +329,15 @@ export interface FileRoutesByTo {
   '/admin/entrega': typeof AdminEntregaRoute
   '/admin/estoque': typeof AdminEstoqueRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
-  '/admin/leads': typeof AdminLeadsRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
   '/admin/pedidos': typeof AdminPedidosRouteWithChildren
-  '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
   '/pagamento/$orderId': typeof PagamentoOrderIdRoute
   '/produto/$slug': typeof ProdutoSlugRoute
-  '/produtor/pedidos': typeof ProdutorPedidosRoute
-  '/produtor/perfil': typeof ProdutorPerfilRoute
-  '/produtor/produtos': typeof ProdutorProdutosRoute
-  '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog': typeof BlogIndexRoute
-  '/produtores': typeof ProdutoresIndexRoute
   '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
@@ -469,12 +349,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/assinatura': typeof AssinaturaRoute
   '/cadastro': typeof CadastroRoute
   '/carrinho': typeof CarrinhoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
-  '/clube': typeof ClubeRoute
   '/contato': typeof ContatoRoute
   '/cuidados': typeof CuidadosRoute
   '/envios': typeof EnviosRoute
@@ -483,17 +361,11 @@ export interface FileRoutesById {
   '/minha-conta': typeof MinhaContaRouteWithChildren
   '/personalizados': typeof PersonalizadosRoute
   '/privacidade': typeof PrivacidadeRoute
-  '/private-label': typeof PrivateLabelRoute
-  '/produtor': typeof ProdutorRouteWithChildren
-  '/quiz': typeof QuizRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/trocas': typeof TrocasRoute
-  '/vender-na-plataforma': typeof VenderNaPlataformaRoute
-  '/admin/assinaturas': typeof AdminAssinaturasRoute
-  '/admin/candidaturas': typeof AdminCandidaturasRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/conteudo': typeof AdminConteudoRoute
@@ -501,22 +373,15 @@ export interface FileRoutesById {
   '/admin/entrega': typeof AdminEntregaRoute
   '/admin/estoque': typeof AdminEstoqueRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
-  '/admin/leads': typeof AdminLeadsRoute
   '/admin/pagamentos': typeof AdminPagamentosRoute
   '/admin/pedidos': typeof AdminPedidosRouteWithChildren
-  '/admin/produtores': typeof AdminProdutoresRoute
   '/admin/produtos': typeof AdminProdutosRouteWithChildren
   '/admin/vendas': typeof AdminVendasRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/minha-conta/privacidade': typeof MinhaContaPrivacidadeRoute
   '/pagamento/$orderId': typeof PagamentoOrderIdRoute
   '/produto/$slug': typeof ProdutoSlugRoute
-  '/produtor/pedidos': typeof ProdutorPedidosRoute
-  '/produtor/perfil': typeof ProdutorPerfilRoute
-  '/produtor/produtos': typeof ProdutorProdutosRoute
-  '/produtores/$slug': typeof ProdutoresSlugRoute
   '/blog/': typeof BlogIndexRoute
-  '/produtores/': typeof ProdutoresIndexRoute
   '/admin/pedidos/$id': typeof AdminPedidosIdRoute
   '/admin/produtos/novo': typeof AdminProdutosNovoRoute
   '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
@@ -529,12 +394,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
-    | '/assinatura'
     | '/cadastro'
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
-    | '/clube'
     | '/contato'
     | '/cuidados'
     | '/envios'
@@ -543,17 +406,11 @@ export interface FileRouteTypes {
     | '/minha-conta'
     | '/personalizados'
     | '/privacidade'
-    | '/private-label'
-    | '/produtor'
-    | '/quiz'
     | '/recuperar-senha'
     | '/reset-password'
     | '/sobre'
     | '/termos'
     | '/trocas'
-    | '/vender-na-plataforma'
-    | '/admin/assinaturas'
-    | '/admin/candidaturas'
     | '/admin/clientes'
     | '/admin/config'
     | '/admin/conteudo'
@@ -561,22 +418,15 @@ export interface FileRouteTypes {
     | '/admin/entrega'
     | '/admin/estoque'
     | '/admin/integracoes'
-    | '/admin/leads'
     | '/admin/pagamentos'
     | '/admin/pedidos'
-    | '/admin/produtores'
     | '/admin/produtos'
     | '/admin/vendas'
     | '/blog/$slug'
     | '/minha-conta/privacidade'
     | '/pagamento/$orderId'
     | '/produto/$slug'
-    | '/produtor/pedidos'
-    | '/produtor/perfil'
-    | '/produtor/produtos'
-    | '/produtores/$slug'
     | '/blog/'
-    | '/produtores/'
     | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
     | '/minha-conta/pedido/$id'
@@ -587,12 +437,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
-    | '/assinatura'
     | '/cadastro'
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
-    | '/clube'
     | '/contato'
     | '/cuidados'
     | '/envios'
@@ -601,17 +449,11 @@ export interface FileRouteTypes {
     | '/minha-conta'
     | '/personalizados'
     | '/privacidade'
-    | '/private-label'
-    | '/produtor'
-    | '/quiz'
     | '/recuperar-senha'
     | '/reset-password'
     | '/sobre'
     | '/termos'
     | '/trocas'
-    | '/vender-na-plataforma'
-    | '/admin/assinaturas'
-    | '/admin/candidaturas'
     | '/admin/clientes'
     | '/admin/config'
     | '/admin/conteudo'
@@ -619,22 +461,15 @@ export interface FileRouteTypes {
     | '/admin/entrega'
     | '/admin/estoque'
     | '/admin/integracoes'
-    | '/admin/leads'
     | '/admin/pagamentos'
     | '/admin/pedidos'
-    | '/admin/produtores'
     | '/admin/produtos'
     | '/admin/vendas'
     | '/blog/$slug'
     | '/minha-conta/privacidade'
     | '/pagamento/$orderId'
     | '/produto/$slug'
-    | '/produtor/pedidos'
-    | '/produtor/perfil'
-    | '/produtor/produtos'
-    | '/produtores/$slug'
     | '/blog'
-    | '/produtores'
     | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
     | '/minha-conta/pedido/$id'
@@ -645,12 +480,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
-    | '/assinatura'
     | '/cadastro'
     | '/carrinho'
     | '/catalogo'
     | '/checkout'
-    | '/clube'
     | '/contato'
     | '/cuidados'
     | '/envios'
@@ -659,17 +492,11 @@ export interface FileRouteTypes {
     | '/minha-conta'
     | '/personalizados'
     | '/privacidade'
-    | '/private-label'
-    | '/produtor'
-    | '/quiz'
     | '/recuperar-senha'
     | '/reset-password'
     | '/sobre'
     | '/termos'
     | '/trocas'
-    | '/vender-na-plataforma'
-    | '/admin/assinaturas'
-    | '/admin/candidaturas'
     | '/admin/clientes'
     | '/admin/config'
     | '/admin/conteudo'
@@ -677,22 +504,15 @@ export interface FileRouteTypes {
     | '/admin/entrega'
     | '/admin/estoque'
     | '/admin/integracoes'
-    | '/admin/leads'
     | '/admin/pagamentos'
     | '/admin/pedidos'
-    | '/admin/produtores'
     | '/admin/produtos'
     | '/admin/vendas'
     | '/blog/$slug'
     | '/minha-conta/privacidade'
     | '/pagamento/$orderId'
     | '/produto/$slug'
-    | '/produtor/pedidos'
-    | '/produtor/perfil'
-    | '/produtor/produtos'
-    | '/produtores/$slug'
     | '/blog/'
-    | '/produtores/'
     | '/admin/pedidos/$id'
     | '/admin/produtos/novo'
     | '/minha-conta/pedido/$id'
@@ -704,12 +524,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AssinaturaRoute: typeof AssinaturaRoute
   CadastroRoute: typeof CadastroRoute
   CarrinhoRoute: typeof CarrinhoRoute
   CatalogoRoute: typeof CatalogoRoute
   CheckoutRoute: typeof CheckoutRoute
-  ClubeRoute: typeof ClubeRoute
   ContatoRoute: typeof ContatoRoute
   CuidadosRoute: typeof CuidadosRoute
   EnviosRoute: typeof EnviosRoute
@@ -718,34 +536,21 @@ export interface RootRouteChildren {
   MinhaContaRoute: typeof MinhaContaRouteWithChildren
   PersonalizadosRoute: typeof PersonalizadosRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
-  PrivateLabelRoute: typeof PrivateLabelRoute
-  ProdutorRoute: typeof ProdutorRouteWithChildren
-  QuizRoute: typeof QuizRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
   TrocasRoute: typeof TrocasRoute
-  VenderNaPlataformaRoute: typeof VenderNaPlataformaRoute
   BlogSlugRoute: typeof BlogSlugRoute
   PagamentoOrderIdRoute: typeof PagamentoOrderIdRoute
   ProdutoSlugRoute: typeof ProdutoSlugRoute
-  ProdutoresSlugRoute: typeof ProdutoresSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
-  ProdutoresIndexRoute: typeof ProdutoresIndexRoute
   ApiPublicJobsExpireReservationsRoute: typeof ApiPublicJobsExpireReservationsRoute
   ApiPublicWebhooksMercadopagoRoute: typeof ApiPublicWebhooksMercadopagoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/vender-na-plataforma': {
-      id: '/vender-na-plataforma'
-      path: '/vender-na-plataforma'
-      fullPath: '/vender-na-plataforma'
-      preLoaderRoute: typeof VenderNaPlataformaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/trocas': {
       id: '/trocas'
       path: '/trocas'
@@ -779,27 +584,6 @@ declare module '@tanstack/react-router' {
       path: '/recuperar-senha'
       fullPath: '/recuperar-senha'
       preLoaderRoute: typeof RecuperarSenhaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz': {
-      id: '/quiz'
-      path: '/quiz'
-      fullPath: '/quiz'
-      preLoaderRoute: typeof QuizRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/produtor': {
-      id: '/produtor'
-      path: '/produtor'
-      fullPath: '/produtor'
-      preLoaderRoute: typeof ProdutorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/private-label': {
-      id: '/private-label'
-      path: '/private-label'
-      fullPath: '/private-label'
-      preLoaderRoute: typeof PrivateLabelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacidade': {
@@ -858,13 +642,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/clube': {
-      id: '/clube'
-      path: '/clube'
-      fullPath: '/clube'
-      preLoaderRoute: typeof ClubeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/checkout': {
       id: '/checkout'
       path: '/checkout'
@@ -893,13 +670,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CadastroRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/assinatura': {
-      id: '/assinatura'
-      path: '/assinatura'
-      fullPath: '/assinatura'
-      preLoaderRoute: typeof AssinaturaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -914,47 +684,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/produtores/': {
-      id: '/produtores/'
-      path: '/produtores'
-      fullPath: '/produtores/'
-      preLoaderRoute: typeof ProdutoresIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
       fullPath: '/blog/'
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/produtores/$slug': {
-      id: '/produtores/$slug'
-      path: '/produtores/$slug'
-      fullPath: '/produtores/$slug'
-      preLoaderRoute: typeof ProdutoresSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/produtor/produtos': {
-      id: '/produtor/produtos'
-      path: '/produtos'
-      fullPath: '/produtor/produtos'
-      preLoaderRoute: typeof ProdutorProdutosRouteImport
-      parentRoute: typeof ProdutorRoute
-    }
-    '/produtor/perfil': {
-      id: '/produtor/perfil'
-      path: '/perfil'
-      fullPath: '/produtor/perfil'
-      preLoaderRoute: typeof ProdutorPerfilRouteImport
-      parentRoute: typeof ProdutorRoute
-    }
-    '/produtor/pedidos': {
-      id: '/produtor/pedidos'
-      path: '/pedidos'
-      fullPath: '/produtor/pedidos'
-      preLoaderRoute: typeof ProdutorPedidosRouteImport
-      parentRoute: typeof ProdutorRoute
     }
     '/produto/$slug': {
       id: '/produto/$slug'
@@ -998,13 +733,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProdutosRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/produtores': {
-      id: '/admin/produtores'
-      path: '/produtores'
-      fullPath: '/admin/produtores'
-      preLoaderRoute: typeof AdminProdutoresRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/pedidos': {
       id: '/admin/pedidos'
       path: '/pedidos'
@@ -1017,13 +745,6 @@ declare module '@tanstack/react-router' {
       path: '/pagamentos'
       fullPath: '/admin/pagamentos'
       preLoaderRoute: typeof AdminPagamentosRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/leads': {
-      id: '/admin/leads'
-      path: '/leads'
-      fullPath: '/admin/leads'
-      preLoaderRoute: typeof AdminLeadsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/integracoes': {
@@ -1073,20 +794,6 @@ declare module '@tanstack/react-router' {
       path: '/clientes'
       fullPath: '/admin/clientes'
       preLoaderRoute: typeof AdminClientesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/candidaturas': {
-      id: '/admin/candidaturas'
-      path: '/candidaturas'
-      fullPath: '/admin/candidaturas'
-      preLoaderRoute: typeof AdminCandidaturasRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/assinaturas': {
-      id: '/admin/assinaturas'
-      path: '/assinaturas'
-      fullPath: '/admin/assinaturas'
-      preLoaderRoute: typeof AdminAssinaturasRouteImport
       parentRoute: typeof AdminRoute
     }
     '/minha-conta/pedido/$id': {
@@ -1161,8 +868,6 @@ const AdminProdutosRouteWithChildren = AdminProdutosRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
-  AdminAssinaturasRoute: typeof AdminAssinaturasRoute
-  AdminCandidaturasRoute: typeof AdminCandidaturasRoute
   AdminClientesRoute: typeof AdminClientesRoute
   AdminConfigRoute: typeof AdminConfigRoute
   AdminConteudoRoute: typeof AdminConteudoRoute
@@ -1170,17 +875,13 @@ interface AdminRouteChildren {
   AdminEntregaRoute: typeof AdminEntregaRoute
   AdminEstoqueRoute: typeof AdminEstoqueRoute
   AdminIntegracoesRoute: typeof AdminIntegracoesRoute
-  AdminLeadsRoute: typeof AdminLeadsRoute
   AdminPagamentosRoute: typeof AdminPagamentosRoute
   AdminPedidosRoute: typeof AdminPedidosRouteWithChildren
-  AdminProdutoresRoute: typeof AdminProdutoresRoute
   AdminProdutosRoute: typeof AdminProdutosRouteWithChildren
   AdminVendasRoute: typeof AdminVendasRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminAssinaturasRoute: AdminAssinaturasRoute,
-  AdminCandidaturasRoute: AdminCandidaturasRoute,
   AdminClientesRoute: AdminClientesRoute,
   AdminConfigRoute: AdminConfigRoute,
   AdminConteudoRoute: AdminConteudoRoute,
@@ -1188,10 +889,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminEntregaRoute: AdminEntregaRoute,
   AdminEstoqueRoute: AdminEstoqueRoute,
   AdminIntegracoesRoute: AdminIntegracoesRoute,
-  AdminLeadsRoute: AdminLeadsRoute,
   AdminPagamentosRoute: AdminPagamentosRoute,
   AdminPedidosRoute: AdminPedidosRouteWithChildren,
-  AdminProdutoresRoute: AdminProdutoresRoute,
   AdminProdutosRoute: AdminProdutosRouteWithChildren,
   AdminVendasRoute: AdminVendasRoute,
 }
@@ -1212,31 +911,13 @@ const MinhaContaRouteWithChildren = MinhaContaRoute._addFileChildren(
   MinhaContaRouteChildren,
 )
 
-interface ProdutorRouteChildren {
-  ProdutorPedidosRoute: typeof ProdutorPedidosRoute
-  ProdutorPerfilRoute: typeof ProdutorPerfilRoute
-  ProdutorProdutosRoute: typeof ProdutorProdutosRoute
-}
-
-const ProdutorRouteChildren: ProdutorRouteChildren = {
-  ProdutorPedidosRoute: ProdutorPedidosRoute,
-  ProdutorPerfilRoute: ProdutorPerfilRoute,
-  ProdutorProdutosRoute: ProdutorProdutosRoute,
-}
-
-const ProdutorRouteWithChildren = ProdutorRoute._addFileChildren(
-  ProdutorRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  AssinaturaRoute: AssinaturaRoute,
   CadastroRoute: CadastroRoute,
   CarrinhoRoute: CarrinhoRoute,
   CatalogoRoute: CatalogoRoute,
   CheckoutRoute: CheckoutRoute,
-  ClubeRoute: ClubeRoute,
   ContatoRoute: ContatoRoute,
   CuidadosRoute: CuidadosRoute,
   EnviosRoute: EnviosRoute,
@@ -1245,21 +926,15 @@ const rootRouteChildren: RootRouteChildren = {
   MinhaContaRoute: MinhaContaRouteWithChildren,
   PersonalizadosRoute: PersonalizadosRoute,
   PrivacidadeRoute: PrivacidadeRoute,
-  PrivateLabelRoute: PrivateLabelRoute,
-  ProdutorRoute: ProdutorRouteWithChildren,
-  QuizRoute: QuizRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
   TrocasRoute: TrocasRoute,
-  VenderNaPlataformaRoute: VenderNaPlataformaRoute,
   BlogSlugRoute: BlogSlugRoute,
   PagamentoOrderIdRoute: PagamentoOrderIdRoute,
   ProdutoSlugRoute: ProdutoSlugRoute,
-  ProdutoresSlugRoute: ProdutoresSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
-  ProdutoresIndexRoute: ProdutoresIndexRoute,
   ApiPublicJobsExpireReservationsRoute: ApiPublicJobsExpireReservationsRoute,
   ApiPublicWebhooksMercadopagoRoute: ApiPublicWebhooksMercadopagoRoute,
 }
