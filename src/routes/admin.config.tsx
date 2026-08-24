@@ -21,7 +21,7 @@ const STORE_FIELDS = [
   { key: "store.timezone", label: "Fuso horário", placeholder: "America/Sao_Paulo" },
   { key: "shipping.free_threshold", label: "Frete grátis acima de (R$)", placeholder: "150" },
   { key: "shipping.flat_rate", label: "Frete fixo (R$)", placeholder: "19.90" },
-  { key: "social.instagram", label: "Instagram URL", placeholder: "https://instagram.com/tatuverso3d" },
+  { key: "social.instagram", label: "Instagram URL", placeholder: "https://www.instagram.com/tatuverso3d/" },
 ];
 
 const COMPANY_FIELDS = [
