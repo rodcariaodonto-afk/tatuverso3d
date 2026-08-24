@@ -18,6 +18,7 @@ import {
   useSalesCounts,
 } from "@/hooks/useProducts";
 import { ProductSection } from "@/components/catalog/ProductRail";
+import { LogoShowcase } from "@/components/brand/LogoShowcase";
 import { tenantConfig } from "@/lib/tenant-config";
 
 export const Route = createFileRoute("/")({
