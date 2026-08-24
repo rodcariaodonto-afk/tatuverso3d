@@ -31,7 +31,7 @@ function LogoRelief({ speed, hoverRef, dragRef, reducedMotion }: ReliefProps) {
       }
     });
     // Peça em pé, largura 1 → escala para preencher a moldura.
-    clone.scale.setScalar(2.1);
+    clone.scale.setScalar(1.55);
     return clone;
   }, [scene]);
 
