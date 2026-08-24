@@ -3,9 +3,8 @@ import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
-import {
-  CatalogProductCard,
-} from "@/components/catalog/ProductCard";
+import { ProductGrid, ProductGridSkeleton } from "@/components/catalog/ProductRail";
+
 import {
   applyCatalogFilters,
   productColors,
@@ -15,7 +14,6 @@ import {
   useSalesCounts,
   PRODUCT_TYPE_LABEL,
 } from "@/hooks/useProducts";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
@@ -353,14 +351,8 @@ function CatalogPage() {
           </div>
 
           {isLoading ? (
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="space-y-3">
-                  <Skeleton className="aspect-square w-full rounded-lg" />
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
-                </div>
-              ))}
+            <div className="mt-8">
+              <ProductGridSkeleton count={8} />
             </div>
           ) : filtered.length === 0 ? (
             <div className="mt-16 rounded-lg border border-dashed border-border py-16 text-center">
@@ -377,11 +369,10 @@ function CatalogPage() {
             </div>
           ) : (
             <>
-              <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                {pageItems.map((p) => (
-                  <CatalogProductCard key={p.id} product={p} />
-                ))}
+              <div className="mt-8">
+                <ProductGrid products={pageItems} />
               </div>
+
               {totalPages > 1 && (
                 <div className="mt-10 flex items-center justify-center gap-1">
                   {Array.from({ length: totalPages }).map((_, i) => {

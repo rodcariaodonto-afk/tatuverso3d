@@ -10,7 +10,7 @@ import { useAuth } from "@/lib/auth-context";
 import { formatBRL, useCart, type CartCustomization } from "@/lib/cart-store";
 import { useCartDrawer } from "@/components/cart/CartDrawer";
 import { mapCatalogProduct, OPTION_TYPE_LABEL, PRODUCT_TYPE_LABEL, useCatalogProducts } from "@/hooks/useProducts";
-import { ProductCard } from "@/components/catalog/ProductCard";
+import { ProductGrid } from "@/components/catalog/ProductRail";
 
 export const Route = createFileRoute("/produto/$slug")({
   head: ({ params }) => ({
@@ -521,16 +521,8 @@ function ProductPage() {
         <section className="mt-20">
           <h2 className="font-display text-2xl text-primary">Você também pode gostar</h2>
           <div className="brand-divider mt-3" />
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {related.map((p) => (
-              <ProductCard
-                key={p.id}
-                product={{
-                  id: p.id, slug: p.slug, name: p.name, short_description: p.short_description,
-                  price: p.min_price, compare_at_price: p.compare_at_price, cover_url: p.cover_url, badges: p.badges,
-                }}
-              />
-            ))}
+          <div className="mt-6">
+            <ProductGrid products={related} />
           </div>
         </section>
       )}
