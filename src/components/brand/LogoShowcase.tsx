@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
-import logoAsset from "@/assets/tatuverso3d-logo-3d.png.asset.json";
+import logoAsset from "@/assets/tatuverso3d-logo.png.asset.json";
 
 const Logo3D = lazy(() => import("@/components/brand/Logo3D"));
 
