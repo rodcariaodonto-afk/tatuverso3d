@@ -123,9 +123,10 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-50 xl:hidden">
+      {/* Mobile drawer (portal: header uses backdrop-blur, which traps fixed children) */}
+      {mobileOpen && typeof document !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-[60] xl:hidden">
+
           <div
             className="absolute inset-0 bg-brand-dark/60"
             onClick={() => setMobileOpen(false)}
