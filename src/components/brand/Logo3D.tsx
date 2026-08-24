@@ -72,7 +72,7 @@ function Medallion({ speed, hoverRef, dragRef, reducedMotion }: MedallionProps) 
       </mesh>
 
       {/* face traseira (não espelhada) */}
-      <mesh position={[0, 0, -0.0865]} rotation={[0, Math.PI, 0]} scale={[-1, 1, 1]}>
+      <mesh visible={false} position={[0, 0, -0.0865]} rotation={[0, Math.PI, 0]} scale={[-1, 1, 1]}>
         <planeGeometry args={[1.36, 1.36]} />
         <meshStandardMaterial
           map={texture}
