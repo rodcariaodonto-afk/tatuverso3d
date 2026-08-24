@@ -16,14 +16,8 @@ function Medallion({ speed, hoverRef, dragRef, reducedMotion }: MedallionProps) 
   const group = useRef<THREE.Group>(null);
   const texture = useTexture(logoAsset.url);
 
-  const backTexture = useMemo(() => {
-    const t = texture.clone();
-    t.needsUpdate = true;
-    t.wrapS = THREE.RepeatWrapping;
-    t.repeat.x = -1;
-    t.offset.x = 1;
-    return t;
-  }, [texture]);
+
+
 
   useFrame((state, delta) => {
     const g = group.current;
