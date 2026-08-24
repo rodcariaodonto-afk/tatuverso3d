@@ -187,8 +187,10 @@ export function Header() {
               </Link>
             </nav>
           </aside>
-        </div>
+        </div>,
+        document.body,
       )}
+
     </header>
   );
 }
