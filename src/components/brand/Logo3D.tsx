@@ -1,23 +1,39 @@
-import { Suspense, useRef } from "react";
+import { Suspense, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { ContactShadows, useTexture } from "@react-three/drei";
+import { ContactShadows, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
-import logoAsset from "@/assets/tatuverso3d-logo-3d.png.asset.json";
+import modelAsset from "@/assets/tatuverso3d-logo.glb.asset.json";
 
-type MedallionProps = {
-  /** rotação alvo (rad/s). 0 = parada (prefers-reduced-motion) */
+type ReliefProps = {
   speed: number;
   hoverRef: React.RefObject<boolean>;
   dragRef: React.RefObject<{ dragging: boolean; delta: number }>;
   reducedMotion: boolean;
 };
 
-function Medallion({ speed, hoverRef, dragRef, reducedMotion }: MedallionProps) {
+function LogoRelief({ speed, hoverRef, dragRef, reducedMotion }: ReliefProps) {
   const group = useRef<THREE.Group>(null);
-  const texture = useTexture(logoAsset.url);
+  const { scene } = useGLTF(modelAsset.url);
 
-
-
+  // Instância própria, com sombras próprias entre os níveis de relevo.
+  const model = useMemo(() => {
+    const clone = scene.clone(true);
+    clone.traverse((obj) => {
+      const mesh = obj as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      const mat = mesh.material as THREE.MeshStandardMaterial;
+      if (mat) {
+        mat.roughness = 0.5;
+        mat.metalness = 0.18;
+        if (mat.map) mat.map.anisotropy = 8;
+      }
+    });
+    // Peça em pé, largura 1 → escala para preencher a moldura.
+    clone.scale.setScalar(2.1);
+    return clone;
+  }, [scene]);
 
   useFrame((state, delta) => {
     const g = group.current;
@@ -30,63 +46,23 @@ function Medallion({ speed, hoverRef, dragRef, reducedMotion }: MedallionProps) 
     }
 
     if (!reducedMotion && !dragRef.current?.dragging) {
-      const factor = hoverRef.current ? 0.35 : 1;
+      const factor = hoverRef.current ? 0.4 : 1;
       g.rotation.y += speed * factor * d;
     }
 
     if (!reducedMotion) {
-      g.position.y = Math.sin(state.clock.elapsedTime * 0.8) * 0.045;
+      g.position.y = Math.sin(state.clock.elapsedTime * 0.7) * 0.04;
     }
   });
 
   return (
     <group ref={group}>
-      {/* corpo com espessura */}
-      <mesh rotation={[Math.PI / 2, 0, 0]} castShadow>
-        <cylinderGeometry args={[1, 1, 0.17, 128]} />
-        <meshStandardMaterial color="#061657" roughness={0.38} metalness={0.35} />
-      </mesh>
-
-      {/* chanfro / contorno externo */}
-      <mesh>
-        <torusGeometry args={[0.995, 0.05, 24, 128]} />
-        <meshStandardMaterial
-          color="#08CFFF"
-          roughness={0.25}
-          metalness={0.5}
-          emissive="#08CFFF"
-          emissiveIntensity={0.12}
-        />
-      </mesh>
-
-      {/* face frontal */}
-      <mesh position={[0, 0, 0.0865]}>
-        <planeGeometry args={[1.36, 1.36]} />
-        <meshStandardMaterial
-          map={texture}
-          transparent
-          roughness={0.45}
-          metalness={0.05}
-          toneMapped={false}
-        />
-      </mesh>
-
-      {/* face traseira (não espelhada) */}
-      <mesh position={[0, 0, -0.0865]} rotation={[0, Math.PI, 0]} scale={[-1, 1, 1]}>
-        <planeGeometry args={[1.36, 1.36]} />
-        <meshStandardMaterial
-          map={texture}
-          transparent
-          side={THREE.DoubleSide}
-          roughness={0.45}
-          metalness={0.05}
-          toneMapped={false}
-        />
-      </mesh>
-
+      <primitive object={model} />
     </group>
   );
 }
+
+useGLTF.preload(modelAsset.url);
 
 export type Logo3DProps = {
   active: boolean;
@@ -135,21 +111,23 @@ export default function Logo3D({ active, reducedMotion }: Logo3DProps) {
         style={{ background: "transparent" }}
         shadows
       >
-        <ambientLight intensity={0.9} />
-        <directionalLight position={[3, 4, 5]} intensity={1.5} castShadow />
-        <directionalLight position={[-4, -1, -3]} intensity={0.5} color="#4aa8ff" />
+        {/* luz ambiente + frontal + lateral + contorno */}
+        <ambientLight intensity={0.65} />
+        <directionalLight position={[2, 3, 4]} intensity={2.1} castShadow />
+        <directionalLight position={[-3.5, 1, 2]} intensity={1.1} color="#66aaff" />
+        <directionalLight position={[0, 1.2, -4]} intensity={1.8} color="#08CFFF" />
         <Suspense fallback={null}>
-          <Medallion
-            speed={(Math.PI * 2) / 10}
+          <LogoRelief
+            speed={(Math.PI * 2) / 11}
             hoverRef={hoverRef}
             dragRef={dragRef}
             reducedMotion={reducedMotion}
           />
           <ContactShadows
-            position={[0, -1.35, 0]}
-            opacity={0.45}
+            position={[0, -1.25, 0]}
+            opacity={0.4}
             scale={5}
-            blur={2.6}
+            blur={2.8}
             far={3}
             color="#020617"
           />
