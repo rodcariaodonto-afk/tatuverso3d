@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+
 import { useCart } from "@/lib/cart-store";
 import { useAuth } from "@/lib/auth-context";
 import { useCartDrawer } from "@/components/cart/CartDrawer";
