@@ -3,9 +3,8 @@ import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
-import {
-  CatalogProductCard,
-} from "@/components/catalog/ProductCard";
+import { ProductGrid, ProductGridSkeleton } from "@/components/catalog/ProductRail";
+
 import {
   applyCatalogFilters,
   productColors,
