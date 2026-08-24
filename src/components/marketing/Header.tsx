@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+
 import { useCart } from "@/lib/cart-store";
 import { useAuth } from "@/lib/auth-context";
 import { useCartDrawer } from "@/components/cart/CartDrawer";
@@ -123,9 +125,10 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-50 xl:hidden">
+      {/* Mobile drawer (portal: header uses backdrop-blur, which traps fixed children) */}
+      {mobileOpen && typeof document !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-[60] xl:hidden">
+
           <div
             className="absolute inset-0 bg-brand-dark/60"
             onClick={() => setMobileOpen(false)}
@@ -184,8 +187,10 @@ export function Header() {
               </Link>
             </nav>
           </aside>
-        </div>
+        </div>,
+        document.body,
       )}
+
     </header>
   );
 }
