@@ -16,12 +16,28 @@ type Tab = "store" | "company" | "payments";
 const STORE_FIELDS = [
   { key: "store.name", label: "Nome da loja", placeholder: "TatuVerso3D" },
   { key: "store.tagline", label: "Tagline", placeholder: "Um universo de ideias que ganham forma" },
-  { key: "store.currency", label: "Moeda", placeholder: "BRL", type: "select", options: ["BRL", "USD", "EUR"] },
-  { key: "store.measurement", label: "Sistema de medição", placeholder: "metric", type: "select", options: ["metric", "imperial"] },
+  {
+    key: "store.currency",
+    label: "Moeda",
+    placeholder: "BRL",
+    type: "select",
+    options: ["BRL", "USD", "EUR"],
+  },
+  {
+    key: "store.measurement",
+    label: "Sistema de medição",
+    placeholder: "metric",
+    type: "select",
+    options: ["metric", "imperial"],
+  },
   { key: "store.timezone", label: "Fuso horário", placeholder: "America/Sao_Paulo" },
   { key: "shipping.free_threshold", label: "Frete grátis acima de (R$)", placeholder: "150" },
   { key: "shipping.flat_rate", label: "Frete fixo (R$)", placeholder: "19.90" },
-  { key: "social.instagram", label: "Instagram URL", placeholder: "https://www.instagram.com/tatuverso3d/" },
+  {
+    key: "social.instagram",
+    label: "Instagram URL",
+    placeholder: "https://www.instagram.com/tatuverso3d/",
+  },
 ];
 
 const COMPANY_FIELDS = [
@@ -59,11 +75,13 @@ function ConfigPage() {
         </header>
 
         <div className="mt-6 flex flex-wrap gap-1 border-b border-border">
-          {([
-            ["store", "Detalhes da loja", Store],
-            ["company", "Informações da empresa", Building2],
-            ["payments", "Pagamentos", CreditCard],
-          ] as const).map(([key, label, Icon]) => (
+          {(
+            [
+              ["store", "Detalhes da loja", Store],
+              ["company", "Informações da empresa", Building2],
+              ["payments", "Pagamentos", CreditCard],
+            ] as const
+          ).map(([key, label, Icon]) => (
             <button
               key={key}
               onClick={() => setTab(key)}
@@ -123,7 +141,11 @@ function useSettings() {
   return { map, isLoading, save };
 }
 
-function SettingsList({ fields }: { fields: { key: string; label: string; placeholder?: string; type?: string; options?: string[] }[] }) {
+function SettingsList({
+  fields,
+}: {
+  fields: { key: string; label: string; placeholder?: string; type?: string; options?: string[] }[];
+}) {
   const { map, isLoading, save } = useSettings();
   const [values, setValues] = useState<Record<string, string>>({});
 
@@ -135,13 +157,16 @@ function SettingsList({ fields }: { fields: { key: string; label: string; placeh
     setValues(v);
   }, [map, fields]);
 
-  if (isLoading) return <div className="text-center text-sm text-muted-foreground py-12">Carregando…</div>;
+  if (isLoading)
+    return <div className="text-center text-sm text-muted-foreground py-12">Carregando…</div>;
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {fields.map((f) => (
         <div key={f.key} className="rounded-lg border border-border bg-card p-5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{f.label}</label>
+          <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            {f.label}
+          </label>
           <p className="mt-0.5 font-mono text-[10px] text-muted-foreground/60">{f.key}</p>
           <div className="mt-3 flex gap-2">
             {f.type === "select" ? (
@@ -152,7 +177,9 @@ function SettingsList({ fields }: { fields: { key: string; label: string; placeh
               >
                 <option value="">—</option>
                 {f.options?.map((o) => (
-                  <option key={o} value={o}>{o}</option>
+                  <option key={o} value={o}>
+                    {o}
+                  </option>
                 ))}
               </select>
             ) : (
@@ -181,9 +208,10 @@ function SettingsList({ fields }: { fields: { key: string; label: string; placeh
 
 function PaymentsPanel() {
   const { map, isLoading, save } = useSettings();
-  const enabled: Record<string, boolean> = (map["payments.enabled"] && typeof map["payments.enabled"] === "object")
-    ? map["payments.enabled"]
-    : {};
+  const enabled: Record<string, boolean> =
+    map["payments.enabled"] && typeof map["payments.enabled"] === "object"
+      ? map["payments.enabled"]
+      : {};
   const [defaultMethod, setDefaultMethod] = useState<string>("");
 
   useEffect(() => {
@@ -196,7 +224,8 @@ function PaymentsPanel() {
     if (ok) toast.success("Atualizado");
   };
 
-  if (isLoading) return <div className="text-center text-sm text-muted-foreground py-12">Carregando…</div>;
+  if (isLoading)
+    return <div className="text-center text-sm text-muted-foreground py-12">Carregando…</div>;
 
   return (
     <div className="space-y-6">
@@ -239,7 +268,9 @@ function PaymentsPanel() {
           >
             <option value="">—</option>
             {PAYMENT_METHODS.filter((m) => enabled[m.key]).map((m) => (
-              <option key={m.key} value={m.key}>{m.label}</option>
+              <option key={m.key} value={m.key}>
+                {m.label}
+              </option>
             ))}
           </select>
           <button
@@ -257,8 +288,8 @@ function PaymentsPanel() {
       <div className="rounded-lg border border-border bg-card p-5">
         <h3 className="font-display text-lg text-primary">Credenciais do gateway</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          Chaves de Stripe / Mercado Pago são armazenadas como segredos no backend.
-          Acesse o painel do Lovable Cloud para configurá-las.
+          Chaves de Stripe / Mercado Pago são armazenadas como segredos no backend. Acesse o painel
+          do Lovable Cloud para configurá-las.
         </p>
       </div>
     </div>
