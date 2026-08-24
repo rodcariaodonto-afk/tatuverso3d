@@ -19,10 +19,10 @@ export const tenantConfig = {
   supportEmail: import.meta.env.VITE_SUPPORT_EMAIL ?? "contato@tatuverso3d.com.br",
   instagram:
     (import.meta.env.VITE_INSTAGRAM as string | undefined) ??
-    "https://instagram.com/tatuverso3d",
+    "https://www.instagram.com/tatuverso3d/",
   tiktok:
     (import.meta.env.VITE_TIKTOK as string | undefined) ??
-    "https://tiktok.com/@tatuverso3d",
+    "https://www.tiktok.com/tatuverso3d/",
 };
 
 /** Aplica a cor primária do tenant como variável CSS no documento. */
