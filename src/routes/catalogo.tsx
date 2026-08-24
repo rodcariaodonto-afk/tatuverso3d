@@ -14,7 +14,6 @@ import {
   useSalesCounts,
   PRODUCT_TYPE_LABEL,
 } from "@/hooks/useProducts";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
