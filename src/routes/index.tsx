@@ -102,34 +102,48 @@ function HomePage() {
           }}
         />
         <div className="container mx-auto px-4 py-12 md:px-6 md:py-16">
-          <p className="eyebrow text-[oklch(0.85_0.06_60)]">{tenantConfig.tagline}</p>
-          <h1 className="mt-3 max-w-3xl font-display text-3xl leading-tight md:text-5xl">
-            Ideias que ganham forma. Produtos que criam conexão.
-          </h1>
-          <p className="mt-3 max-w-xl text-sm text-[oklch(0.9_0.02_265)] md:text-base">
-            Peças sensoriais, articuladas, decorativas e personalizadas feitas em impressão 3D.
-          </p>
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
+            <div className="min-w-0">
+              <p className="eyebrow text-[oklch(0.85_0.06_60)]">{tenantConfig.tagline}</p>
+              <h1 className="mt-3 max-w-3xl font-display text-3xl leading-tight md:text-5xl">
+                Ideias que ganham forma. Produtos que criam conexão.
+              </h1>
+              <p className="mt-3 max-w-xl text-sm text-[oklch(0.9_0.02_265)] md:text-base">
+                Peças sensoriais, articuladas, decorativas e personalizadas feitas em impressão 3D.
+              </p>
 
-          <form onSubmit={submitSearch} className="mt-6 max-w-xl">
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-              <div className="relative min-w-0">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  value={q}
-                  onChange={(e) => setQ(e.target.value)}
-                  placeholder="Buscar fidget, chaveiro, tatu, organizador..."
-                  aria-label="Buscar produtos"
-                  className="h-12 w-full rounded-full border border-transparent bg-background pl-10 pr-4 text-sm text-foreground outline-none focus:border-accent"
-                />
+              {/* Logo 3D — no mobile aparece entre a descrição e a busca */}
+              <div className="mt-6 flex justify-center lg:hidden">
+                <LogoShowcase />
               </div>
-              <button
-                type="submit"
-                className="h-12 shrink-0 rounded-full bg-accent px-5 text-xs font-bold uppercase tracking-wider text-accent-foreground transition hover:brightness-110"
-              >
-                Buscar
-              </button>
+
+              <form onSubmit={submitSearch} className="mt-6 max-w-xl">
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+                  <div className="relative min-w-0">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      value={q}
+                      onChange={(e) => setQ(e.target.value)}
+                      placeholder="Buscar fidget, chaveiro, tatu, organizador..."
+                      aria-label="Buscar produtos"
+                      className="h-12 w-full rounded-full border border-transparent bg-background pl-10 pr-4 text-sm text-foreground outline-none focus:border-accent"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="h-12 shrink-0 rounded-full bg-accent px-5 text-xs font-bold uppercase tracking-wider text-accent-foreground transition hover:brightness-110"
+                  >
+                    Buscar
+                  </button>
+                </div>
+              </form>
             </div>
-          </form>
+
+            {/* Coluna direita — desktop/tablet largo */}
+            <div className="hidden justify-center lg:flex">
+              <LogoShowcase />
+            </div>
+          </div>
 
           {/* Tiras de categoria */}
           <div className="mt-8 grid grid-cols-3 gap-2 sm:gap-3 md:grid-cols-6">
@@ -148,6 +162,7 @@ function HomePage() {
             ))}
           </div>
         </div>
+
       </section>
 
       {/* BENEFÍCIOS */}
