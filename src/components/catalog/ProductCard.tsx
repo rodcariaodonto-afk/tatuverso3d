@@ -1,11 +1,19 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, Image as ImageIcon, Sparkles, Clock } from "lucide-react";
+import { Image as ImageIcon, Sparkles, Clock, Truck } from "lucide-react";
 import type { CatalogProduct } from "@/hooks/useProducts";
 
 const formatBRL = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-/** Shape simples usada na home, quiz e listagens leves. */
+/** Parcelamento simples usado em toda a vitrine. */
+function installments(price: number) {
+  const max = 12;
+  const min = 5; // valor mínimo por parcela
+  const n = Math.max(1, Math.min(max, Math.floor(price / min)));
+  return { n, value: price / n };
+}
+
+/** Shape simples usada na home e listagens leves. */
 export type ProductCardData = {
   id: string;
   slug: string;
@@ -15,10 +23,6 @@ export type ProductCardData = {
   compare_at_price: number | null;
   cover_url: string | null;
   badges: string[] | null;
-  score?: number | null;
-  origin_region?: string | null;
-  origin_country?: string | null;
-  producers?: { name: string } | null;
 };
 
 /** Modelo normalizado consumido pelo card — todas as telas passam por aqui. */
@@ -39,6 +43,7 @@ export type ProductCardView = {
   madeToOrder?: boolean;
   productionDays?: number | null;
   soldOut?: boolean;
+  freeShipping?: boolean;
   ctaLabel?: string;
 };
 
@@ -55,16 +60,22 @@ function Placeholder() {
 
 /**
  * Card base — estrutura idêntica para todos os produtos:
- * imagem quadrada, faixa de badges de altura reservada, nome em 2 linhas,
- * descrição em 2 linhas, bloco de preço com altura fixa e botão ancorado embaixo.
+ * imagem quadrada, faixa de selos absoluta, nome em 2 linhas,
+ * bloco de preço com altura fixa e botão ancorado embaixo.
  */
 export function BaseProductCard({ product }: { product: ProductCardView }) {
   const onSale =
     product.compareAtPrice != null && product.compareAtPrice > product.price;
-  const chips: Array<{ key: string; label: string; icon?: typeof Sparkles }> = [];
+  const discount = onSale
+    ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)
+    : 0;
+  const parc = installments(product.price);
+
+  const chips: Array<{ key: string; label: string; icon: typeof Sparkles }> = [];
   if (product.personalizable)
     chips.push({ key: "custom", label: "Personalizável", icon: Sparkles });
   if (product.madeToOrder) chips.push({ key: "mto", label: "Sob encomenda", icon: Clock });
+  if (product.freeShipping) chips.push({ key: "ship", label: "Frete grátis", icon: Truck });
 
   return (
     <Link
@@ -85,30 +96,27 @@ export function BaseProductCard({ product }: { product: ProductCardView }) {
           <Placeholder />
         )}
 
-        {/* Badges — camada absoluta, nunca empurram o conteúdo */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 flex max-w-full flex-wrap items-start gap-1 p-3">
-          {product.featured && (
+        {/* Selos — camada absoluta, nunca empurram o conteúdo */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 flex max-w-full flex-wrap items-start gap-1 p-2.5">
+          {discount > 0 && (
             <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent-foreground">
+              -{discount}%
+            </span>
+          )}
+          {product.featured && (
+            <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
               Destaque
             </span>
           )}
-          {product.badges.slice(0, 2).map((b) => (
+          {product.badges.slice(0, 1).map((b) => (
             <span
               key={b}
-              className="max-w-[70%] truncate rounded-full bg-background/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur"
+              className="max-w-[60%] truncate rounded-full bg-background/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur"
             >
               {b}
             </span>
           ))}
         </div>
-
-        {/* Favorito — sempre na mesma posição */}
-        <span
-          className="pointer-events-none absolute bottom-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-background/90 text-muted-foreground shadow-sm backdrop-blur"
-          aria-hidden
-        >
-          <Heart className="h-4 w-4" />
-        </span>
 
         {product.soldOut && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/70 text-xs font-bold uppercase tracking-wider text-primary">
@@ -118,22 +126,19 @@ export function BaseProductCard({ product }: { product: ProductCardView }) {
       </div>
 
       {/* Conteúdo */}
-      <div className="flex flex-1 flex-col p-4">
-        <h3 className="line-clamp-2 min-h-[2.6em] font-display text-lg leading-tight text-foreground">
+      <div className="flex flex-1 flex-col p-3 sm:p-4">
+        <h3 className="line-clamp-2 min-h-[2.6em] font-display text-sm leading-tight text-foreground sm:text-base">
           {product.name}
         </h3>
-        <p className="mt-1 line-clamp-2 min-h-[2.5em] text-sm leading-tight text-muted-foreground">
-          {product.description ?? ""}
-        </p>
 
         {/* Selos de atributo — altura reservada mesmo quando vazio */}
-        <div className="mt-2 flex min-h-[22px] flex-wrap items-center gap-1">
-          {chips.map((c) => (
+        <div className="mt-1.5 flex min-h-[20px] flex-wrap items-center gap-1 overflow-hidden">
+          {chips.slice(0, 2).map((c) => (
             <span
               key={c.key}
               className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary"
             >
-              {c.icon && <c.icon className="h-3 w-3" />} {c.label}
+              <c.icon className="h-3 w-3" /> {c.label}
             </span>
           ))}
         </div>
@@ -157,16 +162,19 @@ export function BaseProductCard({ product }: { product: ProductCardView }) {
                 a partir de
               </span>
             )}
-            <span className="font-display text-xl font-semibold text-primary">
+            <span className="font-display text-lg font-semibold text-primary sm:text-xl">
               {formatBRL(product.price)}
             </span>
           </div>
+          <p className="mt-0.5 flex h-4 items-center text-[11px] text-muted-foreground">
+            {parc.n > 1 ? `em até ${parc.n}x de ${formatBRL(parc.value)}` : "à vista no Pix"}
+          </p>
           {product.productionDays ? (
-            <p className="mt-1 flex h-4 items-center text-[11px] text-muted-foreground">
+            <p className="mt-0.5 flex h-4 items-center text-[11px] text-muted-foreground">
               Produção em até {product.productionDays} dias
             </p>
           ) : (
-            <p aria-hidden className="mt-1 h-4" />
+            <p aria-hidden className="mt-0.5 h-4" />
           )}
         </div>
 
@@ -178,7 +186,7 @@ export function BaseProductCard({ product }: { product: ProductCardView }) {
   );
 }
 
-/** Card usado por home, quiz e listagens leves. */
+/** Card usado por listagens leves (dados diretos da tabela products). */
 export function ProductCard({ product }: { product: ProductCardData }) {
   const badges = product.badges ?? [];
   return (
