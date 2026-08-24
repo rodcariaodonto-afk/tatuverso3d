@@ -60,7 +60,7 @@ function Medallion({ speed, hoverRef, dragRef, reducedMotion }: MedallionProps) 
       </mesh>
 
       {/* face frontal */}
-      <mesh visible={false} position={[0, 0, 0.0865]}>
+      <mesh position={[0, 0, 0.0865]}>
         <planeGeometry args={[1.36, 1.36]} />
         <meshStandardMaterial
           map={texture}
