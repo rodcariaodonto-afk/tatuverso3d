@@ -894,7 +894,17 @@ export function ProductForm({ productId }: ProductFormProps) {
             title="Variações"
             action={
               <div className="flex gap-2">
-                <button type="button" onClick={generateVariants} className="rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent">
+                <button
+                  type="button"
+                  onClick={generateVariants}
+                  disabled={!options.some((o) => o.values.length > 0)}
+                  title={
+                    options.some((o) => o.values.length > 0)
+                      ? "Gera uma variação para cada combinação de valores"
+                      : "Cadastre uma opção com valores para gerar combinações"
+                  }
+                  className="rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent disabled:cursor-not-allowed disabled:opacity-50"
+                >
                   Gerar combinações
                 </button>
                 <button type="button" onClick={addVariant} className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent">
@@ -903,6 +913,11 @@ export function ProductForm({ productId }: ProductFormProps) {
               </div>
             }
           >
+            {options.some((o) => o.values.length > 0) && variants.some((v) => !v.valueRefs.length) && (
+              <p className="mb-3 rounded-md border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-foreground/80">
+                Há variações sem valores de opção vinculados. Marque os valores abaixo ou remova a variação.
+              </p>
+            )}
             {variants.length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 Sem variações — a loja usará o preço e estoque base do produto.
