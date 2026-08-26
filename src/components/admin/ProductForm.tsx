@@ -681,44 +681,40 @@ export function ProductForm({ productId }: ProductFormProps) {
       {tab === "images" && (
         <div className="space-y-6">
           <SectionCard title="Imagem de capa">
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
               {form.cover_url && (
-                <img src={form.cover_url} alt="Capa" className="h-24 w-24 rounded-md border border-border object-cover" />
+                <img src={form.cover_url} alt="Capa" className="h-28 w-28 shrink-0 rounded-md border border-border object-cover" />
               )}
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-border px-3 py-2 text-sm hover:border-accent">
-                {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-                Enviar capa
-                <input
-                  type="file" accept="image/*" className="hidden"
-                  onChange={async (e) => {
-                    const f = e.target.files?.[0];
-                    if (!f) return;
-                    const url = await uploadImage(f);
+              <div className="flex-1">
+                <ImageDropzone
+                  busy={uploading}
+                  enablePaste={!coverDone}
+                  label="Arraste a capa aqui"
+                  onFiles={async (files) => {
+                    const url = await uploadImage(files[0]);
                     if (url) setField("cover_url", url);
                   }}
                 />
-              </label>
+              </div>
             </div>
           </SectionCard>
 
-          <SectionCard
-            title="Galeria"
-            action={
-              <label className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent">
-                <Plus className="h-3 w-3" /> Adicionar
-                <input
-                  type="file" accept="image/*" multiple className="hidden"
-                  onChange={async (e) => {
-                    const files = Array.from(e.target.files ?? []);
-                    for (const f of files) {
-                      const url = await uploadImage(f);
-                      if (url) setImages((im) => [...im, { url, alt: form.name, sort_order: im.length }]);
-                    }
-                  }}
-                />
-              </label>
-            }
-          >
+          <SectionCard title="Galeria">
+            <div className="mb-4">
+              <ImageDropzone
+                multiple
+                busy={uploading}
+                label="Arraste as imagens aqui"
+                hint="ou cole com Ctrl+V • ou clique para escolher (várias de uma vez)"
+                onFiles={async (files) => {
+                  for (const f of files) {
+                    const url = await uploadImage(f);
+                    if (url) setImages((im) => [...im, { url, alt: form.name, sort_order: im.length }]);
+                  }
+                }}
+              />
+            </div>
+
             {images.length === 0 ? (
               <p className="text-sm text-muted-foreground">Nenhuma imagem adicional.</p>
             ) : (
