@@ -216,6 +216,10 @@ function ProductPage() {
       toast.error("Selecione todas as opções disponíveis");
       return;
     }
+    if (standaloneVariants.length > 1 && !selectedVariant) {
+      toast.error("Selecione uma variação");
+      return;
+    }
     const missing = missingRequired();
     if (missing) {
       toast.error("Personalização obrigatória", { description: `Preencha: ${missing}` });
