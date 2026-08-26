@@ -162,7 +162,7 @@ export function ProductForm({ productId }: ProductFormProps) {
 
   const [form, setForm] = useState({
     name: "", slug: "", short_description: "", description: "",
-    product_type: "decoracao", status: "draft",
+    product_type: "decoration", status: "draft",
     price: 0, compare_at_price: null as number | null, sku: "",
     material_description: "", dimensions_text: "", color_notes: "", included_items: "",
     care_instructions: "", safety_notes: "", age_recommendation: "",
@@ -232,7 +232,7 @@ export function ProductForm({ productId }: ProductFormProps) {
     const p: any = loaded;
     setForm({
       name: p.name ?? "", slug: p.slug ?? "", short_description: p.short_description ?? "",
-      description: p.description ?? "", product_type: p.product_type ?? "decoracao",
+      description: p.description ?? "", product_type: p.product_type ?? "decoration",
       status: p.status ?? "draft", price: Number(p.price ?? 0),
       compare_at_price: p.compare_at_price != null ? Number(p.compare_at_price) : null,
       sku: p.sku ?? "", material_description: p.material_description ?? "",
