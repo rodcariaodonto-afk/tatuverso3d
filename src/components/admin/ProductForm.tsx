@@ -9,6 +9,8 @@ import { getVariantCosts, saveVariantCosts } from "@/lib/admin-costs.functions";
 import { adminAdjustStock } from "@/lib/inventory-admin.functions";
 import { PRODUCT_TYPE_LABEL, OPTION_TYPE_LABEL } from "@/hooks/useProducts";
 import { ImageDropzone } from "@/components/admin/ImageDropzone";
+import { MoneyInput } from "@/components/admin/MoneyInput";
+
 
 /* ── tipos ─────────────────────────────────────────────────────────────── */
 
