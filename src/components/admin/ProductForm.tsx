@@ -782,21 +782,36 @@ export function ProductForm({ productId }: ProductFormProps) {
           <SectionCard
             title="Opções (cor, tamanho, material…)"
             action={
-              <button
-                type="button"
-                onClick={() =>
-                  setOptions((os) => [...os, {
-                    tempId: uid(), name: "", option_type: "color", is_required: true,
-                    sort_order: os.length, values: [],
-                  }])
-                }
-                className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent"
-              >
-                <Plus className="h-3 w-3" /> Nova opção
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={addQuickQuantityOption}
+                  className="rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent"
+                >
+                  Opção rápida: Quantidade
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setOptions((os) => [...os, {
+                      tempId: uid(), name: "", option_type: "color", is_required: true,
+                      sort_order: os.length, values: [],
+                    }])
+                  }
+                  className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent"
+                >
+                  <Plus className="h-3 w-3" /> Nova opção
+                </button>
+              </div>
             }
           >
-            {options.length === 0 && <p className="text-sm text-muted-foreground">Sem opções cadastradas.</p>}
+            {options.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Sem opções cadastradas. Para ter preços diferentes por variação (ex.: Kit com 4 e Kit com 8),
+                crie uma opção com valores e depois use <strong>Gerar combinações</strong>. Você também pode
+                criar variações avulsas em <strong>Manual</strong> — o cliente escolherá pelo nome delas.
+              </p>
+            )}
             <div className="space-y-4">
               {options.map((o) => (
                 <div key={o.tempId} className="rounded-md border border-border p-4">
