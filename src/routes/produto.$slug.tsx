@@ -121,9 +121,20 @@ function ProductPage() {
     return list.filter((v, i, arr) => arr.findIndex((x) => x.url === v.url) === i);
   }, [raw]);
 
+  /** variações "soltas" (sem vínculo com opções) — escolha direta pelo cliente */
+  const standaloneVariants = useMemo(() => {
+    if (!product) return [];
+    if (product.options.length) return [];
+    return product.variants;
+  }, [product]);
+
   const selectedVariant = useMemo(() => {
     if (!product) return null;
-    if (!product.options.length) return product.variants[0] ?? null;
+    if (!product.options.length) {
+      if (!product.variants.length) return null;
+      if (product.variants.length === 1) return product.variants[0];
+      return product.variants.find((v) => v.id === variantPick) ?? null;
+    }
     const chosen = Object.values(selection);
     if (chosen.length !== product.options.length) return null;
     return (
@@ -133,7 +144,8 @@ function ProductPage() {
           v.option_value_ids.length === chosen.length,
       ) ?? null
     );
-  }, [product, selection]);
+  }, [product, selection, variantPick]);
+
 
   if (isLoading) {
     return <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Carregando...</div>;
