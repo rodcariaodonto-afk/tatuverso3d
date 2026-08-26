@@ -812,12 +812,13 @@ export function ProductForm({ productId }: ProductFormProps) {
                               ? { ...x, values: x.values.map((y) => y.tempId === v.tempId ? { ...y, color_hex: e.target.value } : y) } : x))}
                           />
                         )}
-                        <input
-                          type="number" step="0.01" placeholder="+ R$" value={v.price_adjustment}
+                        <MoneyInput
+                          placeholder="+ R$" value={v.price_adjustment}
                           className="w-24 rounded-md border border-border bg-card px-2 py-1.5 text-sm"
-                          onChange={(e) => setOptions((os) => os.map((x) => x.tempId === o.tempId
-                            ? { ...x, values: x.values.map((y) => y.tempId === v.tempId ? { ...y, price_adjustment: Number(e.target.value) } : y) } : x))}
+                          onChange={(nv) => setOptions((os) => os.map((x) => x.tempId === o.tempId
+                            ? { ...x, values: x.values.map((y) => y.tempId === v.tempId ? { ...y, price_adjustment: nv ?? 0 } : y) } : x))}
                         />
+
                         <button
                           type="button"
                           onClick={() => setOptions((os) => os.map((x) => x.tempId === o.tempId
