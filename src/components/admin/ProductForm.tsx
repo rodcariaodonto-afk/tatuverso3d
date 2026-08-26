@@ -643,11 +643,12 @@ export function ProductForm({ productId }: ProductFormProps) {
         <SectionCard title="Preço base">
           <div className="grid gap-4 md:grid-cols-3">
             <Field label="Preço (R$) *">
-              <input type="number" step="0.01" className={inputCls} value={form.price} onChange={(e) => setField("price", Number(e.target.value))} />
+              <MoneyInput className={inputCls} value={form.price} onChange={(v) => setField("price", v ?? 0)} />
             </Field>
             <Field label="Preço comparativo (R$)">
-              <input type="number" step="0.01" className={inputCls} value={form.compare_at_price ?? ""} onChange={(e) => setField("compare_at_price", e.target.value ? Number(e.target.value) : null)} />
+              <MoneyInput className={inputCls} allowEmpty value={form.compare_at_price} onChange={(v) => setField("compare_at_price", v)} />
             </Field>
+
             <Field label="SKU base">
               <input className={inputCls} value={form.sku} onChange={(e) => setField("sku", e.target.value)} />
             </Field>
