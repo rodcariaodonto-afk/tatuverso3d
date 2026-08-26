@@ -880,7 +880,7 @@ export function ProductForm({ productId }: ProductFormProps) {
                         <input type="number" className={inputCls} value={v.stock_quantity} onChange={(e) => patchVariant(v.tempId, { stock_quantity: Number(e.target.value) })} />
                       </Field>
                       <Field label="Custo (R$)">
-                        <input type="number" step="0.01" className={inputCls} value={v.cost_price ?? ""} onChange={(e) => patchVariant(v.tempId, { cost_price: e.target.value ? Number(e.target.value) : null })} />
+                        <MoneyInput className={inputCls} allowEmpty value={v.cost_price} onChange={(nv) => patchVariant(v.tempId, { cost_price: nv })} />
                       </Field>
                       <Field label="Alerta de estoque">
                         <input type="number" className={inputCls} value={v.low_stock_threshold} onChange={(e) => patchVariant(v.tempId, { low_stock_threshold: Number(e.target.value) })} />
