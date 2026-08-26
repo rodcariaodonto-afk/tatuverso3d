@@ -92,6 +92,7 @@ function ProductPage() {
   const { data: allProducts } = useCatalogProducts();
 
   const [selection, setSelection] = useState<Record<string, string>>({});
+  const [variantPick, setVariantPick] = useState<string | null>(null);
   const [custom, setCustom] = useState<Record<string, string>>({});
   const [qty, setQty] = useState(1);
   const [activeImage, setActiveImage] = useState<string | null>(null);
