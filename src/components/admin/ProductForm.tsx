@@ -370,6 +370,27 @@ export function ProductForm({ productId }: ProductFormProps) {
     setVariants((vs) => vs.map((v) => (v.tempId === tempId ? { ...v, ...patch } : v)));
 
   /* ── salvar ──────────────────────────────────────────────────────────── */
+  const addQuickQuantityOption = () => {
+    if (options.some((o) => o.name.trim().toLowerCase() === "quantidade")) {
+      setTab("variants");
+      return toast.info('A opção "Quantidade" já existe');
+    }
+    setOptions((os) => [
+      ...os,
+      {
+        tempId: uid(), name: "Quantidade", option_type: "other", is_required: true,
+        sort_order: os.length,
+        values: [
+          { tempId: uid(), label: "Kit com 4", value: "kit-4", color_hex: null, price_adjustment: 0, sort_order: 0 },
+          { tempId: uid(), label: "Kit com 8", value: "kit-8", color_hex: null, price_adjustment: 0, sort_order: 1 },
+        ],
+      },
+    ]);
+    toast.success("Opção Quantidade criada", {
+      description: "Ajuste os rótulos e o acréscimo de preço, depois use Gerar combinações.",
+    });
+  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -377,6 +398,15 @@ export function ProductForm({ productId }: ProductFormProps) {
     if (form.price <= 0) return toast.error("Informe um preço maior que zero");
     if (variants.length > 0 && !variants.some((v) => v.is_default))
       return toast.error("Marque uma variação como padrão");
+    if (variants.length > 1) {
+      const keys = variants.map((v) => [...v.valueRefs].sort().join("|"));
+      const dup = keys.some((k, i) => k && keys.indexOf(k) !== i);
+      if (dup) return toast.error("Existem variações com a mesma combinação de opções");
+      const unnamed = variants.filter((v) => !v.valueRefs.length && !v.name.trim());
+      if (unnamed.length)
+        return toast.error("Dê um nome a cada variação (ex.: Kit com 4, Kit com 8)");
+    }
+
 
     setSaving(true);
     try {
@@ -752,21 +782,36 @@ export function ProductForm({ productId }: ProductFormProps) {
           <SectionCard
             title="Opções (cor, tamanho, material…)"
             action={
-              <button
-                type="button"
-                onClick={() =>
-                  setOptions((os) => [...os, {
-                    tempId: uid(), name: "", option_type: "color", is_required: true,
-                    sort_order: os.length, values: [],
-                  }])
-                }
-                className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent"
-              >
-                <Plus className="h-3 w-3" /> Nova opção
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={addQuickQuantityOption}
+                  className="rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent"
+                >
+                  Opção rápida: Quantidade
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setOptions((os) => [...os, {
+                      tempId: uid(), name: "", option_type: "color", is_required: true,
+                      sort_order: os.length, values: [],
+                    }])
+                  }
+                  className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent"
+                >
+                  <Plus className="h-3 w-3" /> Nova opção
+                </button>
+              </div>
             }
           >
-            {options.length === 0 && <p className="text-sm text-muted-foreground">Sem opções cadastradas.</p>}
+            {options.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Sem opções cadastradas. Para ter preços diferentes por variação (ex.: Kit com 4 e Kit com 8),
+                crie uma opção com valores e depois use <strong>Gerar combinações</strong>. Você também pode
+                criar variações avulsas em <strong>Manual</strong> — o cliente escolherá pelo nome delas.
+              </p>
+            )}
             <div className="space-y-4">
               {options.map((o) => (
                 <div key={o.tempId} className="rounded-md border border-border p-4">
@@ -849,7 +894,17 @@ export function ProductForm({ productId }: ProductFormProps) {
             title="Variações"
             action={
               <div className="flex gap-2">
-                <button type="button" onClick={generateVariants} className="rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent">
+                <button
+                  type="button"
+                  onClick={generateVariants}
+                  disabled={!options.some((o) => o.values.length > 0)}
+                  title={
+                    options.some((o) => o.values.length > 0)
+                      ? "Gera uma variação para cada combinação de valores"
+                      : "Cadastre uma opção com valores para gerar combinações"
+                  }
+                  className="rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent disabled:cursor-not-allowed disabled:opacity-50"
+                >
                   Gerar combinações
                 </button>
                 <button type="button" onClick={addVariant} className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs hover:border-accent">
@@ -858,6 +913,11 @@ export function ProductForm({ productId }: ProductFormProps) {
               </div>
             }
           >
+            {options.some((o) => o.values.length > 0) && variants.some((v) => !v.valueRefs.length) && (
+              <p className="mb-3 rounded-md border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-foreground/80">
+                Há variações sem valores de opção vinculados. Marque os valores abaixo ou remova a variação.
+              </p>
+            )}
             {variants.length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 Sem variações — a loja usará o preço e estoque base do produto.

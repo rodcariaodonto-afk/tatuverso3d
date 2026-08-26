@@ -92,6 +92,7 @@ function ProductPage() {
   const { data: allProducts } = useCatalogProducts();
 
   const [selection, setSelection] = useState<Record<string, string>>({});
+  const [variantPick, setVariantPick] = useState<string | null>(null);
   const [custom, setCustom] = useState<Record<string, string>>({});
   const [qty, setQty] = useState(1);
   const [activeImage, setActiveImage] = useState<string | null>(null);
@@ -120,9 +121,20 @@ function ProductPage() {
     return list.filter((v, i, arr) => arr.findIndex((x) => x.url === v.url) === i);
   }, [raw]);
 
+  /** variações "soltas" (sem vínculo com opções) — escolha direta pelo cliente */
+  const standaloneVariants = useMemo(() => {
+    if (!product) return [];
+    if (product.options.length) return [];
+    return product.variants;
+  }, [product]);
+
   const selectedVariant = useMemo(() => {
     if (!product) return null;
-    if (!product.options.length) return product.variants[0] ?? null;
+    if (!product.options.length) {
+      if (!product.variants.length) return null;
+      if (product.variants.length === 1) return product.variants[0];
+      return product.variants.find((v) => v.id === variantPick) ?? null;
+    }
     const chosen = Object.values(selection);
     if (chosen.length !== product.options.length) return null;
     return (
@@ -132,7 +144,8 @@ function ProductPage() {
           v.option_value_ids.length === chosen.length,
       ) ?? null
     );
-  }, [product, selection]);
+  }, [product, selection, variantPick]);
+
 
   if (isLoading) {
     return <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Carregando...</div>;
@@ -150,7 +163,11 @@ function ProductPage() {
   const compareAt = selectedVariant?.compare_at_price ?? product.compare_at_price;
   const onSale = compareAt != null && compareAt > basePrice;
 
-  const stock = selectedVariant ? selectedVariant.stock_quantity : product.stock_quantity;
+  const stock = selectedVariant
+    ? selectedVariant.stock_quantity
+    : product.variants.length
+      ? Math.max(0, ...product.variants.map((v) => v.stock_quantity ?? 0))
+      : product.stock_quantity;
   const unlimited = product.made_to_order || product.allow_backorder || !product.track_inventory;
   const outOfStock = !unlimited && stock <= 0;
 
@@ -201,6 +218,10 @@ function ProductPage() {
   const handleAdd = () => {
     if (product.options.length && !selectedVariant) {
       toast.error("Selecione todas as opções disponíveis");
+      return;
+    }
+    if (standaloneVariants.length > 1 && !selectedVariant) {
+      toast.error("Selecione uma variação");
       return;
     }
     const missing = missingRequired();
@@ -322,11 +343,46 @@ function ProductPage() {
               {onSale && compareAt != null && (
                 <span className="text-sm text-muted-foreground line-through">{formatBRL(compareAt)}</span>
               )}
+              {!selectedVariant && standaloneVariants.length > 1 && (
+                <span className="text-xs uppercase tracking-wider text-muted-foreground">A partir de</span>
+              )}
               <span className="font-display text-3xl font-semibold text-primary">{formatBRL(unitPrice)}</span>
               {customizationAdjust > 0 && (
                 <span className="text-xs text-muted-foreground">inclui {formatBRL(customizationAdjust)} de personalização</span>
               )}
             </div>
+
+            {/* VARIAÇÕES SEM OPÇÕES */}
+            {standaloneVariants.length > 1 && (
+              <div className="mt-5">
+                <p className="eyebrow">Escolha a variação</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {standaloneVariants.map((v, i) => {
+                    const active = selectedVariant?.id === v.id;
+                    const soldOut = !unlimited && (v.stock_quantity ?? 0) <= 0;
+                    return (
+                      <button
+                        key={v.id}
+                        type="button"
+                        disabled={soldOut}
+                        onClick={() => { setVariantPick(v.id); if (v.image_url) setActiveImage(v.image_url); }}
+                        className={`rounded-xl border px-3 py-2 text-left text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                          active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-foreground/80 hover:border-primary"
+                        }`}
+                      >
+                        <span className="block">{v.name?.trim() || v.sku || `Opção ${i + 1}`}</span>
+                        <span className={`block text-[11px] ${active ? "opacity-90" : "text-muted-foreground"}`}>
+                          {formatBRL(v.price)}{soldOut ? " · esgotado" : ""}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                {!selectedVariant && (
+                  <p className="mt-2 text-xs text-destructive">Selecione uma variação para ver preço e disponibilidade.</p>
+                )}
+              </div>
+            )}
 
             {/* OPÇÕES */}
             {product.options.map((o) => (
