@@ -370,6 +370,27 @@ export function ProductForm({ productId }: ProductFormProps) {
     setVariants((vs) => vs.map((v) => (v.tempId === tempId ? { ...v, ...patch } : v)));
 
   /* ── salvar ──────────────────────────────────────────────────────────── */
+  const addQuickQuantityOption = () => {
+    if (options.some((o) => o.name.trim().toLowerCase() === "quantidade")) {
+      setTab("variants");
+      return toast.info('A opção "Quantidade" já existe');
+    }
+    setOptions((os) => [
+      ...os,
+      {
+        tempId: uid(), name: "Quantidade", option_type: "other", is_required: true,
+        sort_order: os.length,
+        values: [
+          { tempId: uid(), label: "Kit com 4", value: "kit-4", color_hex: null, price_adjustment: 0, sort_order: 0 },
+          { tempId: uid(), label: "Kit com 8", value: "kit-8", color_hex: null, price_adjustment: 0, sort_order: 1 },
+        ],
+      },
+    ]);
+    toast.success("Opção Quantidade criada", {
+      description: "Ajuste os rótulos e o acréscimo de preço, depois use Gerar combinações.",
+    });
+  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
