@@ -971,8 +971,9 @@ export function ProductForm({ productId }: ProductFormProps) {
                       </select>
                     </Field>
                     <Field label="Acréscimo (R$)">
-                      <input type="number" step="0.01" className={inputCls} value={f.price_adjustment}
-                        onChange={(e) => setCustomFields((fs) => fs.map((x) => x.tempId === f.tempId ? { ...x, price_adjustment: Number(e.target.value) } : x))} />
+                      <MoneyInput className={inputCls} value={f.price_adjustment}
+                        onChange={(nv) => setCustomFields((fs) => fs.map((x) => x.tempId === f.tempId ? { ...x, price_adjustment: nv ?? 0 } : x))} />
+
                     </Field>
                     <Field label="Placeholder">
                       <input className={inputCls} value={f.placeholder}
