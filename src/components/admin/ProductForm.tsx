@@ -874,7 +874,7 @@ export function ProductForm({ productId }: ProductFormProps) {
                         <input className={inputCls} value={v.sku} onChange={(e) => patchVariant(v.tempId, { sku: e.target.value })} />
                       </Field>
                       <Field label="Preço (R$)">
-                        <input type="number" step="0.01" className={inputCls} value={v.price} onChange={(e) => patchVariant(v.tempId, { price: Number(e.target.value) })} />
+                        <MoneyInput className={inputCls} value={v.price} onChange={(nv) => patchVariant(v.tempId, { price: nv ?? 0 })} />
                       </Field>
                       <Field label="Estoque">
                         <input type="number" className={inputCls} value={v.stock_quantity} onChange={(e) => patchVariant(v.tempId, { stock_quantity: Number(e.target.value) })} />
