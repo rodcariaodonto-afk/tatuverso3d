@@ -163,7 +163,11 @@ function ProductPage() {
   const compareAt = selectedVariant?.compare_at_price ?? product.compare_at_price;
   const onSale = compareAt != null && compareAt > basePrice;
 
-  const stock = selectedVariant ? selectedVariant.stock_quantity : product.stock_quantity;
+  const stock = selectedVariant
+    ? selectedVariant.stock_quantity
+    : product.variants.length
+      ? Math.max(0, ...product.variants.map((v) => v.stock_quantity ?? 0))
+      : product.stock_quantity;
   const unlimited = product.made_to_order || product.allow_backorder || !product.track_inventory;
   const outOfStock = !unlimited && stock <= 0;
 
