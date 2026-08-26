@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getVariantCosts, saveVariantCosts } from "@/lib/admin-costs.functions";
 import { adminAdjustStock } from "@/lib/inventory-admin.functions";
 import { PRODUCT_TYPE_LABEL, OPTION_TYPE_LABEL } from "@/hooks/useProducts";
+import { ImageDropzone } from "@/components/admin/ImageDropzone";
 
 /* ── tipos ─────────────────────────────────────────────────────────────── */
 
@@ -688,9 +689,9 @@ export function ProductForm({ productId }: ProductFormProps) {
               <div className="flex-1">
                 <ImageDropzone
                   busy={uploading}
-                  enablePaste={!coverDone}
+                  enablePaste={!form.cover_url}
                   label="Arraste a capa aqui"
-                  onFiles={async (files) => {
+                  onFiles={async (files: File[]) => {
                     const url = await uploadImage(files[0]);
                     if (url) setField("cover_url", url);
                   }}
@@ -706,7 +707,8 @@ export function ProductForm({ productId }: ProductFormProps) {
                 busy={uploading}
                 label="Arraste as imagens aqui"
                 hint="ou cole com Ctrl+V • ou clique para escolher (várias de uma vez)"
-                onFiles={async (files) => {
+                enablePaste={!!form.cover_url}
+                onFiles={async (files: File[]) => {
                   for (const f of files) {
                     const url = await uploadImage(f);
                     if (url) setImages((im) => [...im, { url, alt: form.name, sort_order: im.length }]);
