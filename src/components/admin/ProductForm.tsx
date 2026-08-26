@@ -9,6 +9,8 @@ import { getVariantCosts, saveVariantCosts } from "@/lib/admin-costs.functions";
 import { adminAdjustStock } from "@/lib/inventory-admin.functions";
 import { PRODUCT_TYPE_LABEL, OPTION_TYPE_LABEL } from "@/hooks/useProducts";
 import { ImageDropzone } from "@/components/admin/ImageDropzone";
+import { MoneyInput } from "@/components/admin/MoneyInput";
+
 
 /* ── tipos ─────────────────────────────────────────────────────────────── */
 
@@ -643,11 +645,12 @@ export function ProductForm({ productId }: ProductFormProps) {
         <SectionCard title="Preço base">
           <div className="grid gap-4 md:grid-cols-3">
             <Field label="Preço (R$) *">
-              <input type="number" step="0.01" className={inputCls} value={form.price} onChange={(e) => setField("price", Number(e.target.value))} />
+              <MoneyInput className={inputCls} value={form.price} onChange={(v) => setField("price", v ?? 0)} />
             </Field>
             <Field label="Preço comparativo (R$)">
-              <input type="number" step="0.01" className={inputCls} value={form.compare_at_price ?? ""} onChange={(e) => setField("compare_at_price", e.target.value ? Number(e.target.value) : null)} />
+              <MoneyInput className={inputCls} allowEmpty value={form.compare_at_price} onChange={(v) => setField("compare_at_price", v)} />
             </Field>
+
             <Field label="SKU base">
               <input className={inputCls} value={form.sku} onChange={(e) => setField("sku", e.target.value)} />
             </Field>
@@ -809,12 +812,13 @@ export function ProductForm({ productId }: ProductFormProps) {
                               ? { ...x, values: x.values.map((y) => y.tempId === v.tempId ? { ...y, color_hex: e.target.value } : y) } : x))}
                           />
                         )}
-                        <input
-                          type="number" step="0.01" placeholder="+ R$" value={v.price_adjustment}
+                        <MoneyInput
+                          placeholder="+ R$" value={v.price_adjustment}
                           className="w-24 rounded-md border border-border bg-card px-2 py-1.5 text-sm"
-                          onChange={(e) => setOptions((os) => os.map((x) => x.tempId === o.tempId
-                            ? { ...x, values: x.values.map((y) => y.tempId === v.tempId ? { ...y, price_adjustment: Number(e.target.value) } : y) } : x))}
+                          onChange={(nv) => setOptions((os) => os.map((x) => x.tempId === o.tempId
+                            ? { ...x, values: x.values.map((y) => y.tempId === v.tempId ? { ...y, price_adjustment: nv ?? 0 } : y) } : x))}
                         />
+
                         <button
                           type="button"
                           onClick={() => setOptions((os) => os.map((x) => x.tempId === o.tempId
@@ -870,13 +874,13 @@ export function ProductForm({ productId }: ProductFormProps) {
                         <input className={inputCls} value={v.sku} onChange={(e) => patchVariant(v.tempId, { sku: e.target.value })} />
                       </Field>
                       <Field label="Preço (R$)">
-                        <input type="number" step="0.01" className={inputCls} value={v.price} onChange={(e) => patchVariant(v.tempId, { price: Number(e.target.value) })} />
+                        <MoneyInput className={inputCls} value={v.price} onChange={(nv) => patchVariant(v.tempId, { price: nv ?? 0 })} />
                       </Field>
                       <Field label="Estoque">
                         <input type="number" className={inputCls} value={v.stock_quantity} onChange={(e) => patchVariant(v.tempId, { stock_quantity: Number(e.target.value) })} />
                       </Field>
                       <Field label="Custo (R$)">
-                        <input type="number" step="0.01" className={inputCls} value={v.cost_price ?? ""} onChange={(e) => patchVariant(v.tempId, { cost_price: e.target.value ? Number(e.target.value) : null })} />
+                        <MoneyInput className={inputCls} allowEmpty value={v.cost_price} onChange={(nv) => patchVariant(v.tempId, { cost_price: nv })} />
                       </Field>
                       <Field label="Alerta de estoque">
                         <input type="number" className={inputCls} value={v.low_stock_threshold} onChange={(e) => patchVariant(v.tempId, { low_stock_threshold: Number(e.target.value) })} />
@@ -967,8 +971,9 @@ export function ProductForm({ productId }: ProductFormProps) {
                       </select>
                     </Field>
                     <Field label="Acréscimo (R$)">
-                      <input type="number" step="0.01" className={inputCls} value={f.price_adjustment}
-                        onChange={(e) => setCustomFields((fs) => fs.map((x) => x.tempId === f.tempId ? { ...x, price_adjustment: Number(e.target.value) } : x))} />
+                      <MoneyInput className={inputCls} value={f.price_adjustment}
+                        onChange={(nv) => setCustomFields((fs) => fs.map((x) => x.tempId === f.tempId ? { ...x, price_adjustment: nv ?? 0 } : x))} />
+
                     </Field>
                     <Field label="Placeholder">
                       <input className={inputCls} value={f.placeholder}
