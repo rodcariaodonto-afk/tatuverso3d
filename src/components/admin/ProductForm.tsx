@@ -377,6 +377,15 @@ export function ProductForm({ productId }: ProductFormProps) {
     if (form.price <= 0) return toast.error("Informe um preço maior que zero");
     if (variants.length > 0 && !variants.some((v) => v.is_default))
       return toast.error("Marque uma variação como padrão");
+    if (variants.length > 1) {
+      const keys = variants.map((v) => [...v.valueRefs].sort().join("|"));
+      const dup = keys.some((k, i) => k && keys.indexOf(k) !== i);
+      if (dup) return toast.error("Existem variações com a mesma combinação de opções");
+      const unnamed = variants.filter((v) => !v.valueRefs.length && !v.name.trim());
+      if (unnamed.length)
+        return toast.error("Dê um nome a cada variação (ex.: Kit com 4, Kit com 8)");
+    }
+
 
     setSaving(true);
     try {
