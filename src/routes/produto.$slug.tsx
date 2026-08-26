@@ -339,11 +339,46 @@ function ProductPage() {
               {onSale && compareAt != null && (
                 <span className="text-sm text-muted-foreground line-through">{formatBRL(compareAt)}</span>
               )}
+              {!selectedVariant && standaloneVariants.length > 1 && (
+                <span className="text-xs uppercase tracking-wider text-muted-foreground">A partir de</span>
+              )}
               <span className="font-display text-3xl font-semibold text-primary">{formatBRL(unitPrice)}</span>
               {customizationAdjust > 0 && (
                 <span className="text-xs text-muted-foreground">inclui {formatBRL(customizationAdjust)} de personalização</span>
               )}
             </div>
+
+            {/* VARIAÇÕES SEM OPÇÕES */}
+            {standaloneVariants.length > 1 && (
+              <div className="mt-5">
+                <p className="eyebrow">Escolha a variação</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {standaloneVariants.map((v, i) => {
+                    const active = selectedVariant?.id === v.id;
+                    const soldOut = !unlimited && (v.stock_quantity ?? 0) <= 0;
+                    return (
+                      <button
+                        key={v.id}
+                        type="button"
+                        disabled={soldOut}
+                        onClick={() => { setVariantPick(v.id); if (v.image_url) setActiveImage(v.image_url); }}
+                        className={`rounded-xl border px-3 py-2 text-left text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                          active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-foreground/80 hover:border-primary"
+                        }`}
+                      >
+                        <span className="block">{v.name?.trim() || v.sku || `Opção ${i + 1}`}</span>
+                        <span className={`block text-[11px] ${active ? "opacity-90" : "text-muted-foreground"}`}>
+                          {formatBRL(v.price)}{soldOut ? " · esgotado" : ""}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                {!selectedVariant && (
+                  <p className="mt-2 text-xs text-destructive">Selecione uma variação para ver preço e disponibilidade.</p>
+                )}
+              </div>
+            )}
 
             {/* OPÇÕES */}
             {product.options.map((o) => (
