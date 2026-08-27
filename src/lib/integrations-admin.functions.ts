@@ -119,28 +119,27 @@ export const debugMpEnvironment = createServerFn({ method: "POST" })
     const token = process.env["MERCADOPAGO_ACCESS_TOKEN"]?.trim();
     if (!token) return { ok: false, status: null, live_mode: null, keys: [] };
 
-    const endpoints = [
-      "/v1/payments/search?limit=1",
-      "/v1/payment_methods",
-      "/v1/identification_types",
-      "/v1/merchant_orders/search?limit=1",
-    ];
+    // Cria uma preferência mínima para forçar o retorno de live_mode.
+    const prefRes = await fetch("https://api.mercadopago.com/checkout/preferences", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "X-Idempotency-Key": `env-debug-${Date.now()}`,
+      },
+      body: JSON.stringify({
+        items: [{ title: "Verificação de ambiente", quantity: 1, unit_price: 0.01 }],
+        payer: { email: "debug@tatuverso3d.com.br" },
+      }),
+    });
+    const prefBody = await prefRes.json().catch(() => ({}) as any);
 
-    const results = [];
-    for (const path of endpoints) {
-      const res = await fetch(`https://api.mercadopago.com${path}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const body = await res.json().catch(() => ({}) as any);
-      results.push({
-        path,
-        status: res.status,
-        live_mode: body.live_mode ?? null,
-        keys: Object.keys(body).slice(0, 6),
-      });
-    }
-
-    return { results };
+    return {
+      ok: prefRes.ok,
+      status: prefRes.status,
+      live_mode: prefBody.live_mode ?? null,
+      keys: Object.keys(prefBody).slice(0, 6),
+    };
   });
 
 export const testMelhorEnvio = createServerFn({ method: "POST" })
