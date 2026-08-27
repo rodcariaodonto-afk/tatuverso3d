@@ -138,7 +138,10 @@ export const debugMpEnvironment = createServerFn({ method: "POST" })
       ok: prefRes.ok,
       status: prefRes.status,
       live_mode: prefBody.live_mode ?? null,
-      keys: Object.keys(prefBody).slice(0, 6),
+      init_point: prefBody.init_point ?? null,
+      sandbox_init_point: prefBody.sandbox_init_point ?? null,
+      binary_mode: prefBody.binary_mode ?? null,
+      keys: Object.keys(prefBody).slice(0, 8),
     };
   });
 
