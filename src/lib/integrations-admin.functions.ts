@@ -111,7 +111,7 @@ export const testMercadoPago = createServerFn({ method: "POST" })
     };
   });
 
-/** Debug temporário: retorna metadados da resposta de payments/search sem expor dados. */
+/** Debug temporário: retorna metadados da resposta sem expor dados. */
 export const debugMpEnvironment = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
@@ -119,16 +119,28 @@ export const debugMpEnvironment = createServerFn({ method: "POST" })
     const token = process.env["MERCADOPAGO_ACCESS_TOKEN"]?.trim();
     if (!token) return { ok: false, status: null, live_mode: null, keys: [] };
 
-    const res = await fetch("https://api.mercadopago.com/v1/payments/search?limit=1", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const body = await res.json().catch(() => ({}) as any);
-    return {
-      ok: res.ok,
-      status: res.status,
-      live_mode: body.live_mode ?? null,
-      keys: Object.keys(body).slice(0, 10),
-    };
+    const endpoints = [
+      "/v1/payments/search?limit=1",
+      "/v1/payment_methods",
+      "/v1/identification_types",
+      "/v1/merchant_orders/search?limit=1",
+    ];
+
+    const results = [];
+    for (const path of endpoints) {
+      const res = await fetch(`https://api.mercadopago.com${path}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const body = await res.json().catch(() => ({}) as any);
+      results.push({
+        path,
+        status: res.status,
+        live_mode: body.live_mode ?? null,
+        keys: Object.keys(body).slice(0, 6),
+      });
+    }
+
+    return { results };
   });
 
 export const testMelhorEnvio = createServerFn({ method: "POST" })
