@@ -88,16 +88,44 @@ export const testMercadoPago = createServerFn({ method: "POST" })
     const token = process.env["MERCADOPAGO_ACCESS_TOKEN"]?.trim();
     if (!token) return { ok: false, message: "Credencial MERCADOPAGO_ACCESS_TOKEN não configurada." };
 
-    const res = await fetch("https://api.mercadopago.com/users/me", {
+    const meRes = await fetch("https://api.mercadopago.com/users/me", {
       headers: { Authorization: `Bearer ${token}` },
     });
-    const body = await res.json().catch(() => ({}) as any);
-    if (!res.ok) {
-      return { ok: false, message: `Mercado Pago [${res.status}]: ${(body as any).message ?? "token inválido"}` };
+    const meBody = await meRes.json().catch(() => ({}) as any);
+    if (!meRes.ok) {
+      return { ok: false, message: `Mercado Pago [${meRes.status}]: ${(meBody as any).message ?? "token inválido"}` };
     }
+
+    // Infere o ambiente criando uma preferência mínima.
+    const prefRes = await fetch("https://api.mercadopago.com/checkout/preferences", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "X-Idempotency-Key": `env-check-${Date.now()}`,
+      },
+      body: JSON.stringify({
+        items: [{ title: "Verificação de ambiente", quantity: 1, unit_price: 0.01 }],
+        payer: { email: "verificacao@tatuverso3d.com.br" },
+      }),
+    });
+    const prefBody = await prefRes.json().catch(() => ({}) as any);
+    const initPoint = String(prefBody.init_point ?? "");
+    const sandboxPoint = String(prefBody.sandbox_init_point ?? "");
+
+    let isProduction: boolean | null = null;
+    if (initPoint.includes("www.mercadopago.com.br") && sandboxPoint.includes("sandbox.mercadopago.com.br")) {
+      isProduction = true;
+    } else if (initPoint.includes("sandbox.mercadopago.com.br")) {
+      isProduction = false;
+    }
+
+    const envLabel = isProduction === true ? "Produção" : isProduction === false ? "Sandbox" : "Ambiente não identificado";
+
     return {
       ok: true,
-      message: `Conectado como ${(body as any).nickname ?? (body as any).email ?? "conta MP"} (${(body as any).site_id ?? "?"})`,
+      message: `Conectado como ${(meBody as any).nickname ?? (meBody as any).email ?? "conta MP"} (${(meBody as any).site_id ?? "?"}) — ${envLabel}`,
+      live_mode: isProduction,
     };
   });
 
