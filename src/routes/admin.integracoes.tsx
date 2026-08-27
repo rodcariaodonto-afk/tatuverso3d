@@ -32,7 +32,7 @@ type SettingKey =
   | "integrations.email_from_address"
   | "integrations.email_reply_to";
 
-type TestResult = { ok: boolean; message: string } | null;
+type TestResult = { ok: boolean; message: string; live_mode?: boolean | null } | null;
 
 function IntegracoesPage() {
   const qc = useQueryClient();
