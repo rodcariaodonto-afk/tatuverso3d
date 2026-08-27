@@ -61,7 +61,7 @@ const BENEFITS = [
   {
     icon: Layers,
     title: "100% personalizável",
-    desc: "Cor, nome, tamanho — do seu jeito.",
+    desc: "Cor, nome e tamanho, tudo do seu jeito.",
   },
   {
     icon: Palette,
@@ -100,7 +100,7 @@ function HomePage() {
 
   return (
     <div className="bg-background">
-      {/* HERO — faixa cósmica compacta */}
+      {/* HERO: faixa cósmica compacta */}
       <section className="relative isolate overflow-hidden bg-brand-dark text-[oklch(0.97_0.01_265)]">
         <div
           className="absolute inset-0 -z-10"
@@ -114,11 +114,11 @@ function HomePage() {
             <div className="min-w-0 lg:col-start-1 lg:row-start-1">
               <p className="eyebrow text-[oklch(0.85_0.06_60)]">+2.000 peças entregues no Brasil</p>
               <h1 className="mt-2 max-w-3xl font-display text-3xl leading-tight md:text-4xl">
-                Produtos 3D únicos, do seu jeito — do fidget que acalma ao presente que ninguém
+                Produtos 3D únicos, do seu jeito: do fidget que acalma ao presente que ninguém
                 mais tem
               </h1>
               <p className="mt-3 max-w-xl text-sm text-[oklch(0.9_0.02_265)] md:text-base">
-                Sensoriais, articulados, decoração e presentes personalizados — feitos sob medida,
+                Sensoriais, articulados, decoração e presentes personalizados, feitos sob medida,
                 com cor, nome e detalhes do seu jeito. Envio para todo o Brasil.
               </p>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
@@ -186,7 +186,7 @@ function HomePage() {
                 Tem uma ideia na cabeça? A gente imprime do jeito que você imaginou.
               </h2>
               <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[oklch(0.91_0.02_265)] md:text-base">
-                Manda o tamanho, a cor e a referência — nossa equipe modela e imprime sua peça do
+                Manda o tamanho, a cor e a referência. Nossa equipe modela e imprime sua peça do
                 zero. Orçamento em até 24h, sem compromisso.
               </p>
               <div className="mt-5 flex flex-wrap gap-2 text-xs font-semibold text-white/85">
