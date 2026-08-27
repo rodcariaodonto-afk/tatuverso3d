@@ -88,28 +88,46 @@ export const testMercadoPago = createServerFn({ method: "POST" })
     const token = process.env["MERCADOPAGO_ACCESS_TOKEN"]?.trim();
     if (!token) return { ok: false, message: "Credencial MERCADOPAGO_ACCESS_TOKEN não configurada." };
 
-    const [meRes, paymentsRes] = await Promise.all([
-      fetch("https://api.mercadopago.com/users/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      }),
-      fetch("https://api.mercadopago.com/v1/payments/search?limit=1", {
-        headers: { Authorization: `Bearer ${token}` },
-      }),
-    ]);
-
+    const meRes = await fetch("https://api.mercadopago.com/users/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const meBody = await meRes.json().catch(() => ({}) as any);
     if (!meRes.ok) {
       return { ok: false, message: `Mercado Pago [${meRes.status}]: ${(meBody as any).message ?? "token inválido"}` };
     }
 
+    // Verifica ambiente usando o endpoint de pagamentos.
+    const paymentsRes = await fetch("https://api.mercadopago.com/v1/payments/search?limit=1", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const paymentsBody = await paymentsRes.json().catch(() => ({}) as any);
     const liveMode = (paymentsBody as any).live_mode;
-    const envLabel = liveMode === true ? "Produção" : liveMode === false ? "Sandbox" : "Ambiente desconhecido";
+    const envLabel = liveMode === true ? "Produção" : liveMode === false ? "Sandbox" : "Ambiente não identificado";
 
     return {
       ok: true,
       message: `Conectado como ${(meBody as any).nickname ?? (meBody as any).email ?? "conta MP"} (${(meBody as any).site_id ?? "?"}) — ${envLabel}`,
       live_mode: liveMode,
+    };
+  });
+
+/** Debug temporário: retorna metadados da resposta de payments/search sem expor dados. */
+export const debugMpEnvironment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context as any);
+    const token = process.env["MERCADOPAGO_ACCESS_TOKEN"]?.trim();
+    if (!token) return { ok: false, status: null, live_mode: null, keys: [] };
+
+    const res = await fetch("https://api.mercadopago.com/v1/payments/search?limit=1", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const body = await res.json().catch(() => ({}) as any);
+    return {
+      ok: res.ok,
+      status: res.status,
+      live_mode: body.live_mode ?? null,
+      keys: Object.keys(body).slice(0, 10),
     };
   });
 
