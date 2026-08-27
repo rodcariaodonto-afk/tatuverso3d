@@ -64,7 +64,7 @@ export function Header() {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <Link to="/" className="flex items-center leading-none" aria-label={`${tenantConfig.name} — página inicial`}>
+          <Link to="/" className="flex items-center leading-none" aria-label={`${tenantConfig.name}, página inicial`}>
             <img
               src={logo}
               alt={`Logotipo ${tenantConfig.name}`}
