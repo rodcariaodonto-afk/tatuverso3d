@@ -40,7 +40,6 @@ function IntegracoesPage() {
   const persist = useServerFn(saveIntegrations);
   const runMpTest = useServerFn(testMercadoPago);
   const runMeTest = useServerFn(testMelhorEnvio);
-  const runMpDebug = useServerFn(debugMpEnvironment);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin", "integrations"],
@@ -69,13 +68,6 @@ function IntegracoesPage() {
     mutationFn: () => runMpTest(),
     onSuccess: (r) => setMpResult(r),
     onError: (e: any) => setMpResult({ ok: false, message: e?.message ?? "Erro" }),
-  });
-
-  const [mpDebug, setMpDebug] = useState<any>(null);
-  const mpDebugMutation = useMutation({
-    mutationFn: () => runMpDebug(),
-    onSuccess: (r) => setMpDebug(r),
-    onError: (e: any) => setMpDebug({ ok: false, error: e?.message ?? "Erro" }),
   });
 
   const meTest = useMutation({
