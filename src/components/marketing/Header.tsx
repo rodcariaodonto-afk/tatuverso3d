@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -22,10 +22,17 @@ export const STORE_NAV = [
 ];
 
 export function Header() {
+  const navigate = useNavigate();
   const count = useCart((s) => s.items.reduce((a, i) => a + i.quantity, 0));
   const { user } = useAuth();
   const openDrawer = useCartDrawer((s) => s.setOpen);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const submitSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    navigate({ to: "/catalogo", search: { q: searchQuery } as never });
+  };
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -82,6 +89,26 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-1 md:gap-2">
+          <form
+            onSubmit={submitSearch}
+            className="relative hidden w-44 md:block xl:w-40 2xl:w-56"
+            role="search"
+          >
+            <input
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Buscar produtos..."
+              aria-label="Buscar produtos"
+              className="h-10 w-full rounded-full border border-border bg-background pl-4 pr-10 text-sm text-foreground outline-none transition focus:border-primary"
+            />
+            <button
+              type="submit"
+              className="absolute right-0 top-0 inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground/70 hover:text-primary"
+              aria-label="Pesquisar"
+            >
+              <Search className="h-4 w-4" />
+            </button>
+          </form>
           <Link
             to="/personalizados"
             className="hidden whitespace-nowrap rounded-full bg-accent px-5 py-2 text-center text-xs font-bold uppercase tracking-wider text-accent-foreground transition hover:brightness-105 lg:inline-flex lg:items-center"
@@ -91,7 +118,7 @@ export function Header() {
           <Link
             to="/catalogo"
             search={{ q: "" } as never}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 hover:bg-muted hover:text-primary"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 hover:bg-muted hover:text-primary md:hidden"
             aria-label="Buscar produtos"
           >
             <Search className="h-5 w-5" />
