@@ -96,53 +96,36 @@ export const testMercadoPago = createServerFn({ method: "POST" })
       return { ok: false, message: `Mercado Pago [${meRes.status}]: ${(meBody as any).message ?? "token inválido"}` };
     }
 
-    // Verifica ambiente usando o endpoint de pagamentos.
-    const paymentsRes = await fetch("https://api.mercadopago.com/v1/payments/search?limit=1", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const paymentsBody = await paymentsRes.json().catch(() => ({}) as any);
-    const liveMode = (paymentsBody as any).live_mode;
-    const envLabel = liveMode === true ? "Produção" : liveMode === false ? "Sandbox" : "Ambiente não identificado";
-
-    return {
-      ok: true,
-      message: `Conectado como ${(meBody as any).nickname ?? (meBody as any).email ?? "conta MP"} (${(meBody as any).site_id ?? "?"}) — ${envLabel}`,
-      live_mode: liveMode,
-    };
-  });
-
-/** Debug temporário: retorna metadados da resposta sem expor dados. */
-export const debugMpEnvironment = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    await assertAdmin(context as any);
-    const token = process.env["MERCADOPAGO_ACCESS_TOKEN"]?.trim();
-    if (!token) return { ok: false, status: null, live_mode: null, keys: [] };
-
-    // Cria uma preferência mínima para forçar o retorno de live_mode.
+    // Infere o ambiente criando uma preferência mínima.
     const prefRes = await fetch("https://api.mercadopago.com/checkout/preferences", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-        "X-Idempotency-Key": `env-debug-${Date.now()}`,
+        "X-Idempotency-Key": `env-check-${Date.now()}`,
       },
       body: JSON.stringify({
         items: [{ title: "Verificação de ambiente", quantity: 1, unit_price: 0.01 }],
-        payer: { email: "debug@tatuverso3d.com.br" },
+        payer: { email: "verificacao@tatuverso3d.com.br" },
       }),
     });
     const prefBody = await prefRes.json().catch(() => ({}) as any);
+    const initPoint = String(prefBody.init_point ?? "");
+    const sandboxPoint = String(prefBody.sandbox_init_point ?? "");
+
+    let isProduction: boolean | null = null;
+    if (initPoint.includes("www.mercadopago.com.br") && sandboxPoint.includes("sandbox.mercadopago.com.br")) {
+      isProduction = true;
+    } else if (initPoint.includes("sandbox.mercadopago.com.br")) {
+      isProduction = false;
+    }
+
+    const envLabel = isProduction === true ? "Produção" : isProduction === false ? "Sandbox" : "Ambiente não identificado";
 
     return {
-      ok: prefRes.ok,
-      status: prefRes.status,
-      live_mode: prefBody.live_mode ?? null,
-      init_point: prefBody.init_point ?? null,
-      sandbox_init_point: prefBody.sandbox_init_point ?? null,
-      binary_mode: prefBody.binary_mode ?? null,
-      token_prefix: token.slice(0, 8),
-      keys: Object.keys(prefBody).slice(0, 8),
+      ok: true,
+      message: `Conectado como ${(meBody as any).nickname ?? (meBody as any).email ?? "conta MP"} (${(meBody as any).site_id ?? "?"}) — ${envLabel}`,
+      live_mode: isProduction,
     };
   });
 
