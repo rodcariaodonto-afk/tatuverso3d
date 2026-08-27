@@ -184,6 +184,55 @@ function HomePage() {
         </div>
       </section>
 
+      {/* BANNER DE CRIAÇÃO PERSONALIZADA */}
+      <section className="container mx-auto px-4 py-8 md:px-6 md:py-12">
+        <div className="relative isolate overflow-hidden rounded-3xl bg-brand-dark px-6 py-10 text-[oklch(0.97_0.01_265)] shadow-xl md:px-12 md:py-14">
+          <div
+            className="absolute inset-0 -z-10"
+            style={{
+              background:
+                "radial-gradient(70% 120% at 0% 50%, oklch(0.48 0.2 275 / 0.85) 0%, transparent 65%), radial-gradient(55% 110% at 100% 30%, oklch(0.65 0.2 45 / 0.72) 0%, transparent 68%)",
+            }}
+          />
+          <div className="absolute -right-10 -top-14 -z-10 h-48 w-48 rounded-full border border-white/10" />
+          <div className="absolute -bottom-24 right-20 -z-10 h-56 w-56 rounded-full border border-white/10" />
+
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
+            <div className="min-w-0">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[oklch(0.9_0.08_60)] backdrop-blur">
+                <Sparkles className="h-4 w-4" /> Criação personalizada
+              </div>
+              <h2 className="mt-5 max-w-3xl font-display text-3xl leading-tight md:text-4xl lg:text-5xl">
+                Tem uma ideia e não sabe como transformá-la em realidade?
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[oklch(0.91_0.02_265)] md:text-base">
+                Conte para a gente. Criamos sua peça em impressão 3D do zero, com o tamanho, as
+                cores e os detalhes que você imaginou.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2 text-xs font-semibold text-white/85">
+                <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5">
+                  Projeto sob medida
+                </span>
+                <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5">
+                  Orçamento personalizado
+                </span>
+                <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5">
+                  Produção exclusiva
+                </span>
+              </div>
+            </div>
+
+            <Link
+              to="/personalizados"
+              className="group inline-flex min-h-14 shrink-0 items-center justify-center gap-3 rounded-full bg-accent px-7 py-4 text-sm font-bold uppercase tracking-wider text-accent-foreground shadow-lg transition hover:-translate-y-0.5 hover:brightness-110"
+            >
+              Transformar minha ideia
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* VITRINES */}
       <ProductSection
         eyebrow="Favoritos da órbita"
@@ -230,28 +279,6 @@ function HomePage() {
           </div>
         </section>
       )}
-
-      {/* CTA PERSONALIZADOS */}
-      <section className="container mx-auto px-4 py-12 md:px-6">
-        <div className="grid items-center gap-6 overflow-hidden rounded-3xl bg-brand-dark p-8 text-[oklch(0.97_0.01_265)] md:grid-cols-[1.2fr_auto] md:p-12">
-          <div className="min-w-0">
-            <p className="eyebrow text-[oklch(0.85_0.06_60)]">Projetos sob medida</p>
-            <h2 className="mt-2 font-display text-2xl md:text-3xl">
-              Tem uma ideia? A gente imprime.
-            </h2>
-            <p className="mt-3 max-w-xl text-sm text-[oklch(0.9_0.02_265)]">
-              Brindes corporativos, lembranças de eventos, peças com logo, nome ou cor exclusiva.
-              Conte o que você precisa e montamos um orçamento.
-            </p>
-          </div>
-          <Link
-            to="/personalizados"
-            className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-accent px-6 text-xs font-bold uppercase tracking-wider text-accent-foreground transition hover:brightness-110"
-          >
-            Pedir personalizado <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </section>
     </div>
   );
 }
