@@ -41,6 +41,7 @@ function IntegracoesPage() {
   const persist = useServerFn(saveIntegrations);
   const runMpTest = useServerFn(testMercadoPago);
   const runMeTest = useServerFn(testMelhorEnvio);
+  const runMpDebug = useServerFn(debugMpEnvironment);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin", "integrations"],
