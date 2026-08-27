@@ -72,6 +72,13 @@ function IntegracoesPage() {
     onError: (e: any) => setMpResult({ ok: false, message: e?.message ?? "Erro" }),
   });
 
+  const [mpDebug, setMpDebug] = useState<any>(null);
+  const mpDebugMutation = useMutation({
+    mutationFn: () => runMpDebug(),
+    onSuccess: (r) => setMpDebug(r),
+    onError: (e: any) => setMpDebug({ ok: false, error: e?.message ?? "Erro" }),
+  });
+
   const meTest = useMutation({
     mutationFn: () =>
       runMeTest({ data: { environment: (value("integrations.me_environment", "sandbox") as "sandbox" | "production") } }),
