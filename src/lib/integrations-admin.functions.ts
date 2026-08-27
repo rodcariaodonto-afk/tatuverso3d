@@ -141,6 +141,7 @@ export const debugMpEnvironment = createServerFn({ method: "POST" })
       init_point: prefBody.init_point ?? null,
       sandbox_init_point: prefBody.sandbox_init_point ?? null,
       binary_mode: prefBody.binary_mode ?? null,
+      token_prefix: token.slice(0, 8),
       keys: Object.keys(prefBody).slice(0, 8),
     };
   });
