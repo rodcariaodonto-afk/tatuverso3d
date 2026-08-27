@@ -5,7 +5,7 @@ import logoAsset from "@/assets/tatuverso3d-logo.png.asset.json";
 const Logo3D = lazy(() => import("@/components/brand/Logo3D"));
 
 /** Altura/largura reservadas por breakpoint — evita mudança de layout no carregamento. */
-const BOX = "h-[260px] w-[260px] md:h-[330px] md:w-[330px] lg:h-[410px] lg:w-[410px]";
+const BOX = "h-[180px] w-[180px] md:h-[220px] md:w-[220px] lg:h-[260px] lg:w-[260px]";
 
 function StaticLogo() {
   return (
