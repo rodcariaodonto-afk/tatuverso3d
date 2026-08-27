@@ -10,7 +10,6 @@ import {
   saveIntegrations,
   testMercadoPago,
   testMelhorEnvio,
-  debugMpEnvironment,
 } from "@/lib/integrations-admin.functions";
 
 export const Route = createFileRoute("/admin/integracoes")({
