@@ -16,7 +16,7 @@ export function Footer() {
           </div>
           <p className="mt-4 text-sm font-semibold text-white/85">{tenantConfig.tagline}</p>
           <p className="mt-2 text-sm leading-relaxed text-white/65">
-            TatuVerso3D — produtos em impressão 3D feitos no Brasil, um por um. Sensoriais,
+            TatuVerso3D. Produtos em impressão 3D feitos no Brasil, um por um. Sensoriais,
             decoração, presentes, colecionáveis e peças sob medida, com envio pra todo o país.
           </p>
           <div className="mt-4 flex gap-4 text-sm text-white/80">
