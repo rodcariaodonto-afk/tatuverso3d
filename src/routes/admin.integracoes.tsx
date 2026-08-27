@@ -130,19 +130,6 @@ function IntegracoesPage() {
               onClick={() => mpTest.mutate()}
               result={mpResult}
             />
-            <button
-              onClick={() => mpDebugMutation.mutate()}
-              disabled={mpDebugMutation.isPending}
-              className="mt-2 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:border-primary disabled:opacity-50"
-            >
-              {mpDebugMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
-              Debug ambiente MP
-            </button>
-            {mpDebug ? (
-              <pre className="mt-2 rounded-lg border border-border bg-card p-3 text-xs text-muted-foreground">
-                {JSON.stringify(mpDebug, null, 2)}
-              </pre>
-            ) : null}
           </Card>
 
           <Card title="Melhor Envio">
