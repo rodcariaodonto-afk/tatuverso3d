@@ -1,5 +1,5 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
 import {
   ArrowRight,
   Boxes,
@@ -8,7 +8,6 @@ import {
   Layers,
   MapPin,
   Palette,
-  Search,
   Sparkles,
   Truck,
 } from "lucide-react";
@@ -19,7 +18,6 @@ import {
 } from "@/hooks/useProducts";
 import { ProductSection } from "@/components/catalog/ProductRail";
 import { LogoShowcase } from "@/components/brand/LogoShowcase";
-import { tenantConfig } from "@/lib/tenant-config";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -55,15 +53,29 @@ const CATEGORY_TILES = [
 ];
 
 const BENEFITS = [
-  { icon: Truck, title: "Envio para todo o Brasil", desc: "Rastreio em cada pedido." },
-  { icon: Layers, title: "Impressão 3D real", desc: "Camada por camada, no capricho." },
-  { icon: Palette, title: "Personalizável", desc: "Cor, nome e detalhes do seu jeito." },
-  { icon: MapPin, title: "Feito por makers", desc: "Produção nacional e artesanal." },
+  {
+    icon: Truck,
+    title: "Envio para todo o Brasil",
+    desc: "Rastreio em tempo real, do pedido à sua porta.",
+  },
+  {
+    icon: Layers,
+    title: "100% personalizável",
+    desc: "Cor, nome, tamanho — do seu jeito.",
+  },
+  {
+    icon: Palette,
+    title: "Feito à mão",
+    desc: "Impressão 3D real, camada por camada, no capricho.",
+  },
+  {
+    icon: MapPin,
+    title: "Produção artesanal brasileira",
+    desc: "Feito por makers, peça por peça.",
+  },
 ];
 
 function HomePage() {
-  const navigate = useNavigate();
-  const [q, setQ] = useState("");
   const { data: products, isLoading } = useCatalogProducts();
   const { data: salesCounts } = useSalesCounts();
 
@@ -86,14 +98,9 @@ function HomePage() {
     [all],
   );
 
-  const submitSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    navigate({ to: "/catalogo", search: { q } as never });
-  };
-
   return (
     <div className="bg-background">
-      {/* HERO — faixa cósmica compacta com busca */}
+      {/* HERO — faixa cósmica compacta */}
       <section className="relative isolate overflow-hidden bg-brand-dark text-[oklch(0.97_0.01_265)]">
         <div
           className="absolute inset-0 -z-10"
@@ -105,64 +112,56 @@ function HomePage() {
         <div className="container mx-auto px-4 py-6 md:px-6 md:py-8">
           <div className="grid items-center gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-8">
             <div className="min-w-0 lg:col-start-1 lg:row-start-1">
-              <p className="eyebrow text-[oklch(0.85_0.06_60)]">{tenantConfig.tagline}</p>
+              <p className="eyebrow text-[oklch(0.85_0.06_60)]">+2.000 peças entregues no Brasil</p>
               <h1 className="mt-2 max-w-3xl font-display text-3xl leading-tight md:text-4xl">
-                Ideias que ganham forma. Produtos que criam conexão.
+                Produtos 3D únicos, do seu jeito — do fidget que acalma ao presente que ninguém
+                mais tem
               </h1>
               <p className="mt-3 max-w-xl text-sm text-[oklch(0.9_0.02_265)] md:text-base">
-                Peças sensoriais, articuladas, decorativas e personalizadas feitas em impressão 3D.
+                Sensoriais, articulados, decoração e presentes personalizados — feitos sob medida,
+                com cor, nome e detalhes do seu jeito. Envio para todo o Brasil.
               </p>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  to="/catalogo"
+                  search={{ sort: "best_sellers" } as never}
+                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-accent px-6 py-3 text-center text-xs font-bold uppercase tracking-wider text-accent-foreground transition hover:brightness-110"
+                >
+                  Ver mais vendidos
+                </Link>
+                <Link
+                  to="/personalizados"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/45 px-6 py-3 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:border-white hover:bg-white/10"
+                >
+                  Criar o meu personalizado
+                </Link>
+              </div>
             </div>
 
-            {/* Logo 3D — mobile/tablet entre a descrição e a busca; desktop à direita */}
-            <div className="flex justify-center lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
+            <div className="flex justify-center lg:col-start-2 lg:row-start-1 lg:self-center">
               <LogoShowcase />
             </div>
-
-            <form
-              onSubmit={submitSearch}
-              className="max-w-xl lg:col-start-1 lg:row-start-2 lg:w-full"
-            >
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-                <div className="relative min-w-0">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    value={q}
-                    onChange={(e) => setQ(e.target.value)}
-                    placeholder="Buscar fidget, chaveiro, tatu, organizador..."
-                    aria-label="Buscar produtos"
-                    className="h-11 w-full rounded-full border border-transparent bg-background pl-10 pr-4 text-sm text-foreground outline-none focus:border-accent"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="h-11 shrink-0 rounded-full bg-accent px-5 text-xs font-bold uppercase tracking-wider text-accent-foreground transition hover:brightness-110"
-                >
-                  Buscar
-                </button>
-              </div>
-            </form>
-          </div>
-
-
-          {/* Tiras de categoria */}
-          <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3 md:grid-cols-6">
-            {CATEGORY_TILES.map((c) => (
-              <Link
-                key={c.type}
-                to="/catalogo"
-                search={{ type: [c.type] } as never}
-                className="flex flex-col items-center gap-1.5 rounded-2xl bg-[oklch(1_0_0_/_0.08)] p-2.5 text-center backdrop-blur transition hover:bg-[oklch(1_0_0_/_0.16)]"
-              >
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-accent/90 text-accent-foreground">
-                  <c.icon className="h-4 w-4" />
-                </span>
-                <span className="text-[11px] font-semibold leading-tight">{c.name}</span>
-              </Link>
-            ))}
           </div>
         </div>
+      </section>
 
+      {/* NAVEGAÇÃO SECUNDÁRIA POR CATEGORIA */}
+      <section className="bg-brand-dark text-[oklch(0.97_0.01_265)]">
+        <div className="container mx-auto grid grid-cols-3 gap-2 px-4 pb-5 sm:gap-3 md:grid-cols-6 md:px-6">
+          {CATEGORY_TILES.map((c) => (
+            <Link
+              key={c.type}
+              to="/catalogo"
+              search={{ type: [c.type] } as never}
+              className="flex flex-col items-center gap-1.5 rounded-2xl bg-[oklch(1_0_0_/_0.08)] p-2.5 text-center backdrop-blur transition hover:bg-[oklch(1_0_0_/_0.16)]"
+            >
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-accent/90 text-accent-foreground">
+                <c.icon className="h-4 w-4" />
+              </span>
+              <span className="text-[11px] font-semibold leading-tight">{c.name}</span>
+            </Link>
+          ))}
+        </div>
       </section>
 
       {/* BANNER DE CRIAÇÃO PERSONALIZADA */}
@@ -181,24 +180,24 @@ function HomePage() {
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
             <div className="min-w-0">
               <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[oklch(0.9_0.08_60)] backdrop-blur">
-                <Sparkles className="h-4 w-4" /> Criação personalizada
+                <Sparkles className="h-4 w-4" /> Sob encomenda
               </div>
               <h2 className="mt-5 max-w-3xl font-display text-3xl leading-tight md:text-4xl lg:text-5xl">
-                Tem uma ideia e não sabe como transformá-la em realidade?
+                Tem uma ideia na cabeça? A gente imprime do jeito que você imaginou.
               </h2>
               <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[oklch(0.91_0.02_265)] md:text-base">
-                Conte para a gente. Criamos sua peça em impressão 3D do zero, com o tamanho, as
-                cores e os detalhes que você imaginou.
+                Manda o tamanho, a cor e a referência — nossa equipe modela e imprime sua peça do
+                zero. Orçamento em até 24h, sem compromisso.
               </p>
               <div className="mt-5 flex flex-wrap gap-2 text-xs font-semibold text-white/85">
                 <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5">
-                  Projeto sob medida
+                  Orçamento grátis em 24h
                 </span>
                 <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5">
-                  Orçamento personalizado
+                  Você aprova antes de produzir
                 </span>
                 <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5">
-                  Produção exclusiva
+                  Peça única, feita só pra você
                 </span>
               </div>
             </div>
@@ -207,7 +206,7 @@ function HomePage() {
               to="/personalizados"
               className="group inline-flex min-h-14 shrink-0 items-center justify-center gap-3 rounded-full bg-accent px-7 py-4 text-sm font-bold uppercase tracking-wider text-accent-foreground shadow-lg transition hover:-translate-y-0.5 hover:brightness-110"
             >
-              Transformar minha ideia
+              Pedir meu orçamento
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
@@ -235,7 +234,7 @@ function HomePage() {
 
       {/* VITRINES */}
       <ProductSection
-        eyebrow="Favoritos da órbita"
+        eyebrow="Os favoritos"
         title="Destaques"
         linkTo="/catalogo"
         isLoading={isLoading}
@@ -252,7 +251,7 @@ function HomePage() {
       />
 
       <ProductSection
-        eyebrow="Escolha da galera"
+        eyebrow="Os mais vendidos"
         title="Mais vendidos"
         linkTo="/catalogo"
         linkSearch={{ sort: "best_sellers" }}
