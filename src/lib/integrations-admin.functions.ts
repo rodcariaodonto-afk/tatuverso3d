@@ -88,16 +88,28 @@ export const testMercadoPago = createServerFn({ method: "POST" })
     const token = process.env["MERCADOPAGO_ACCESS_TOKEN"]?.trim();
     if (!token) return { ok: false, message: "Credencial MERCADOPAGO_ACCESS_TOKEN não configurada." };
 
-    const res = await fetch("https://api.mercadopago.com/users/me", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const body = await res.json().catch(() => ({}) as any);
-    if (!res.ok) {
-      return { ok: false, message: `Mercado Pago [${res.status}]: ${(body as any).message ?? "token inválido"}` };
+    const [meRes, paymentsRes] = await Promise.all([
+      fetch("https://api.mercadopago.com/users/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+      fetch("https://api.mercadopago.com/v1/payments/search?limit=0", {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+    ]);
+
+    const meBody = await meRes.json().catch(() => ({}) as any);
+    if (!meRes.ok) {
+      return { ok: false, message: `Mercado Pago [${meRes.status}]: ${(meBody as any).message ?? "token inválido"}` };
     }
+
+    const paymentsBody = await paymentsRes.json().catch(() => ({}) as any);
+    const liveMode = (paymentsBody as any).live_mode;
+    const envLabel = liveMode === true ? "Produção" : liveMode === false ? "Sandbox" : "Ambiente desconhecido";
+
     return {
       ok: true,
-      message: `Conectado como ${(body as any).nickname ?? (body as any).email ?? "conta MP"} (${(body as any).site_id ?? "?"})`,
+      message: `Conectado como ${(meBody as any).nickname ?? (meBody as any).email ?? "conta MP"} (${(meBody as any).site_id ?? "?"}) — ${envLabel}`,
+      live_mode: liveMode,
     };
   });
 
