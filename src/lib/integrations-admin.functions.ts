@@ -92,7 +92,7 @@ export const testMercadoPago = createServerFn({ method: "POST" })
       fetch("https://api.mercadopago.com/users/me", {
         headers: { Authorization: `Bearer ${token}` },
       }),
-      fetch("https://api.mercadopago.com/v1/payments/search?limit=0", {
+      fetch("https://api.mercadopago.com/v1/payments/search?limit=1", {
         headers: { Authorization: `Bearer ${token}` },
       }),
     ]);
