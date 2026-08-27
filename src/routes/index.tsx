@@ -102,11 +102,11 @@ function HomePage() {
               "radial-gradient(120% 90% at 12% 10%, oklch(0.42 0.19 275) 0%, transparent 55%), radial-gradient(90% 80% at 88% 20%, oklch(0.5 0.2 330 / 0.5) 0%, transparent 60%), radial-gradient(80% 70% at 70% 95%, oklch(0.62 0.18 45 / 0.4) 0%, transparent 60%)",
           }}
         />
-        <div className="container mx-auto px-4 py-12 md:px-6 md:py-16">
-          <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
+        <div className="container mx-auto px-4 py-6 md:px-6 md:py-8">
+          <div className="grid items-center gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-8">
             <div className="min-w-0 lg:col-start-1 lg:row-start-1">
               <p className="eyebrow text-[oklch(0.85_0.06_60)]">{tenantConfig.tagline}</p>
-              <h1 className="mt-3 max-w-3xl font-display text-3xl leading-tight md:text-5xl">
+              <h1 className="mt-2 max-w-3xl font-display text-3xl leading-tight md:text-4xl">
                 Ideias que ganham forma. Produtos que criam conexão.
               </h1>
               <p className="mt-3 max-w-xl text-sm text-[oklch(0.9_0.02_265)] md:text-base">
@@ -131,12 +131,12 @@ function HomePage() {
                     onChange={(e) => setQ(e.target.value)}
                     placeholder="Buscar fidget, chaveiro, tatu, organizador..."
                     aria-label="Buscar produtos"
-                    className="h-12 w-full rounded-full border border-transparent bg-background pl-10 pr-4 text-sm text-foreground outline-none focus:border-accent"
+                    className="h-11 w-full rounded-full border border-transparent bg-background pl-10 pr-4 text-sm text-foreground outline-none focus:border-accent"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="h-12 shrink-0 rounded-full bg-accent px-5 text-xs font-bold uppercase tracking-wider text-accent-foreground transition hover:brightness-110"
+                  className="h-11 shrink-0 rounded-full bg-accent px-5 text-xs font-bold uppercase tracking-wider text-accent-foreground transition hover:brightness-110"
                 >
                   Buscar
                 </button>
@@ -146,16 +146,16 @@ function HomePage() {
 
 
           {/* Tiras de categoria */}
-          <div className="mt-8 grid grid-cols-3 gap-2 sm:gap-3 md:grid-cols-6">
+          <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3 md:grid-cols-6">
             {CATEGORY_TILES.map((c) => (
               <Link
                 key={c.type}
                 to="/catalogo"
                 search={{ type: [c.type] } as never}
-                className="flex flex-col items-center gap-2 rounded-2xl bg-[oklch(1_0_0_/_0.08)] p-3 text-center backdrop-blur transition hover:bg-[oklch(1_0_0_/_0.16)]"
+                className="flex flex-col items-center gap-1.5 rounded-2xl bg-[oklch(1_0_0_/_0.08)] p-2.5 text-center backdrop-blur transition hover:bg-[oklch(1_0_0_/_0.16)]"
               >
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent/90 text-accent-foreground">
-                  <c.icon className="h-5 w-5" />
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-accent/90 text-accent-foreground">
+                  <c.icon className="h-4 w-4" />
                 </span>
                 <span className="text-[11px] font-semibold leading-tight">{c.name}</span>
               </Link>
@@ -165,28 +165,9 @@ function HomePage() {
 
       </section>
 
-      {/* BENEFÍCIOS */}
-      <section className="border-b border-border bg-surface-soft">
-        <div className="container mx-auto grid grid-cols-2 gap-4 px-4 py-6 md:grid-cols-4 md:px-6">
-          {BENEFITS.map((b) => (
-            <div key={b.title} className="flex min-w-0 items-start gap-3">
-              <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <b.icon className="h-4 w-4" />
-              </span>
-              <div className="min-w-0">
-                <p className="truncate text-xs font-bold uppercase tracking-wide text-foreground">
-                  {b.title}
-                </p>
-                <p className="text-[11px] text-muted-foreground">{b.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* BANNER DE CRIAÇÃO PERSONALIZADA */}
-      <section className="container mx-auto px-4 py-8 md:px-6 md:py-12">
-        <div className="relative isolate overflow-hidden rounded-3xl bg-brand-dark px-6 py-10 text-[oklch(0.97_0.01_265)] shadow-xl md:px-12 md:py-14">
+      <section className="container mx-auto px-4 py-5 md:px-6 md:py-7">
+        <div className="relative isolate overflow-hidden rounded-3xl bg-brand-dark px-6 py-8 text-[oklch(0.97_0.01_265)] shadow-xl md:px-12 md:py-10">
           <div
             className="absolute inset-0 -z-10"
             style={{
@@ -230,6 +211,25 @@ function HomePage() {
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* BENEFÍCIOS */}
+      <section className="border-y border-border bg-surface-soft">
+        <div className="container mx-auto grid grid-cols-2 gap-4 px-4 py-6 md:grid-cols-4 md:px-6">
+          {BENEFITS.map((b) => (
+            <div key={b.title} className="flex min-w-0 items-start gap-3">
+              <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <b.icon className="h-4 w-4" />
+              </span>
+              <div className="min-w-0">
+                <p className="truncate text-xs font-bold uppercase tracking-wide text-foreground">
+                  {b.title}
+                </p>
+                <p className="text-[11px] text-muted-foreground">{b.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
