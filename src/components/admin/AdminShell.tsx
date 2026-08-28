@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { tenantConfig } from "@/lib/tenant-config";
 import {
   LayoutDashboard,
+  BarChart3,
   Package,
   ShoppingBag,
   TrendingUp,
@@ -29,6 +30,7 @@ const NAV = [
   { to: "/admin/estoque", label: "Estoque", icon: Package },
   { to: "/admin/pagamentos", label: "Pagamentos", icon: CreditCard },
   { to: "/admin/vendas", label: "Vendas", icon: TrendingUp },
+  { to: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/admin/clientes", label: "Clientes", icon: Users },
   { to: "/admin/cupons", label: "Cupons", icon: TicketPercent },
   { to: "/admin/entrega", label: "Entrega e frete", icon: Truck },

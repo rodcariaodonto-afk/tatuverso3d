@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft, Clock, Heart, Package, Ruler, Share2, Shield, ShoppingBag, Sparkles, Upload,
 } from "lucide-react";
@@ -11,6 +11,7 @@ import { formatBRL, useCart, type CartCustomization } from "@/lib/cart-store";
 import { useCartDrawer } from "@/components/cart/CartDrawer";
 import { mapCatalogProduct, OPTION_TYPE_LABEL, PRODUCT_TYPE_LABEL, useCatalogProducts } from "@/hooks/useProducts";
 import { ProductGrid } from "@/components/catalog/ProductRail";
+import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/produto/$slug")({
   head: ({ params }) => ({
@@ -100,6 +101,10 @@ function ProductPage() {
   const [fav, setFav] = useState(false);
 
   const product = useMemo(() => (raw ? mapCatalogProduct(raw) : null), [raw]);
+
+  useEffect(() => {
+    if (product?.id) trackEvent("product_view", { product_id: product.id });
+  }, [product?.id]);
 
   const fields = useMemo(
     () =>
@@ -249,6 +254,10 @@ function ProductPage() {
       })
       .filter(Boolean) as string[];
 
+    trackEvent("add_to_cart", {
+      product_id: product.id,
+      value_cents: Math.round(unitPrice * qty * 100),
+    });
     add({
       product_id: product.id,
       variant_id: selectedVariant?.id ?? null,

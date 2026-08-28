@@ -111,6 +111,7 @@ export function Header() {
           </form>
           <Link
             to="/personalizados"
+            data-track="header:personalize"
             className="hidden whitespace-nowrap rounded-full bg-accent px-5 py-2 text-center text-xs font-bold uppercase tracking-wider text-accent-foreground transition hover:brightness-105 lg:inline-flex lg:items-center"
           >
             Personalize o seu
@@ -207,6 +208,7 @@ export function Header() {
               </Link>
               <Link
                 to="/personalizados"
+                data-track="header-mobile:personalize"
                 onClick={() => setMobileOpen(false)}
                 className="mt-3 block rounded-full bg-accent px-4 py-3 text-center text-sm font-bold uppercase tracking-wider text-accent-foreground"
               >

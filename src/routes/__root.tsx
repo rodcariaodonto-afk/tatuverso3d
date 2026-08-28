@@ -4,9 +4,11 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import appCss from "../styles.css?url";
 import { AuthProvider } from "@/lib/auth-context";
@@ -15,6 +17,7 @@ import { Footer } from "@/components/marketing/Footer";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { Toaster } from "sonner";
 import { tenantConfig, applyTenantTheme } from "@/lib/tenant-config";
+import { initAnalytics, trackPageview } from "@/lib/analytics";
 
 function NotFoundComponent() {
   return (
@@ -139,9 +142,15 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (r) => r.location.pathname });
 
   // Aplica cores do tenant via CSS variables
   applyTenantTheme();
+
+  useEffect(() => initAnalytics(), []);
+  useEffect(() => {
+    trackPageview(pathname);
+  }, [pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>
