@@ -18,6 +18,7 @@ import {
 } from "@/hooks/useProducts";
 import { ProductSection } from "@/components/catalog/ProductRail";
 import { LogoShowcase } from "@/components/brand/LogoShowcase";
+import dentistasAsset from "@/assets/dentistas-3d.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
