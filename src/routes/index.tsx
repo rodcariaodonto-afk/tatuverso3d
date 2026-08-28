@@ -18,6 +18,7 @@ import {
 } from "@/hooks/useProducts";
 import { ProductSection } from "@/components/catalog/ProductRail";
 import { LogoShowcase } from "@/components/brand/LogoShowcase";
+import dentistasAsset from "@/assets/dentistas-3d.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -162,6 +163,42 @@ function HomePage() {
               <span className="text-[11px] font-semibold leading-tight">{c.name}</span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* SPOTLIGHT PARA DENTISTAS */}
+      <section className="container mx-auto px-4 py-5 md:px-6 md:py-7">
+        <div className="grid overflow-hidden rounded-3xl bg-brand-dark shadow-xl lg:grid-cols-2">
+          <div className="flex flex-col justify-center px-6 py-9 text-[oklch(0.97_0.01_265)] md:px-10 md:py-12">
+            <div className="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[oklch(0.9_0.08_60)] backdrop-blur">
+              <Hand className="h-4 w-4" /> Para Dentistas
+            </div>
+            <h2 className="mt-5 max-w-md font-display text-3xl leading-tight md:text-4xl">
+              Peças 3D que valorizam seu consultório
+            </h2>
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-[oklch(0.91_0.02_265)] md:text-base">
+              Molde anatômico de dente, porta-escovas, plaquinhas com seu nome e chaveiros para
+              pacientes — tudo sob encomenda, na cor e no acabamento que você escolher.
+            </p>
+            <div className="mt-6">
+              <Link
+                to="/personalizados"
+                data-track="home-dentistas:orcamento"
+                className="group inline-flex min-h-11 items-center justify-center gap-3 rounded-full bg-accent px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-accent-foreground shadow-lg transition hover:-translate-y-0.5 hover:brightness-110"
+              >
+                Pedir meu orçamento
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </div>
+          <div className="relative min-h-56 overflow-hidden lg:min-h-full">
+            <img
+              src={dentistasAsset.url}
+              alt="Peças 3D personalizadas para dentistas: molde de dente anatômico, porta-escovas, plaquinhas e chaveiros"
+              className="absolute inset-0 h-full w-full object-cover"
+              loading="lazy"
+            />
+          </div>
         </div>
       </section>
 
