@@ -71,6 +71,126 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics_daily: {
+        Row: {
+          add_to_carts: number
+          checkouts: number
+          clicks: number
+          day: string
+          pageviews: number
+          product_views: number
+          purchases: number
+          revenue_cents: number
+          sessions: number
+          updated_at: string
+          visitors: number
+        }
+        Insert: {
+          add_to_carts?: number
+          checkouts?: number
+          clicks?: number
+          day: string
+          pageviews?: number
+          product_views?: number
+          purchases?: number
+          revenue_cents?: number
+          sessions?: number
+          updated_at?: string
+          visitors?: number
+        }
+        Update: {
+          add_to_carts?: number
+          checkouts?: number
+          clicks?: number
+          day?: string
+          pageviews?: number
+          product_views?: number
+          purchases?: number
+          revenue_cents?: number
+          sessions?: number
+          updated_at?: string
+          visitors?: number
+        }
+        Relationships: []
+      }
+      analytics_events: {
+        Row: {
+          browser: string | null
+          country: string | null
+          created_at: string
+          device_type: string | null
+          duration_ms: number | null
+          element_id: string | null
+          element_label: string | null
+          event_type: string
+          id: string
+          order_id: string | null
+          os: string | null
+          path: string | null
+          product_id: string | null
+          referrer: string | null
+          referrer_host: string | null
+          region: string | null
+          session_id: string
+          user_id: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          value_cents: number | null
+          visitor_id: string
+        }
+        Insert: {
+          browser?: string | null
+          country?: string | null
+          created_at?: string
+          device_type?: string | null
+          duration_ms?: number | null
+          element_id?: string | null
+          element_label?: string | null
+          event_type: string
+          id?: string
+          order_id?: string | null
+          os?: string | null
+          path?: string | null
+          product_id?: string | null
+          referrer?: string | null
+          referrer_host?: string | null
+          region?: string | null
+          session_id: string
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          value_cents?: number | null
+          visitor_id: string
+        }
+        Update: {
+          browser?: string | null
+          country?: string | null
+          created_at?: string
+          device_type?: string | null
+          duration_ms?: number | null
+          element_id?: string | null
+          element_label?: string | null
+          event_type?: string
+          id?: string
+          order_id?: string | null
+          os?: string | null
+          path?: string | null
+          product_id?: string | null
+          referrer?: string | null
+          referrer_host?: string | null
+          region?: string | null
+          session_id?: string
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          value_cents?: number | null
+          visitor_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -2507,6 +2627,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      analytics_report: { Args: { _from: string; _to: string }; Returns: Json }
+      analytics_rollup: { Args: { _days?: number }; Returns: number }
       commit_stock: { Args: { _order_id: string }; Returns: undefined }
       current_cart_session: { Args: never; Returns: string }
       expire_stock_reservations: { Args: never; Returns: number }

@@ -20,10 +20,10 @@ export function Footer() {
             decoração, presentes, colecionáveis e peças sob medida, com envio pra todo o país.
           </p>
           <div className="mt-4 flex gap-4 text-sm text-white/80">
-            <a href={tenantConfig.instagram} target="_blank" rel="noreferrer" className="hover:text-white">
+            <a href={tenantConfig.instagram} data-track="footer:instagram" target="_blank" rel="noreferrer" className="hover:text-white">
               Instagram
             </a>
-            <a href={tenantConfig.tiktok} target="_blank" rel="noreferrer" className="hover:text-white">
+            <a href={tenantConfig.tiktok} data-track="footer:tiktok" target="_blank" rel="noreferrer" className="hover:text-white">
               TikTok
             </a>
           </div>

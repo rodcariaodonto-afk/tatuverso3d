@@ -81,6 +81,8 @@ export function BaseProductCard({ product }: { product: ProductCardView }) {
     <Link
       to="/produto/$slug"
       params={{ slug: product.slug }}
+      data-track="product-card"
+      data-track-label={product.name}
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
     >
       {/* Mídia — proporção quadrada para todos os cards */}

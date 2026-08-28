@@ -131,6 +131,7 @@ function HomePage() {
                 </Link>
                 <Link
                   to="/personalizados"
+                  data-track="home-hero:personalize"
                   className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/45 px-6 py-3 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:border-white hover:bg-white/10"
                 >
                   Criar o meu personalizado
@@ -204,6 +205,7 @@ function HomePage() {
 
             <Link
               to="/personalizados"
+              data-track="home-cta:orcamento"
               className="group inline-flex min-h-14 shrink-0 items-center justify-center gap-3 rounded-full bg-accent px-7 py-4 text-sm font-bold uppercase tracking-wider text-accent-foreground shadow-lg transition hover:-translate-y-0.5 hover:brightness-110"
             >
               Pedir meu orçamento

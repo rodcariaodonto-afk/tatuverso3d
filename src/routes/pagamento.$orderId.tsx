@@ -16,6 +16,7 @@ import {
 import { getPaymentConfig, getPaymentStatus, startPayment } from "@/lib/payments.functions";
 import { formatBRL } from "@/lib/cart-store";
 import { useAuth } from "@/lib/auth-context";
+import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/pagamento/$orderId")({
   head: () => ({
@@ -106,6 +107,17 @@ function PaymentPage() {
   const order = statusQuery.data?.order ?? null;
   const payment = statusQuery.data?.payment ?? null;
   const paid = order?.payment_status === "paid";
+
+  const trackedPurchase = useRef(false);
+  useEffect(() => {
+    if (paid && order?.id && !trackedPurchase.current) {
+      trackedPurchase.current = true;
+      trackEvent("purchase", {
+        order_id: order.id,
+        value_cents: Math.round(Number(order.total ?? 0) * 100),
+      });
+    }
+  }, [paid, order?.id, order?.total]);
 
   useEffect(() => {
     if (!pix && payment?.method === "pix" && payment.qr_code) {

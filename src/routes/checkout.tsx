@@ -26,6 +26,7 @@ import {
 } from "@/lib/shipping.shared";
 import { formatBRL, useCart } from "@/lib/cart-store";
 import { useAuth } from "@/lib/auth-context";
+import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -85,6 +86,10 @@ function CheckoutPage() {
   const listAddressesFn = useServerFn(listAddresses);
   const quoteShippingFn = useServerFn(quoteShipping);
   const createOrderFn = useServerFn(createOrder);
+
+  useEffect(() => {
+    trackEvent("begin_checkout");
+  }, []);
 
   const addressesQuery = useQuery({
     queryKey: ["addresses"],

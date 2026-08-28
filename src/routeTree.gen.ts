@@ -44,12 +44,15 @@ import { Route as AdminCuponsRouteImport } from './routes/admin.cupons'
 import { Route as AdminConteudoRouteImport } from './routes/admin.conteudo'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminPedidosIndexRouteImport } from './routes/admin.pedidos.index'
 import { Route as MinhaContaPedidoIdRouteImport } from './routes/minha-conta.pedido.$id'
 import { Route as AdminProdutosNovoRouteImport } from './routes/admin.produtos.novo'
 import { Route as AdminPedidosIdRouteImport } from './routes/admin.pedidos.$id'
 import { Route as ApiPublicWebhooksMercadopagoRouteImport } from './routes/api/public/webhooks/mercadopago'
 import { Route as ApiPublicJobsExpireReservationsRouteImport } from './routes/api/public/jobs/expire-reservations'
+import { Route as ApiPublicJobsAnalyticsRollupRouteImport } from './routes/api/public/jobs/analytics-rollup'
+import { Route as ApiPublicAnalyticsCollectRouteImport } from './routes/api/public/analytics/collect'
 import { Route as AdminProdutosIdEditarRouteImport } from './routes/admin.produtos.$id.editar'
 
 const TrocasRoute = TrocasRouteImport.update({
@@ -227,6 +230,11 @@ const AdminClientesRoute = AdminClientesRouteImport.update({
   path: '/clientes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPedidosIndexRoute = AdminPedidosIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -259,6 +267,18 @@ const ApiPublicJobsExpireReservationsRoute =
     path: '/api/public/jobs/expire-reservations',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicJobsAnalyticsRollupRoute =
+  ApiPublicJobsAnalyticsRollupRouteImport.update({
+    id: '/api/public/jobs/analytics-rollup',
+    path: '/api/public/jobs/analytics-rollup',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicAnalyticsCollectRoute =
+  ApiPublicAnalyticsCollectRouteImport.update({
+    id: '/api/public/analytics/collect',
+    path: '/api/public/analytics/collect',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AdminProdutosIdEditarRoute = AdminProdutosIdEditarRouteImport.update({
   id: '/$id/editar',
   path: '/$id/editar',
@@ -285,6 +305,7 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/trocas': typeof TrocasRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/conteudo': typeof AdminConteudoRoute
@@ -306,6 +327,8 @@ export interface FileRoutesByFullPath {
   '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
   '/admin/pedidos/': typeof AdminPedidosIndexRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
+  '/api/public/analytics/collect': typeof ApiPublicAnalyticsCollectRoute
+  '/api/public/jobs/analytics-rollup': typeof ApiPublicJobsAnalyticsRollupRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
   '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
 }
@@ -329,6 +352,7 @@ export interface FileRoutesByTo {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/trocas': typeof TrocasRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/conteudo': typeof AdminConteudoRoute
@@ -349,6 +373,8 @@ export interface FileRoutesByTo {
   '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
   '/admin/pedidos': typeof AdminPedidosIndexRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
+  '/api/public/analytics/collect': typeof ApiPublicAnalyticsCollectRoute
+  '/api/public/jobs/analytics-rollup': typeof ApiPublicJobsAnalyticsRollupRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
   '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
 }
@@ -373,6 +399,7 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
   '/trocas': typeof TrocasRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/conteudo': typeof AdminConteudoRoute
@@ -394,6 +421,8 @@ export interface FileRoutesById {
   '/minha-conta/pedido/$id': typeof MinhaContaPedidoIdRoute
   '/admin/pedidos/': typeof AdminPedidosIndexRoute
   '/admin/produtos/$id/editar': typeof AdminProdutosIdEditarRoute
+  '/api/public/analytics/collect': typeof ApiPublicAnalyticsCollectRoute
+  '/api/public/jobs/analytics-rollup': typeof ApiPublicJobsAnalyticsRollupRoute
   '/api/public/jobs/expire-reservations': typeof ApiPublicJobsExpireReservationsRoute
   '/api/public/webhooks/mercadopago': typeof ApiPublicWebhooksMercadopagoRoute
 }
@@ -419,6 +448,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/trocas'
+    | '/admin/analytics'
     | '/admin/clientes'
     | '/admin/config'
     | '/admin/conteudo'
@@ -440,6 +470,8 @@ export interface FileRouteTypes {
     | '/minha-conta/pedido/$id'
     | '/admin/pedidos/'
     | '/admin/produtos/$id/editar'
+    | '/api/public/analytics/collect'
+    | '/api/public/jobs/analytics-rollup'
     | '/api/public/jobs/expire-reservations'
     | '/api/public/webhooks/mercadopago'
   fileRoutesByTo: FileRoutesByTo
@@ -463,6 +495,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/trocas'
+    | '/admin/analytics'
     | '/admin/clientes'
     | '/admin/config'
     | '/admin/conteudo'
@@ -483,6 +516,8 @@ export interface FileRouteTypes {
     | '/minha-conta/pedido/$id'
     | '/admin/pedidos'
     | '/admin/produtos/$id/editar'
+    | '/api/public/analytics/collect'
+    | '/api/public/jobs/analytics-rollup'
     | '/api/public/jobs/expire-reservations'
     | '/api/public/webhooks/mercadopago'
   id:
@@ -506,6 +541,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/termos'
     | '/trocas'
+    | '/admin/analytics'
     | '/admin/clientes'
     | '/admin/config'
     | '/admin/conteudo'
@@ -527,6 +563,8 @@ export interface FileRouteTypes {
     | '/minha-conta/pedido/$id'
     | '/admin/pedidos/'
     | '/admin/produtos/$id/editar'
+    | '/api/public/analytics/collect'
+    | '/api/public/jobs/analytics-rollup'
     | '/api/public/jobs/expire-reservations'
     | '/api/public/webhooks/mercadopago'
   fileRoutesById: FileRoutesById
@@ -555,6 +593,8 @@ export interface RootRouteChildren {
   PagamentoOrderIdRoute: typeof PagamentoOrderIdRoute
   ProdutoSlugRoute: typeof ProdutoSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  ApiPublicAnalyticsCollectRoute: typeof ApiPublicAnalyticsCollectRoute
+  ApiPublicJobsAnalyticsRollupRoute: typeof ApiPublicJobsAnalyticsRollupRoute
   ApiPublicJobsExpireReservationsRoute: typeof ApiPublicJobsExpireReservationsRoute
   ApiPublicWebhooksMercadopagoRoute: typeof ApiPublicWebhooksMercadopagoRoute
 }
@@ -806,6 +846,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminClientesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/pedidos/': {
       id: '/admin/pedidos/'
       path: '/'
@@ -848,6 +895,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicJobsExpireReservationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/jobs/analytics-rollup': {
+      id: '/api/public/jobs/analytics-rollup'
+      path: '/api/public/jobs/analytics-rollup'
+      fullPath: '/api/public/jobs/analytics-rollup'
+      preLoaderRoute: typeof ApiPublicJobsAnalyticsRollupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/analytics/collect': {
+      id: '/api/public/analytics/collect'
+      path: '/api/public/analytics/collect'
+      fullPath: '/api/public/analytics/collect'
+      preLoaderRoute: typeof ApiPublicAnalyticsCollectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/produtos/$id/editar': {
       id: '/admin/produtos/$id/editar'
       path: '/$id/editar'
@@ -887,6 +948,7 @@ const AdminProdutosRouteWithChildren = AdminProdutosRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminClientesRoute: typeof AdminClientesRoute
   AdminConfigRoute: typeof AdminConfigRoute
   AdminConteudoRoute: typeof AdminConteudoRoute
@@ -901,6 +963,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminClientesRoute: AdminClientesRoute,
   AdminConfigRoute: AdminConfigRoute,
   AdminConteudoRoute: AdminConteudoRoute,
@@ -954,6 +1017,8 @@ const rootRouteChildren: RootRouteChildren = {
   PagamentoOrderIdRoute: PagamentoOrderIdRoute,
   ProdutoSlugRoute: ProdutoSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
+  ApiPublicAnalyticsCollectRoute: ApiPublicAnalyticsCollectRoute,
+  ApiPublicJobsAnalyticsRollupRoute: ApiPublicJobsAnalyticsRollupRoute,
   ApiPublicJobsExpireReservationsRoute: ApiPublicJobsExpireReservationsRoute,
   ApiPublicWebhooksMercadopagoRoute: ApiPublicWebhooksMercadopagoRoute,
 }
