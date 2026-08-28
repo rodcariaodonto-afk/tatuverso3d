@@ -166,32 +166,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* SPOTLIGHT PARA DENTISTAS */}
-      <section className="container mx-auto px-4 py-5 md:px-6 md:py-7">
-        <div className="overflow-hidden rounded-3xl bg-brand-dark shadow-xl">
-          <img
-            src={dentistasAsset.url}
-            alt="Peças 3D personalizadas para dentistas: molde de dente anatômico, porta escovas, plaquinhas e chaveiros"
-            className="block h-auto w-full"
-            loading="lazy"
-          />
-          <div className="flex flex-col items-start justify-between gap-4 px-6 py-5 text-[oklch(0.97_0.01_265)] sm:flex-row sm:items-center md:px-8">
-            <p className="max-w-xl text-sm leading-relaxed text-[oklch(0.91_0.02_265)] md:text-base">
-              Peças 3D sob encomenda para o seu consultório, na cor e no acabamento que você
-              escolher.
-            </p>
-            <Link
-              to="/personalizados"
-              data-track="home-dentistas:orcamento"
-              className="group inline-flex min-h-11 shrink-0 items-center justify-center gap-3 rounded-full bg-accent px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-accent-foreground shadow-lg transition hover:-translate-y-0.5 hover:brightness-110"
-            >
-              Pedir meu orçamento
-              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* BANNER DE CRIAÇÃO PERSONALIZADA */}
       <section className="container mx-auto px-4 py-5 md:px-6 md:py-7">
         <div className="relative isolate overflow-hidden rounded-3xl bg-brand-dark px-6 py-8 text-[oklch(0.97_0.01_265)] shadow-xl md:px-12 md:py-10">
@@ -234,6 +208,32 @@ function HomePage() {
               to="/personalizados"
               data-track="home-cta:orcamento"
               className="group inline-flex min-h-14 shrink-0 items-center justify-center gap-3 rounded-full bg-accent px-7 py-4 text-sm font-bold uppercase tracking-wider text-accent-foreground shadow-lg transition hover:-translate-y-0.5 hover:brightness-110"
+            >
+              Pedir meu orçamento
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* SPOTLIGHT PARA DENTISTAS */}
+      <section className="container mx-auto px-4 py-5 md:px-6 md:py-7">
+        <div className="overflow-hidden rounded-3xl bg-brand-dark shadow-xl">
+          <img
+            src={dentistasAsset.url}
+            alt="Peças 3D personalizadas para dentistas: molde de dente anatômico, porta escovas, plaquinhas e chaveiros"
+            className="block h-auto w-full"
+            loading="lazy"
+          />
+          <div className="flex flex-col items-start justify-between gap-4 px-6 py-5 text-[oklch(0.97_0.01_265)] sm:flex-row sm:items-center md:px-8">
+            <p className="max-w-xl text-sm leading-relaxed text-[oklch(0.91_0.02_265)] md:text-base">
+              Peças 3D sob encomenda para o seu consultório, na cor e no acabamento que você
+              escolher.
+            </p>
+            <Link
+              to="/personalizados"
+              data-track="home-dentistas:orcamento"
+              className="group inline-flex min-h-11 shrink-0 items-center justify-center gap-3 rounded-full bg-accent px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-accent-foreground shadow-lg transition hover:-translate-y-0.5 hover:brightness-110"
             >
               Pedir meu orçamento
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
