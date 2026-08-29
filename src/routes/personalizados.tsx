@@ -82,11 +82,7 @@ function PersonalizadosPage() {
 
       <form
         className="mt-12 grid gap-4 rounded-2xl border border-border bg-surface-soft p-6 sm:grid-cols-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSent(true);
-          toast.success("Recebemos sua ideia! Responderemos por e-mail em breve.");
-        }}
+        onSubmit={handleSubmit}
       >
         <div className="sm:col-span-2">
           <h2 className="font-display text-2xl text-primary">Solicitar personalização</h2>
@@ -109,9 +105,10 @@ function PersonalizadosPage() {
         <div className="sm:col-span-2 flex flex-wrap items-center gap-3">
           <button
             type="submit"
-            className="rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wider text-accent-foreground"
+            disabled={sending}
+            className="rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wider text-accent-foreground disabled:opacity-60"
           >
-            Enviar solicitação
+            {sending ? "Enviando…" : "Enviar solicitação"}
           </button>
           <a
             href={`mailto:${tenantConfig.supportEmail}`}
