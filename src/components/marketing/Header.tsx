@@ -13,7 +13,7 @@ const defaultLogo = logoAsset.url;
 
 export const STORE_NAV = [
   { label: "Início", to: "/" as const, search: undefined },
-  { label: "Loja", to: "/catalogo" as const, search: { q: "" } },
+  { label: "Produtos", to: "/catalogo" as const, search: { q: "" } },
   { label: "Sensoriais", to: "/catalogo" as const, search: { q: "sensorial" } },
   { label: "Decoração e Utilidades", to: "/catalogo" as const, search: { q: "decoração" } },
   { label: "Presentes", to: "/catalogo" as const, search: { q: "presente" } },
