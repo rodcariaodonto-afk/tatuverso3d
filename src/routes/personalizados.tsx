@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { tenantConfig } from "@/lib/tenant-config";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/personalizados")({
   head: () => ({
@@ -26,6 +27,32 @@ export const Route = createFileRoute("/personalizados")({
 
 function PersonalizadosPage() {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (sending) return;
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const name = String(data.get("nome") ?? "").trim();
+    const email = String(data.get("email") ?? "").trim();
+    const idea = String(data.get("ideia") ?? "").trim();
+    if (!name || !email || !idea) return;
+
+    setSending(true);
+    const { error } = await supabase
+      .from("quote_requests" as never)
+      .insert({ name, email, idea } as never);
+    setSending(false);
+
+    if (error) {
+      toast.error("Não foi possível enviar. Tente novamente ou escreva para nosso e-mail.");
+      return;
+    }
+    form.reset();
+    setSent(true);
+    toast.success("Recebemos sua ideia! Responderemos por e-mail em breve.");
+  }
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-16 md:px-6">
@@ -55,11 +82,7 @@ function PersonalizadosPage() {
 
       <form
         className="mt-12 grid gap-4 rounded-2xl border border-border bg-surface-soft p-6 sm:grid-cols-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSent(true);
-          toast.success("Recebemos sua ideia! Responderemos por e-mail em breve.");
-        }}
+        onSubmit={handleSubmit}
       >
         <div className="sm:col-span-2">
           <h2 className="font-display text-2xl text-primary">Solicitar personalização</h2>
@@ -82,9 +105,10 @@ function PersonalizadosPage() {
         <div className="sm:col-span-2 flex flex-wrap items-center gap-3">
           <button
             type="submit"
-            className="rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wider text-accent-foreground"
+            disabled={sending}
+            className="rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wider text-accent-foreground disabled:opacity-60"
           >
-            Enviar solicitação
+            {sending ? "Enviando…" : "Enviar solicitação"}
           </button>
           <a
             href={`mailto:${tenantConfig.supportEmail}`}
