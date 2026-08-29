@@ -2051,6 +2051,36 @@ export type Database = {
         }
         Relationships: []
       }
+      quote_requests: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          idea: string
+          name: string
+          notes: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          idea: string
+          name: string
+          notes?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          idea?: string
+          name?: string
+          notes?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           body: string | null
