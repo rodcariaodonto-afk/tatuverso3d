@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { tenantConfig } from "@/lib/tenant-config";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/personalizados")({
   head: () => ({
