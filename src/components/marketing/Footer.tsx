@@ -31,7 +31,7 @@ export function Footer() {
         <div>
           <h4 className="eyebrow !text-white/60">Comprar</h4>
           <ul className="mt-4 space-y-2 text-sm text-white/80">
-            <li><Link to="/catalogo" search={{ q: "" } as never}>Loja</Link></li>
+            <li><Link to="/catalogo" search={{ q: "" } as never}>Produtos</Link></li>
             <li><Link to="/catalogo" search={{ q: "sensorial" } as never}>Sensoriais</Link></li>
             <li><Link to="/catalogo" search={{ q: "decoração" } as never}>Decoração e Utilidades</Link></li>
             <li><Link to="/catalogo" search={{ q: "presente" } as never}>Presentes</Link></li>
