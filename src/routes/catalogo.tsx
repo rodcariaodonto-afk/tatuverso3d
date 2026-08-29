@@ -306,7 +306,7 @@ function CatalogPage() {
   return (
     <div className="container mx-auto px-4 py-12 md:px-6">
       <header className="mb-10">
-        <p className="eyebrow">Loja</p>
+        <p className="eyebrow">Produtos</p>
         <h1 className="mt-2 font-display text-4xl md:text-5xl">Produtos em impressão 3D</h1>
         <div className="brand-divider mt-3" />
         <p className="mt-4 max-w-2xl text-sm text-muted-foreground">
