@@ -27,6 +27,32 @@ export const Route = createFileRoute("/personalizados")({
 
 function PersonalizadosPage() {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (sending) return;
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const name = String(data.get("nome") ?? "").trim();
+    const email = String(data.get("email") ?? "").trim();
+    const idea = String(data.get("ideia") ?? "").trim();
+    if (!name || !email || !idea) return;
+
+    setSending(true);
+    const { error } = await supabase
+      .from("quote_requests" as never)
+      .insert({ name, email, idea } as never);
+    setSending(false);
+
+    if (error) {
+      toast.error("Não foi possível enviar. Tente novamente ou escreva para nosso e-mail.");
+      return;
+    }
+    form.reset();
+    setSent(true);
+    toast.success("Recebemos sua ideia! Responderemos por e-mail em breve.");
+  }
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-16 md:px-6">
