@@ -69,7 +69,7 @@ function CatalogPage() {
   const navigate = useNavigate({ from: "/catalogo" });
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const { data: products, isLoading } = useCatalogProducts();
+  const { data: products, isLoading, isError, refetch, isFetching } = useCatalogProducts();
   const { data: categories } = useCategories();
   const { data: salesCounts } = useSalesCounts();
 
@@ -353,6 +353,21 @@ function CatalogPage() {
           {isLoading ? (
             <div className="mt-8">
               <ProductGridSkeleton count={8} />
+            </div>
+          ) : isError ? (
+            <div className="mt-16 rounded-lg border border-dashed border-destructive/40 py-16 text-center">
+              <p className="font-display text-xl text-destructive">
+                Não conseguimos carregar os produtos
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Verifique sua conexão e tente novamente.
+              </p>
+              <button
+                onClick={() => refetch()}
+                className="mt-4 inline-flex min-h-11 items-center gap-1 rounded-full bg-primary px-5 py-2 text-xs font-bold uppercase tracking-wider text-primary-foreground"
+              >
+                {isFetching ? "Tentando..." : "Tentar novamente"}
+              </button>
             </div>
           ) : filtered.length === 0 ? (
             <div className="mt-16 rounded-lg border border-dashed border-border py-16 text-center">
