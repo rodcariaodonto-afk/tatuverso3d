@@ -188,6 +188,7 @@ export function useCatalogProducts() {
       return (data ?? []).map(mapCatalogProduct);
     },
     staleTime: 60_000,
+    retry: 2,
   });
 }
 
@@ -220,6 +221,7 @@ export function useCategories() {
       return data ?? [];
     },
     staleTime: 5 * 60_000,
+    retry: 2,
   });
 }
 
