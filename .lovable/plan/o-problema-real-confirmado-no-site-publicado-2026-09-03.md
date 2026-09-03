@@ -1,4 +1,5 @@
-# Correção: site não carrega produtos (visitantes deslogados) + otimização mobile
+Correção: site não carrega produtos (visitantes deslogados) + otimização mobile  
+O SITE PRECISA CARREGAR TUDO MESMO PARA QUEM NAO ESTA LOGADO, EXIGIR SE LOGAR APENAS PARA COMPRAS.
 
 ## O problema real (confirmado no site publicado)
 
