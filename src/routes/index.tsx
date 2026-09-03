@@ -77,7 +77,7 @@ const BENEFITS = [
 ];
 
 function HomePage() {
-  const { data: products, isLoading } = useCatalogProducts();
+  const { data: products, isLoading, isError, refetch, isFetching } = useCatalogProducts();
   const { data: salesCounts } = useSalesCounts();
 
   const all = products ?? [];
@@ -297,7 +297,26 @@ function HomePage() {
         products={personalizable}
       />
 
-      {!isLoading && all.length === 0 && (
+      {isError && (
+        <section className="container mx-auto px-4 pb-12 md:px-6">
+          <div className="rounded-2xl border border-dashed border-destructive/40 py-14 text-center">
+            <p className="font-display text-xl text-destructive">
+              Não conseguimos carregar os produtos
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Verifique sua conexão e tente novamente.
+            </p>
+            <button
+              onClick={() => refetch()}
+              className="mt-4 inline-flex min-h-11 items-center rounded-full bg-primary px-5 py-2 text-xs font-bold uppercase tracking-wider text-primary-foreground"
+            >
+              {isFetching ? "Tentando..." : "Tentar novamente"}
+            </button>
+          </div>
+        </section>
+      )}
+
+      {!isLoading && !isError && all.length === 0 && (
         <section className="container mx-auto px-4 pb-12 md:px-6">
           <div className="rounded-2xl border border-dashed border-border py-16 text-center">
             <p className="font-display text-xl text-primary">Vitrine em preparação</p>

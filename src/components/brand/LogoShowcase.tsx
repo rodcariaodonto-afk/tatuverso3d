@@ -38,7 +38,12 @@ function Showcase() {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    setWebgl(supportsWebGL());
+    // Em telas pequenas ou conexões lentas usamos o logo estático (mais leve e estável).
+    const conn = (navigator as any).connection;
+    const slow =
+      !!conn && (conn.saveData === true || /2g|slow-2g|3g/.test(String(conn.effectiveType ?? "")));
+    const small = window.matchMedia("(max-width: 767px)").matches;
+    setWebgl(!small && !slow && supportsWebGL());
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const onChange = () => setReducedMotion(mq.matches);
     onChange();
